@@ -11,14 +11,24 @@ export function header(ctx: AppContext, showHome: boolean): HTMLElement {
 
   const langGroup = el('div', { class: 'lang', role: 'group', 'aria-label': t(lang, 'language') });
   for (const option of LANGS) {
-    const button = el('button', { type: 'button', class: 'pill', 'aria-pressed': String(option === lang) }, option.toUpperCase());
+    const button = el(
+      'button',
+      { type: 'button', class: 'pill', 'aria-pressed': String(option === lang), 'data-focus-key': `lang-${option}` },
+      option.toUpperCase(),
+    );
     button.addEventListener('click', () => ctx.setSettings({ lang: option }));
     langGroup.append(button);
   }
 
   const soundButton = el(
     'button',
-    { type: 'button', class: 'icon-button sound', 'aria-pressed': String(sound), 'aria-label': t(lang, 'sound') },
+    {
+      type: 'button',
+      class: 'icon-button sound',
+      'aria-pressed': String(sound),
+      'aria-label': t(lang, 'sound'),
+      'data-focus-key': 'sound',
+    },
     sound ? '🔊' : '🔇',
   );
   soundButton.addEventListener('click', () => ctx.setSettings({ sound: !sound }));

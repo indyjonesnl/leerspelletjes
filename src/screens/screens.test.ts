@@ -79,4 +79,11 @@ describe('header', () => {
     expect(bar.querySelector('a.home-link')).toBeNull();
     expect(header(makeCtx('nl'), true).querySelector('a.home-link')!.getAttribute('aria-label')).toBe('Naar start');
   });
+
+  it('exposes stable data-focus-key attributes for focus restoration', () => {
+    const bar = header(makeCtx('nl'), false);
+    expect(bar.querySelector('[data-focus-key="lang-nl"]')?.textContent).toBe('NL');
+    expect(bar.querySelector('[data-focus-key="lang-en"]')?.textContent).toBe('EN');
+    expect(bar.querySelector('[data-focus-key="sound"]')).not.toBeNull();
+  });
 });

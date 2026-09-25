@@ -23,6 +23,10 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
   let destroyed = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let speakerShown = ctx.speech.isAvailable(ctx.settings.lang);
+  /** Whether focus should move to the first choice once the next question is shown (set when a
+   *  correct answer is chosen while focus is in the play area; the answered choice is disabled and
+   *  removed before the auto-advance timer fires, so real focus can't carry it across the wait). */
+  let focusNextQuestion = false;
   const lang = () => ctx.settings.lang;
 
   function speakQuestion(automatic: boolean): void {
@@ -39,13 +43,18 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
 
   function choose(id: string): void {
     if (destroyed || finished || round.result) return;
+    const wasFocusedInPlay = !!document.activeElement && body.contains(document.activeElement);
     chosenId = id;
     const result = round.answer(id);
     if (ctx.settings.sound) (result.correct ? playCorrect : playWrong)();
     render();
     live.textContent = result.correct ? t(lang(), 'correct') : `${t(lang(), 'wrong')} ${answerLabel()}`;
-    if (result.correct) timer = setTimeout(advance, ADVANCE_DELAY_MS);
-    else body.querySelector<HTMLButtonElement>('.continue')?.focus();
+    if (result.correct) {
+      focusNextQuestion = wasFocusedInPlay;
+      timer = setTimeout(advance, ADVANCE_DELAY_MS);
+    } else {
+      body.querySelector<HTMLButtonElement>('.continue')?.focus();
+    }
   }
 
   function advance(): void {
@@ -79,6 +88,13 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
     const L = lang();
     const q = round.current;
     const result = round.result;
+
+    const activeBefore = document.activeElement;
+    const focusedChoiceId =
+      activeBefore instanceof HTMLElement && activeBefore.classList.contains('choice') ? activeBefore.dataset.id : undefined;
+    const focusedHint = activeBefore instanceof HTMLElement && activeBefore.classList.contains('hint-button');
+    const focusWasInPlay = !!activeBefore && body.contains(activeBefore);
+
     body.replaceChildren();
 
     const top = el('div', { class: 'play-top' },
@@ -145,12 +161,28 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
         body.append(next);
       }
     }
+
+    if (focusedChoiceId) {
+      const same = body.querySelector<HTMLButtonElement>(`.choice[data-id="${focusedChoiceId}"]`);
+      if (same && !same.disabled) { same.focus(); return; }
+    }
+    if (focusedHint) {
+      body.querySelector<HTMLButtonElement>('.hint-button')?.focus();
+      return;
+    }
+    if ((focusWasInPlay || focusNextQuestion) && result === null) {
+      body.querySelector<HTMLButtonElement>('.choice')?.focus();
+      focusNextQuestion = false;
+    }
   }
 
   function renderEnd(): void {
     const L = lang();
     const score = round.score;
     const message = score >= 8 ? 'endGreat' : score >= 5 ? 'endGood' : 'endPractice';
+    const activeBefore = document.activeElement;
+    const focusWasInPlay = (!!activeBefore && body.contains(activeBefore)) || focusNextQuestion;
+    focusNextQuestion = false;
     const again = el('button', { type: 'button', class: 'big-button' }, t(L, 'playAgain'));
     again.addEventListener('click', () => {
       round = new Round(game, level, rng);
@@ -169,10 +201,12 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
         el('a', { class: 'big-button secondary', href: '#/' }, t(L, 'home')),
       ),
     );
+    if (focusWasInPlay) again.focus();
   }
 
   function onKey(event: KeyboardEvent): void {
     if (destroyed || finished) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
     const buttons = [...body.querySelectorAll<HTMLButtonElement>('.choice')];
     const n = Number(event.key);
     if (Number.isInteger(n) && n >= 1 && n <= buttons.length) {
@@ -205,8 +239,12 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
   return {
     el: root,
     update() {
+      ctx.speech.stop();
       speakerShown = ctx.speech.isAvailable(lang());
       render();
+      live.textContent = finished
+        ? t(lang(), 'score', { score: round.score, total: round.length })
+        : round.current.prompt[lang()];
     },
     destroy() {
       destroyed = true;

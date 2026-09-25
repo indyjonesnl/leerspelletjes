@@ -37,9 +37,13 @@ const ctx: AppContext = {
 };
 
 function renderHeader(): void {
+  const active = document.activeElement;
+  const focusKey =
+    active instanceof HTMLElement && headerSlot.contains(active) ? active.getAttribute('data-focus-key') : null;
   document.documentElement.lang = ctx.settings.lang;
   document.title = t(ctx.settings.lang, 'appTitle');
   headerSlot.replaceChildren(header(ctx, showHome));
+  if (focusKey) headerSlot.querySelector<HTMLElement>(`[data-focus-key="${focusKey}"]`)?.focus();
 }
 
 function createScreen(route: Route): Screen {
