@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "predev": "node scripts/copy-flags.mjs",
+    "prebuild": "node scripts/copy-flags.mjs",
+    "gen:countries": "node scripts/gen-countries.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
@@ -15,5 +18,8 @@
     "typescript": "^7.0.2",
     "vite": "^8.3.1",
     "vitest": "^5.0.2"
+  },
+  "dependencies": {
+    "flag-icons": "^7.5.0"
   }
 }
