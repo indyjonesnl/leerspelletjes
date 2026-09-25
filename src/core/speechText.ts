@@ -8,5 +8,6 @@ export function questionSpeech(question: Question, lang: Lang, withChoices: bool
   const labels = question.choices.map((c) => c.label[lang]);
   const list =
     labels.length > 1 ? `${labels.slice(0, -1).join(', ')} ${t(lang, 'or')} ${labels[labels.length - 1]}` : labels.join('');
-  return `${base} ${list}`;
+  const sep = /[.?!:]$/.test(base) ? ' ' : ': ';
+  return `${base}${sep}${list}`;
 }

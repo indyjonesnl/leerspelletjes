@@ -106,6 +106,12 @@ describe('playScreen', () => {
     expect(choice('b').classList.contains('wrong')).toBe(true);
   });
 
+  it('ignores number keys held with a modifier', () => {
+    start(makeCtx().ctx);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: '2', ctrlKey: true }));
+    expect(choice('b').classList.contains('wrong')).toBe(false);
+  });
+
   it('second tap and number key after answering are ignored', () => {
     start(makeCtx().ctx);
     for (let i = 0; i < 10; i++) {
@@ -148,6 +154,46 @@ describe('playScreen', () => {
     expect(text('.prompt')).toBe('Question number 3');
   });
 
+  it('stops speech and updates the live region when the language changes', () => {
+    const { ctx, speech } = makeCtx();
+    const s = start(ctx);
+    ctx.settings = { ...ctx.settings, lang: 'en' };
+    s.update!();
+    expect(speech.stop).toHaveBeenCalled();
+    expect(text('.sr-only')).toBe('Question number 1');
+  });
+
+  it('moves focus between choices with the arrow keys', () => {
+    start(makeCtx().ctx);
+    choice('a').focus();
+    press('ArrowRight');
+    expect(document.activeElement).toBe(choice('b'));
+    press('ArrowRight');
+    expect(document.activeElement).toBe(choice('c'));
+    press('ArrowLeft');
+    expect(document.activeElement).toBe(choice('b'));
+  });
+
+  it('focuses the first choice of the next question after a correct answer and auto-advance', () => {
+    start(makeCtx().ctx);
+    choice('a').focus();
+    choice('a').click();
+    vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    expect(text('.progress')).toBe('Vraag 2 van 10');
+    expect(document.activeElement).toBe(choice('a'));
+  });
+
+  it('focuses the continue button after a wrong answer, then the first choice of the next question', () => {
+    start(makeCtx().ctx);
+    choice('b').focus();
+    choice('b').click();
+    const continueButton = document.querySelector<HTMLButtonElement>('button.continue')!;
+    expect(document.activeElement).toBe(continueButton);
+    continueButton.click();
+    expect(text('.progress')).toBe('Vraag 2 van 10');
+    expect(document.activeElement).toBe(choice('a'));
+  });
+
   it('does nothing after being destroyed mid-advance', () => {
     const { ctx, speech } = makeCtx();
     const s = start(ctx);
@@ -163,7 +209,7 @@ describe('playScreen', () => {
   it('reads question and choices automatically on autoSpeak levels', () => {
     const { ctx, speech } = makeCtx();
     start(ctx, makeGame(), levels[0]);
-    expect(speech.speak).toHaveBeenCalledWith('Vraag nummer 1 Aap, Beer of Cavia', 'nl');
+    expect(speech.speak).toHaveBeenCalledWith('Vraag nummer 1: Aap, Beer of Cavia', 'nl');
   });
 
   it('does not auto-speak when sound is off, but the speaker button still works', () => {
@@ -171,7 +217,7 @@ describe('playScreen', () => {
     start(ctx, makeGame(), levels[0]);
     expect(speech.speak).not.toHaveBeenCalled();
     document.querySelector<HTMLButtonElement>('.speak')!.click();
-    expect(speech.speak).toHaveBeenCalledWith('Vraag nummer 1 Aap, Beer of Cavia', 'nl');
+    expect(speech.speak).toHaveBeenCalledWith('Vraag nummer 1: Aap, Beer of Cavia', 'nl');
   });
 
   it('speaker button reads only the question on levels without autoSpeak', () => {

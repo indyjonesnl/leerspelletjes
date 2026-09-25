@@ -27,4 +27,19 @@ describe('questionSpeech', () => {
     const q = { ...question, speech: { nl: 'zes keer zeven', en: 'six times seven' } };
     expect(questionSpeech(q, 'en', false)).toBe('six times seven');
   });
+
+  it('joins the prompt and choices with a colon when the prompt has no trailing punctuation', () => {
+    const q: Question = {
+      key: '6:7',
+      prompt: { nl: '6 keer 7', en: '6 times 7' },
+      choices: [
+        { id: 'a', label: { nl: '42', en: '42' } },
+        { id: 'b', label: { nl: '35', en: '35' } },
+        { id: 'c', label: { nl: '49', en: '49' } },
+        { id: 'd', label: { nl: '43', en: '43' } },
+      ],
+      answerId: 'a',
+    };
+    expect(questionSpeech(q, 'nl', true)).toBe('6 keer 7: 42, 35, 49 of 43');
+  });
 });
