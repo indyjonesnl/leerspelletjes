@@ -26,6 +26,18 @@ npm run size       # build and check the 200 KB first-load budget
 
 `src/games/flags/data/countries.ts` is generated. To change names, edit `scripts/gen-countries.mjs` and run `npm run gen:countries`.
 
+## Deploy to GitHub Pages
+
+`.github/workflows/deploy.yml` runs the unit tests, builds the site and publishes `dist/` on every push to `main`.
+
+One-time setup:
+
+1. Push this repository to GitHub (public, unless your plan allows Pages on private repositories).
+2. In the repository go to **Settings → Pages** and set **Source** to **GitHub Actions**.
+3. Push to `main` (or run the workflow from the **Actions** tab). The site appears at `https://<user>.github.io/<repo>/`.
+
+Hash-based routing (`#/...`) means refreshing or sharing a game link never hits a 404, and relative asset paths work from the `/<repo>/` sub-path. For a custom domain, set it under **Settings → Pages → Custom domain**.
+
 ## Deploy (Cloudflare Pages or Netlify)
 
 - Build command: `npm run build`
