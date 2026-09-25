@@ -11,7 +11,8 @@
     "test:e2e": "playwright test",
     "predev": "node scripts/copy-flags.mjs",
     "prebuild": "node scripts/copy-flags.mjs",
-    "gen:countries": "node scripts/gen-countries.mjs"
+    "gen:countries": "node scripts/gen-countries.mjs",
+    "size": "npm run build && node scripts/check-size.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
