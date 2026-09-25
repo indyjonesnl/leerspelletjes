@@ -62,6 +62,15 @@ test('unknown routes go home', async ({ page }) => {
   await expect(page.locator('.tiles')).toBeVisible();
 });
 
+for (const lang of ['nl', 'en'] as const) {
+  test(`header does not overflow the viewport in ${lang.toUpperCase()}`, async ({ page }) => {
+    await page.goto('./#/tables/7');
+    if (lang === 'en') await page.getByRole('button', { name: 'EN', exact: true }).click();
+    const fits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+    expect(fits).toBe(true);
+  });
+}
+
 test('language choice is remembered', async ({ page }) => {
   await page.goto('./');
   await page.getByRole('button', { name: 'EN', exact: true }).click();

@@ -127,7 +127,7 @@ button { font: inherit; color: inherit; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
 @media (max-width: 480px) {
-  .brand { font-size: 18px; }
+  .brand { font-size: 18px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .prompt { font-size: 26px; }
 }
 
