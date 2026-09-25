@@ -44,8 +44,13 @@ test('switching language mid-round keeps progress', async ({ page }) => {
 });
 
 test('leaving mid-round cancels the auto-advance', async ({ page }) => {
-  await page.goto('./#/clock/1');
-  await page.locator('.choice').first().click();
+  await page.goto('./#/tables/7');
+  const promptText = await page.locator('.prompt').innerText();
+  const a = Number(promptText.match(/\d+/)?.[0]);
+  const product = a * 7;
+  await page.locator('.choice .label', { hasText: new RegExp(`^${product}$`) }).click();
+  await expect(page.locator('.choice.correct')).toBeVisible();
+  await expect(page.locator('button.continue')).toHaveCount(0);
   await page.getByRole('link', { name: 'Naar start' }).first().click();
   await page.waitForTimeout(1500);
   await expect(page.locator('.tiles')).toBeVisible();
