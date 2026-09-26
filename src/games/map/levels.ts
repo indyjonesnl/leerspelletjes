@@ -20,7 +20,7 @@ export const MAP_LEVELS: Level[] = [
   { id: '6', label: { nl: 'Afrika', en: 'Africa' }, example: { nl: 'Egypte, Kenia, Nigeria…', en: 'Egypt, Kenya, Nigeria…' }, autoSpeak: false },
   { id: '7', label: { nl: 'Afrika – kleine landen', en: 'Africa – small countries' }, example: { nl: 'Rwanda, Gambia, Seychellen…', en: 'Rwanda, Gambia, Seychelles…' }, autoSpeak: false, roundLength: 5 },
   { id: '8', label: { nl: 'Azië en Oceanië', en: 'Asia and Oceania' }, example: { nl: 'China, India, Australië…', en: 'China, India, Australia…' }, autoSpeak: false },
-  { id: '9', label: { nl: 'Azië en Oceanië – eilanden en kleine landen', en: 'Asia and Oceania – islands and small country' }, example: { nl: 'Singapore, Fiji, Qatar…', en: 'Singapore, Fiji, Qatar…' }, autoSpeak: false, roundLength: 5 },
+  { id: '9', label: { nl: 'Azië en Oceanië – eilanden en kleine landen', en: 'Asia and Oceania – islands and small countries' }, example: { nl: 'Singapore, Fiji, Qatar…', en: 'Singapore, Fiji, Qatar…' }, autoSpeak: false, roundLength: 5 },
 ];
 
 export const MAP_CONFIG: Record<string, MapLevelConfig> = {
