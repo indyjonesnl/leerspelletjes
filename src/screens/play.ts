@@ -35,6 +35,55 @@ function centreOf(node: Element): { x: number; y: number } {
 
 export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng = createRng()): Screen {
   const root = el('main', { class: 'play' });
+  if (!game.load) return roundScreen(ctx, game, level, rng, root);
+
+  let inner: Screen | undefined;
+  let failed = false;
+  let destroyed = false;
+
+  function renderStatus(): void {
+    const L = ctx.settings.lang;
+    if (!failed) {
+      root.replaceChildren(el('p', { class: 'loading', role: 'status' }, t(L, 'loading')));
+      return;
+    }
+    const retry = el('button', { type: 'button', class: 'big-button' }, t(L, 'retry'));
+    retry.addEventListener('click', attempt);
+    root.replaceChildren(el('section', { class: 'end' }, el('p', { role: 'alert' }, t(L, 'loadFailed')), retry));
+  }
+
+  function attempt(): void {
+    failed = false;
+    renderStatus();
+    game.load!(level).then(
+      () => {
+        if (destroyed) return;
+        root.replaceChildren();
+        inner = roundScreen(ctx, game, level, rng, root);
+      },
+      () => {
+        if (destroyed) return;
+        failed = true;
+        renderStatus();
+      },
+    );
+  }
+
+  attempt();
+  return {
+    el: root,
+    update() {
+      if (inner) inner.update?.();
+      else renderStatus();
+    },
+    destroy() {
+      destroyed = true;
+      inner?.destroy?.();
+    },
+  };
+}
+
+function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: HTMLElement): Screen {
   const live = el('p', { class: 'sr-only', 'aria-live': 'polite' });
   const body = el('div');
   root.append(live, body);

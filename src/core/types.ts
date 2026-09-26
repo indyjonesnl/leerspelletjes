@@ -57,5 +57,7 @@ export interface Game {
   icon: string;
   pickerLayout: 'list' | 'grid';
   levels: Level[];
+  /** Loads what the level needs before its first question (e.g. a map). */
+  load?(level: Level): Promise<void>;
   makeQuestion(level: Level, rng: Rng, previous: readonly Question[]): Question;
 }

@@ -121,6 +121,7 @@ button { font: inherit; color: inherit; }
 .big-button.secondary { border: 3px solid var(--line); background: var(--card); color: var(--ink); }
 .end { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 24px; text-align: center; }
 .end h1 { margin: 0; font-size: 48px; }
+.loading { margin-top: 48px; color: var(--muted); font-size: 24px; text-align: center; }
 .confetti { position: absolute; top: -12px; width: 10px; height: 16px; border-radius: 2px; pointer-events: none; animation: fall 2.2s ease-in forwards; }
 
 @keyframes fall { to { transform: translate(var(--drift), 110vh) rotate(720deg); } }

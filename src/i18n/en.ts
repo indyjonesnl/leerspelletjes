@@ -20,6 +20,9 @@ export const en: Record<StringKey, string> = {
   endPractice: 'Keep practising, you are getting better!',
   playAgain: 'Play again',
   nextLevel: 'Next level',
+  loading: 'Loading…',
+  loadFailed: "Couldn't load the game.",
+  retry: 'Try again',
   or: 'or',
   privacy: 'Privacy',
   privacyBody:

@@ -18,6 +18,9 @@ export const nl = {
   endPractice: 'Blijf oefenen, je wordt steeds beter!',
   playAgain: 'Nog een keer',
   nextLevel: 'Volgend niveau',
+  loading: 'Laden…',
+  loadFailed: 'Het spel kon niet laden.',
+  retry: 'Probeer opnieuw',
   or: 'of',
   privacy: 'Privacy',
   privacyBody:

@@ -375,3 +375,51 @@ describe('playScreen with answers on the visual', () => {
     expect(speech.speak).toHaveBeenCalledWith('Waar ligt 1?', 'nl');
   });
 });
+
+const flush = async () => { await Promise.resolve(); await Promise.resolve(); };
+
+describe('playScreen with game.load', () => {
+  it('waits for load before the first question', async () => {
+    let resolve!: () => void;
+    const game = { ...makeGame(), load: vi.fn(() => new Promise<void>((r) => { resolve = r; })) };
+    start(makeCtx().ctx, game);
+    expect(game.load).toHaveBeenCalledWith(levels[1]);
+    expect(text('.loading')).toBe('Laden…');
+    expect(document.querySelector('.prompt')).toBeNull();
+    resolve();
+    await flush();
+    expect(text('.prompt')).toBe('Vraag nummer 1');
+  });
+
+  it('shows a retry button when loading fails', async () => {
+    const load = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
+    start(makeCtx().ctx, { ...makeGame(), load });
+    await flush();
+    expect(text('[role="alert"]')).toBe('Het spel kon niet laden.');
+    [...document.querySelectorAll('button')].find((b) => b.textContent === 'Probeer opnieuw')!.click();
+    expect(text('.loading')).toBe('Laden…');
+    await flush();
+    expect(text('.prompt')).toBe('Vraag nummer 1');
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+
+  it('translates the loading text when the language changes', () => {
+    const { ctx } = makeCtx();
+    const s = start(ctx, { ...makeGame(), load: () => new Promise<void>(() => {}) });
+    ctx.settings = { ...ctx.settings, lang: 'en' };
+    s.update!();
+    expect(text('.loading')).toBe('Loading…');
+  });
+
+  it('shows nothing when destroyed before loading finishes', async () => {
+    let resolve!: () => void;
+    const { ctx, speech } = makeCtx();
+    const s = start(ctx, { ...makeGame(), load: () => new Promise<void>((r) => { resolve = r; }) }, levels[0]);
+    s.destroy!();
+    resolve();
+    await flush();
+    expect(document.querySelector('.prompt')).toBeNull();
+    expect(speech.speak).not.toHaveBeenCalled();
+    screen = undefined;
+  });
+});
