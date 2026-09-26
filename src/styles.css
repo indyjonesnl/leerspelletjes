@@ -99,7 +99,6 @@ button { font: inherit; color: inherit; }
 .country { fill: #f7dcae; stroke: #fff; stroke-width: 1; vector-effect: non-scaling-stroke; }
 .country.other { fill: #efe8da; }
 .country.target { cursor: pointer; }
-.country.target:hover { fill: #f2b35e; }
 .country.target:focus { outline: none; }
 .country.target:focus-visible { stroke: var(--accent); stroke-width: 4; }
 .country.correct { fill: var(--correct); }
@@ -118,7 +117,7 @@ button { font: inherit; color: inherit; }
 .box-bg.correct { fill: var(--correct-bg); }
 .box-bg.wrong { fill: var(--wrong-bg); }
 .box-frame { fill: none; stroke: var(--line); stroke-width: 3; vector-effect: non-scaling-stroke; pointer-events: all; }
-.box:hover .box-frame, .box.drop-over .box-frame, .box:focus-visible .box-frame { stroke: var(--accent); stroke-width: 4; }
+.box.drop-over .box-frame, .box:focus-visible .box-frame { stroke: var(--accent); stroke-width: 4; }
 .box.correct .box-frame { stroke: var(--correct); stroke-width: 4; }
 .box.wrong .box-frame { stroke: var(--wrong); stroke-width: 4; }
 .box[aria-disabled='true'] { cursor: default; }
@@ -180,4 +179,11 @@ button { font: inherit; color: inherit; }
   .tile { transition: none; }
   .confetti { display: none; }
   .name-card { transition: none; }
+}
+
+/* Only a real pointer gets hover feedback, and only while a target is still unanswered — otherwise a touch
+   device's sticky hover, or the pointer resting on an answered spot, would hide the correct/wrong colour. */
+@media (hover: hover) {
+  .country.target:not([aria-disabled='true']):hover { fill: #f2b35e; }
+  .box:not([aria-disabled='true']):hover .box-frame { stroke: var(--accent); stroke-width: 4; }
 }
