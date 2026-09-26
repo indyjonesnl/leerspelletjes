@@ -28,7 +28,7 @@ npm run size       # build and check the 200 KB first-load budget
 
 ## Map data
 
-`src/games/map/data/*.ts` is generated from [world-atlas](https://github.com/topojson/world-atlas) (Natural Earth, public domain) by `scripts/gen-maps.mjs`: one file per region, loaded when a map level opens. Map projections, which countries count as "small" and simplification are set at the top of the script; run `npm run gen:maps` after changing them.
+`src/games/map/data/*.ts` is generated from [world-atlas](https://github.com/topojson/world-atlas) (ISC licence) by `scripts/gen-maps.mjs`: one file per region, loaded when a map level opens. world-atlas packages [Natural Earth](https://www.naturalearthdata.com/) data, which is public domain. Map projections, which countries count as "small" and simplification are set at the top of the script; run `npm run gen:maps` after changing them.
 
 ## Deploy to GitHub Pages
 
