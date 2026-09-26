@@ -3,6 +3,7 @@ import { el, svgEl } from '../../core/ui';
 import type { MapCountry, RegionMap } from './types';
 import { viewSize } from './regions';
 import { feedbackClass, markEl } from './MapView';
+import { enableDrag } from './drag';
 
 export interface Crop { x: number; y: number; width: number; height: number }
 export interface BoxLayout { code: string; x: number; y: number; size: number; key: number }
@@ -80,6 +81,7 @@ export function calloutsView(
   for (const box of boxes) svg.append(boxEl(box, byCode.get(box.code)!, layerId, state, unit));
 
   const card = el('div', { class: state.picked ? 'name-card done' : 'name-card' }, name[state.lang]);
+  if (!state.picked) enableDrag(card, svg);
   return el('div', { class: 'map-visual' }, svg, card);
 }
 

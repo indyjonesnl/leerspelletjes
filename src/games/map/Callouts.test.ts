@@ -79,4 +79,18 @@ describe('calloutsView', () => {
     for (const b of view.querySelectorAll('.box')) expect(b.getAttribute('aria-disabled')).toBe('true');
     expect(view.querySelector('.name-card')!.classList.contains('done')).toBe(true);
   });
+
+  it('lets the card be dragged only before answering', () => {
+    const open = calloutsView(map, { countries: four, name, state: { lang: 'nl', picked: null } });
+    document.body.replaceChildren(open);
+    const card = open.querySelector<HTMLElement>('.name-card')!;
+    card.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+    expect(card.classList.contains('dragging')).toBe(true);
+    window.dispatchEvent(new MouseEvent('pointercancel'));
+
+    const done = calloutsView(map, { countries: four, name, state: { lang: 'nl', picked: { id: 'A', answerId: 'A' } } });
+    const doneCard = done.querySelector<HTMLElement>('.name-card')!;
+    doneCard.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+    expect(doneCard.classList.contains('dragging')).toBe(false);
+  });
 });
