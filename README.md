@@ -3,7 +3,7 @@
 Free educational games for primary school children (groep 1–8), in Dutch and English.
 No accounts, no cookies, no tracking.
 
-Games: clock reading, times tables, flags.
+Games: clock reading, times tables, flags, finding countries on the map.
 
 ## Development
 
@@ -25,6 +25,10 @@ npm run size       # build and check the 200 KB first-load budget
 ## Country data
 
 `src/games/flags/data/countries.ts` is generated. To change names, edit `scripts/gen-countries.mjs` and run `npm run gen:countries`.
+
+## Map data
+
+`src/games/map/data/*.ts` is generated from [world-atlas](https://github.com/topojson/world-atlas) (Natural Earth, public domain) by `scripts/gen-maps.mjs`: one file per region, loaded when a map level opens. Map projections, which countries count as "small" and simplification are set at the top of the script; run `npm run gen:maps` after changing them.
 
 ## Deploy to GitHub Pages
 

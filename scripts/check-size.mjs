@@ -1,5 +1,5 @@
 // Fails when the first-load assets (HTML, JS, CSS, Latin font files) exceed 200 KB gzipped.
-// Flag SVGs are excluded: they load per question.
+// Flag SVGs and map region chunks are excluded: they load per question or per map level.
 import { readdirSync, readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 
@@ -7,8 +7,11 @@ const LIMIT = 200 * 1024;
 const dist = new URL('../dist/', import.meta.url);
 const assets = new URL('assets/', dist);
 
+/** Map region chunks from src/games/map/data/, loaded when a map level opens. */
+const REGION_CHUNK = /^(europe|americas|africa|asia-oceania)-[\w-]+\.js$/;
+
 const isFirstLoad = (file) =>
-  /\.(js|css)$/.test(file) || (/\.woff2$/.test(file) && /-latin-\d+-/.test(file));
+  !REGION_CHUNK.test(file) && (/\.(js|css)$/.test(file) || (/\.woff2$/.test(file) && /-latin-\d+-/.test(file)));
 
 const files = [
   new URL('index.html', dist),
