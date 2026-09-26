@@ -103,9 +103,9 @@ button { font: inherit; color: inherit; }
 .country.target:focus-visible { stroke: var(--accent); stroke-width: 4; }
 .country.correct { fill: var(--correct); }
 .country.wrong { fill: var(--wrong); }
-.map-mark { font-weight: 700; paint-order: stroke; stroke: #fff; stroke-width: 4px; }
-.map-mark.correct { fill: var(--correct); }
-.map-mark.wrong { fill: var(--wrong); }
+.map-mark { font-weight: 700; paint-order: stroke; }
+.map-mark.correct { fill: #fff; stroke: var(--correct); stroke-width: 6px; }
+.map-mark.wrong { fill: #fff; stroke: var(--wrong); stroke-width: 6px; }
 .box-row-bg { fill: var(--bg); }
 .callout-line { stroke: var(--ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .callout-dot { fill: var(--accent); stroke: #fff; stroke-width: 2; vector-effect: non-scaling-stroke; }
