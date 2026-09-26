@@ -63,4 +63,41 @@ describe('enableDrag', () => {
     expect(card.style.transform).toBe('');
     expect(clicked).not.toHaveBeenCalled();
   });
+
+  it('ignores a second pointer moving or dropping the card, but the first pointer still answers', () => {
+    const { box, card, clicked, setUnder } = setup();
+    setUnder(box);
+
+    const down = new MouseEvent('pointerdown', { bubbles: true, clientX: 10, clientY: 10 });
+    Object.defineProperty(down, 'pointerId', { value: 1 });
+    card.dispatchEvent(down);
+    expect(card.classList.contains('dragging')).toBe(true);
+
+    // A second finger touches down: ignored while the first pointer's drag is active.
+    const otherDown = new MouseEvent('pointerdown', { bubbles: true, clientX: 5, clientY: 5 });
+    Object.defineProperty(otherDown, 'pointerId', { value: 2 });
+    card.dispatchEvent(otherDown);
+
+    const otherMove = new MouseEvent('pointermove', { bubbles: true, clientX: 90, clientY: 90 });
+    Object.defineProperty(otherMove, 'pointerId', { value: 2 });
+    window.dispatchEvent(otherMove);
+    expect(card.style.transform).toBe('');
+
+    const otherUp = new MouseEvent('pointerup', { bubbles: true, clientX: 90, clientY: 90 });
+    Object.defineProperty(otherUp, 'pointerId', { value: 2 });
+    window.dispatchEvent(otherUp);
+    expect(clicked).not.toHaveBeenCalled();
+    expect(card.classList.contains('dragging')).toBe(true);
+
+    // The original pointer's move and drop still work.
+    const move = new MouseEvent('pointermove', { bubbles: true, clientX: 50, clientY: 80 });
+    Object.defineProperty(move, 'pointerId', { value: 1 });
+    window.dispatchEvent(move);
+    expect(card.style.transform).toBe('translate(40px, 70px)');
+
+    const up = new MouseEvent('pointerup', { bubbles: true, clientX: 50, clientY: 80 });
+    Object.defineProperty(up, 'pointerId', { value: 1 });
+    window.dispatchEvent(up);
+    expect(clicked).toHaveBeenCalledOnce();
+  });
 });

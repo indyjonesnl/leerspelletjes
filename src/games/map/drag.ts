@@ -7,6 +7,7 @@ export type HitTest = (x: number, y: number) => Element | null;
  *  `.dragging` so the hit test sees what is under it. */
 export function enableDrag(card: HTMLElement, area: Element, hitTest: HitTest = (x, y) => document.elementFromPoint(x, y)): void {
   let start: { x: number; y: number } | null = null;
+  let pointerId: number | undefined;
   let over: Element | null = null;
 
   const targetAt = (x: number, y: number): Element | null => {
@@ -21,29 +22,35 @@ export function enableDrag(card: HTMLElement, area: Element, hitTest: HitTest = 
     over = next;
   };
 
-  const onMove = (event: MouseEvent) => {
-    if (!start) return;
+  // A missing pointerId (MouseEvent-based tests, and any non-pointer event) always matches.
+  const samePointer = (event: PointerEvent) => event.pointerId === undefined || pointerId === undefined || event.pointerId === pointerId;
+
+  const onMove = (event: PointerEvent) => {
+    if (!start || !samePointer(event)) return;
     card.style.transform = `translate(${event.clientX - start.x}px, ${event.clientY - start.y}px)`;
     setOver(targetAt(event.clientX, event.clientY));
   };
 
-  const onEnd = (event: MouseEvent) => {
-    if (!start) return;
+  const onEnd = (event: PointerEvent) => {
+    if (!start || !samePointer(event)) return;
     window.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup', onEnd);
     window.removeEventListener('pointercancel', onEnd);
     const target = event.type === 'pointerup' ? targetAt(event.clientX, event.clientY) : null;
     setOver(null);
     start = null;
+    pointerId = undefined;
     card.classList.remove('dragging');
     card.style.transform = '';
     target?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
   };
 
   card.addEventListener('pointerdown', (event) => {
+    if (start) return; // a drag is already active; ignore a second pointer's pointerdown
     if (event.button !== 0) return;
     event.preventDefault();
     start = { x: event.clientX, y: event.clientY };
+    pointerId = event.pointerId;
     card.classList.add('dragging');
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onEnd);
