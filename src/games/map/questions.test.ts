@@ -2,8 +2,8 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { createRng } from '../../core/rng';
 import type { Question, VisualState } from '../../core/types';
 import { getRegion, loadRegion } from './regions';
-import { MAP_CONFIG, levelPool } from './levels';
-import { makeTapQuestion } from './questions';
+import { MAP_CONFIG, MAP_LEVELS, levelPool } from './levels';
+import { makeMapQuestion, makeSmallQuestion, makeTapQuestion, nearestSmall } from './questions';
 
 beforeAll(async () => {
   await Promise.all((['europe', 'americas', 'africa', 'asia-oceania'] as const).map(loadRegion));
@@ -61,6 +61,54 @@ describe('makeTapQuestion', () => {
     for (const t of svg.querySelectorAll('[data-choice-id]')) {
       expect(t.getAttribute('aria-disabled')).toBe('true');
       expect(t.getAttribute('tabindex')).toBeNull();
+    }
+  });
+});
+
+describe('nearestSmall', () => {
+  it('returns the closest other small countries, nearest first', () => {
+    const pool = levelPool(MAP_CONFIG['3'], getRegion('europe'));
+    const monaco = pool.find((c) => c.code === 'MC')!;
+    const near = nearestSmall(monaco, pool);
+    const dist = (c: { cx: number; cy: number }) => Math.hypot(c.cx - monaco.cx, c.cy - monaco.cy);
+    expect(near).toHaveLength(3);
+    expect(near.map((c) => c.code)).not.toContain('MC');
+    for (let i = 1; i < near.length; i++) expect(dist(near[i])).toBeGreaterThanOrEqual(dist(near[i - 1]));
+    const others = pool.filter((c) => c.code !== 'MC' && !near.includes(c));
+    for (const o of others) expect(dist(o)).toBeGreaterThanOrEqual(dist(near[2]));
+  });
+});
+
+describe('makeSmallQuestion', () => {
+  it('shows the answer and three other small countries as boxes', () => {
+    for (const id of ['3', '5', '7', '9']) {
+      const config = MAP_CONFIG[id];
+      const q = makeSmallQuestion(config, createRng(2), []);
+      expect(q.answerOn).toBe('visual');
+      expect(q.choices).toHaveLength(4);
+      expect(q.choices.map((c) => c.id)).toContain(q.answerId);
+      for (const c of q.choices) expect(getRegion(config.region).countries.find((m) => m.code === c.id)!.small).toBe(true);
+      const view = render(q, { lang: 'nl', picked: null });
+      expect(view.querySelectorAll('.box[data-choice-id]')).toHaveLength(4);
+    }
+  });
+
+  it('never repeats a country within a 5-question round', () => {
+    for (const id of ['3', '5', '7', '9']) {
+      for (let seed = 0; seed < 10; seed++) {
+        const previous: Question[] = [];
+        for (let i = 0; i < 5; i++) previous.push(makeSmallQuestion(MAP_CONFIG[id], createRng(seed), previous));
+        expect(new Set(previous.map((q) => q.key)).size, `level ${id} seed ${seed}`).toBe(5);
+      }
+    }
+  });
+});
+
+describe('makeMapQuestion', () => {
+  it('uses the question type of the level', () => {
+    for (const level of MAP_LEVELS) {
+      const q = makeMapQuestion(level, createRng(1), []);
+      expect(q.choices.length > 4, level.id).toBe(MAP_CONFIG[level.id].kind === 'tap');
     }
   });
 });
