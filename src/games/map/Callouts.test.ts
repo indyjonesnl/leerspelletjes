@@ -64,10 +64,19 @@ describe('calloutsView', () => {
     expect(boxes[0].getAttribute('tabindex')).toBe('0');
     expect(view.querySelectorAll('.callout-dot')).toHaveLength(4);
     expect(view.querySelectorAll('.callout-line')).toHaveLength(4);
-    expect(view.querySelector('.box[data-choice-id="A"] svg.inset')!.getAttribute('viewBox')).toBe('97 197 6 6');
+    const boxA = view.querySelector('.box[data-choice-id="A"]')!;
+    const insetA = boxA.previousElementSibling as SVGSVGElement;
+    expect(insetA.matches('svg.inset')).toBe(true);
+    expect(insetA.getAttribute('viewBox')).toBe('97 197 6 6');
     expect(view.querySelector('.name-card')!.textContent).toBe('Aapland');
     const layer = view.querySelector('g[id^="map-layer-"]')!;
-    expect(view.querySelector('.box use')!.getAttribute('href')).toBe(`#${layer.id}`);
+    expect(insetA.querySelector('use')!.getAttribute('href')).toBe(`#${layer.id}`);
+  });
+
+  it('keeps the inset out of the interactive box and marks it non-interactive', () => {
+    const view = calloutsView(map, { countries: four, name, state: { lang: 'nl', picked: null } });
+    for (const box of view.querySelectorAll('.box')) expect(box.querySelector('svg, use')).toBeNull();
+    for (const inset of view.querySelectorAll('svg.inset')) expect(inset.getAttribute('pointer-events')).toBe('none');
   });
 
   it('labels boxes in English and marks the answer and a wrong pick', () => {

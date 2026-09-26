@@ -78,15 +78,35 @@ export function calloutsView(
     const c = byCode.get(box.code)!;
     svg.append(svgEl('circle', { class: ['callout-dot', feedbackClass(c.code, state)].filter(Boolean).join(' '), cx: c.cx, cy: c.cy, r: 7 * unit }));
   }
-  for (const box of boxes) svg.append(boxEl(box, byCode.get(box.code)!, layerId, state, unit));
+  for (const box of boxes) svg.append(...boxEl(box, byCode.get(box.code)!, layerId, state, unit));
 
   const card = el('div', { class: state.picked ? 'name-card done' : 'name-card' }, name[state.lang]);
   if (!state.picked) enableDrag(card, svg);
   return el('div', { class: 'map-visual' }, svg, card);
 }
 
-function boxEl(box: BoxLayout, c: MapCountry, layerId: string, state: VisualState, unit: number): SVGGElement {
+/** A box's background, its (non-interactive) zoomed-in inset, and the interactive frame on top — in that paint
+ *  order, as siblings, so the inset's `<use>` of the whole map layer never inflates the frame's bounding box. */
+function boxEl(box: BoxLayout, c: MapCountry, layerId: string, state: VisualState, unit: number): [SVGRectElement, SVGSVGElement, SVGGElement] {
   const result = feedbackClass(c.code, state);
+  const rx = 16 * unit;
+
+  const bg = svgEl('rect', { class: ['box-bg', result].filter(Boolean).join(' '), x: box.x, y: box.y, width: box.size, height: box.size, rx });
+
+  const pad = 6 * unit;
+  const vb = insetViewBox(c);
+  const [vx, vy, vs] = vb.split(' ').map(Number);
+  const inset = svgEl('svg', {
+    class: 'inset', x: box.x + pad, y: box.y + pad, width: box.size - 2 * pad, height: box.size - 2 * pad, viewBox: vb,
+    'pointer-events': 'none',
+  });
+  inset.append(
+    svgEl('rect', { class: 'inset-sea', x: vx, y: vy, width: vs, height: vs }),
+    svgEl('use', { href: `#${layerId}` }),
+    svgEl('path', { class: 'inset-country', d: c.d }),
+    svgEl('circle', { class: 'inset-ring', cx: c.cx, cy: c.cy, r: vs * 0.3 }),
+  );
+
   const g = svgEl('g', {
     class: ['box', result].filter(Boolean).join(' '),
     'data-choice-id': c.code,
@@ -98,19 +118,10 @@ function boxEl(box: BoxLayout, c: MapCountry, layerId: string, state: VisualStat
     tabindex: state.picked ? undefined : 0,
     'aria-disabled': state.picked ? 'true' : undefined,
   });
-  const pad = 6 * unit;
-  const vb = insetViewBox(c);
-  const [vx, vy, vs] = vb.split(' ').map(Number);
-  const inset = svgEl('svg', { class: 'inset', x: box.x + pad, y: box.y + pad, width: box.size - 2 * pad, height: box.size - 2 * pad, viewBox: vb });
-  inset.append(
-    svgEl('rect', { class: 'inset-sea', x: vx, y: vy, width: vs, height: vs }),
-    svgEl('use', { href: `#${layerId}` }),
-    svgEl('path', { class: 'inset-country', d: c.d }),
-    svgEl('circle', { class: 'inset-ring', cx: c.cx, cy: c.cy, r: vs * 0.3 }),
-  );
   const key = svgEl('text', { class: 'box-key', x: box.x + 18 * unit, y: box.y + 40 * unit, 'font-size': 30 * unit, 'aria-hidden': 'true' });
   key.textContent = String(box.key);
-  g.append(svgEl('rect', { class: 'box-frame', x: box.x, y: box.y, width: box.size, height: box.size, rx: 16 * unit }), inset, key);
+  g.append(svgEl('rect', { class: 'box-frame', x: box.x, y: box.y, width: box.size, height: box.size, rx }), key);
   if (result) g.append(markEl(box.x + box.size - 36 * unit, box.y + 40 * unit, result, 56 * unit));
-  return g;
+
+  return [bg, inset, g];
 }

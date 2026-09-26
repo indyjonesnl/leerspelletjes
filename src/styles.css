@@ -113,10 +113,13 @@ button { font: inherit; color: inherit; }
 .callout-dot.wrong { fill: var(--wrong); }
 .box { cursor: pointer; }
 .box:focus { outline: none; }
-.box-frame { fill: #fff; stroke: var(--line); stroke-width: 3; vector-effect: non-scaling-stroke; }
+.box-bg { fill: #fff; }
+.box-bg.correct { fill: var(--correct-bg); }
+.box-bg.wrong { fill: var(--wrong-bg); }
+.box-frame { fill: none; stroke: var(--line); stroke-width: 3; vector-effect: non-scaling-stroke; pointer-events: all; }
 .box:hover .box-frame, .box.drop-over .box-frame, .box:focus-visible .box-frame { stroke: var(--accent); stroke-width: 4; }
-.box.correct .box-frame { fill: var(--correct-bg); stroke: var(--correct); stroke-width: 4; }
-.box.wrong .box-frame { fill: var(--wrong-bg); stroke: var(--wrong); stroke-width: 4; }
+.box.correct .box-frame { stroke: var(--correct); stroke-width: 4; }
+.box.wrong .box-frame { stroke: var(--wrong); stroke-width: 4; }
 .box[aria-disabled='true'] { cursor: default; }
 .inset-sea { fill: #cfe8f5; }
 .inset-country { fill: var(--accent); }
