@@ -22,9 +22,14 @@ export function markEl(x: number, y: number, kind: 'correct' | 'wrong', fontSize
   return text;
 }
 
+/** Matches the `.map` rule's `max-height` in styles.css: keeps the SVG's own aspect ratio instead of the
+ *  browser stretching it to fill `width: 100%`, which would letterbox it and crop the map at the sides. */
+const MAX_HEIGHT_VH = 64;
+
 /** The region map. Countries in `targets` carry `data-choice-id` and show ✓/✗ once answered. */
 export function mapView(map: RegionMap, { targets, state }: { targets: ReadonlySet<string>; state: VisualState }): SVGSVGElement {
-  const svg = svgEl('svg', { class: 'map', viewBox: map.viewBox });
+  const [, , w, h] = map.viewBox.split(' ').map(Number);
+  const svg = svgEl('svg', { class: 'map', viewBox: map.viewBox, style: `max-width: calc(${MAX_HEIGHT_VH}vh * ${w} / ${h})` });
   svg.append(svgEl('path', { class: 'map-bg', d: map.background }));
   const marks: SVGTextElement[] = [];
   for (const c of map.countries) {

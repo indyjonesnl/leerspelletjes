@@ -66,6 +66,30 @@ test('a small-countries round has 5 questions answered by tapping boxes', async 
   await expect(page.locator('.end h1')).toHaveText('5 van 5!');
 });
 
+test('the map keeps its own aspect ratio instead of letterboxing', async ({ page }) => {
+  for (const route of ['#/map/2', '#/map/3']) {
+    await page.goto(`./${route}`);
+    const svg = page.locator('svg.map').first();
+    await expect(svg).toBeVisible();
+    const [, , w, h] = (await svg.getAttribute('viewBox'))!.split(' ').map(Number);
+    const box = (await svg.boundingBox())!;
+    const expectedRatio = w / h;
+    const actualRatio = box.width / box.height;
+    expect(Math.abs(actualRatio - expectedRatio) / expectedRatio).toBeLessThan(0.02);
+  }
+});
+
+test('the prompt stays above the fold on small-countries levels', async ({ page }) => {
+  for (const route of ['#/map/3', '#/map/5']) {
+    await page.goto(`./${route}`);
+    const prompt = page.locator('.prompt');
+    await expect(prompt).toBeVisible();
+    const box = (await prompt.boundingBox())!;
+    const viewport = page.viewportSize()!;
+    expect(box.y + box.height).toBeLessThanOrEqual(viewport.height);
+  }
+});
+
 test('map data loads only when a map level opens', async ({ page }) => {
   const requests: string[] = [];
   page.on('request', (r) => requests.push(r.url()));

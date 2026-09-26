@@ -11,6 +11,9 @@ export interface BoxLayout { code: string; x: number; y: number; size: number; k
 const INSET_MIN = 6;
 const INSET_MAX = 80;
 const BOX_LABEL: Localized = { nl: 'Vak {n}', en: 'Box {n}' };
+/** Matches the `.map.callouts` rule's `max-height` in styles.css (see MapView's MAX_HEIGHT_VH comment). Lower
+ *  than the plain map's cap: the box row underneath the crop needs the extra room to stay above the fold. */
+const MAX_HEIGHT_VH = 56;
 let layerCount = 0;
 
 const round1 = (v: number) => Math.round(v * 10) / 10;
@@ -59,7 +62,12 @@ export function calloutsView(
   const unit = crop.width / 1000;
   const boxSize = boxes[0].size;
   const bottom = boxes[0].y + boxSize + 24 * unit;
-  const svg = svgEl('svg', { class: 'map callouts', viewBox: `${crop.x} ${crop.y} ${crop.width} ${round1(bottom - crop.y)}` });
+  const vbHeight = round1(bottom - crop.y);
+  const svg = svgEl('svg', {
+    class: 'map callouts',
+    viewBox: `${crop.x} ${crop.y} ${crop.width} ${vbHeight}`,
+    style: `max-width: calc(${MAX_HEIGHT_VH}vh * ${crop.width} / ${vbHeight})`,
+  });
 
   const layerId = `map-layer-${++layerCount}`;
   const layer = svgEl('g', { id: layerId });
