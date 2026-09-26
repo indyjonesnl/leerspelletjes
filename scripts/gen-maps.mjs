@@ -55,7 +55,7 @@ const REGIONS = {
   americas: {
     continents: ['americas'],
     projection: () => d3.geoAzimuthalEqualArea().rotate([85, -10]),
-    box: [[-170, -56], [-30, 72]],
+    box: [[-140, -56], [-30, 62]],
   },
   africa: {
     continents: ['africa'],

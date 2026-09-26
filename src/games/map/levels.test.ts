@@ -21,7 +21,7 @@ describe('map levels', () => {
 
   it('splits each region into tappable and small countries', () => {
     const sizes = MAP_LEVELS.map((l) => levelPool(MAP_CONFIG[l.id], getRegion(MAP_CONFIG[l.id].region)).length);
-    expect(sizes).toEqual([15, 36, 8, 22, 13, 42, 12, 34, 26]);
+    expect(sizes).toEqual([15, 36, 8, 23, 12, 42, 12, 34, 26]);
     for (const l of MAP_LEVELS) {
       const config = MAP_CONFIG[l.id];
       for (const c of levelPool(config, getRegion(config.region))) expect(c.small, `${l.id} ${c.code}`).toBe(config.kind === 'small');
