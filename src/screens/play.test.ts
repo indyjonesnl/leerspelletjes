@@ -249,4 +249,15 @@ describe('playScreen', () => {
     expect(text('.prompt')).toBe('Vraag nummer 2');
     expect(text('.progress')).toBe('Vraag 1 van 10');
   });
+
+  it('ends a short level after its round length and grades by percentage', () => {
+    const short: Level = { ...levels[1], roundLength: 5 };
+    start(makeCtx().ctx, makeGame(), short);
+    expect(text('.progress')).toBe('Vraag 1 van 5');
+    for (let i = 0; i < 4; i++) answerCorrectly();
+    choice('b').click();
+    document.querySelector<HTMLButtonElement>('button.continue')!.click();
+    expect(text('.end h1')).toBe('4 van 5!');
+    expect(text('.end p')).toBe('Super gedaan!');
+  });
 });

@@ -23,7 +23,7 @@ export class Round {
     private readonly game: Game,
     private readonly level: Level,
     private readonly rng: Rng,
-    length = ROUND_LENGTH,
+    length = level.roundLength ?? ROUND_LENGTH,
   ) {
     this.length = length;
     this.current = this.generate();

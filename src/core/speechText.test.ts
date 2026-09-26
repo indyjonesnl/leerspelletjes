@@ -42,4 +42,18 @@ describe('questionSpeech', () => {
     };
     expect(questionSpeech(q, 'nl', true)).toBe('6 keer 7: 42, 35, 49 of 43');
   });
+
+  it('never lists the choices of a question answered on the visual', () => {
+    const q: Question = {
+      key: 'DE',
+      prompt: { nl: 'Waar ligt Duitsland?', en: 'Where is Germany?' },
+      answerOn: 'visual',
+      choices: [
+        { id: 'DE', label: { nl: 'Duitsland', en: 'Germany' } },
+        { id: 'FR', label: { nl: 'Frankrijk', en: 'France' } },
+      ],
+      answerId: 'DE',
+    };
+    expect(questionSpeech(q, 'nl', true)).toBe('Waar ligt Duitsland?');
+  });
 });

@@ -17,6 +17,8 @@ export interface Level {
   example: Localized;
   /** Read each question (and its choices) aloud automatically. */
   autoSpeak: boolean;
+  /** Questions per round; defaults to ROUND_LENGTH (10). */
+  roundLength?: number;
 }
 
 export interface Choice {
@@ -35,7 +37,9 @@ export interface Question {
   visualLabel?: { hidden: Localized; revealed: Localized };
   /** Optional help the child can show, e.g. a dot grid. */
   hint?: () => HTMLElement | SVGElement;
-  /** 3 or 4 options, shuffled, containing the answer exactly once. */
+  /** 'choices' (default): answer buttons. 'visual': the visual's `[data-choice-id]` elements are the answers. */
+  answerOn?: 'choices' | 'visual';
+  /** The possible answers with their names. With answer buttons: 3 or 4 options, shuffled, containing the answer once. */
   choices: Choice[];
   answerId: string;
 }

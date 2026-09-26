@@ -101,6 +101,19 @@ describe('Round', () => {
     expect(round.replaceCurrent()).toBe(false);
     expect(round.current.key).toBe(key);
   });
+
+  it('uses the level round length when set', () => {
+    const short: Level = { ...level, roundLength: 5 };
+    const round = new Round(fakeGame(manyKeys), short, createRng(1));
+    expect(round.length).toBe(5);
+    let count = 1;
+    round.answer('right');
+    while (round.next()) {
+      count++;
+      round.answer('right');
+    }
+    expect(count).toBe(5);
+  });
 });
 
 describe('nextLevel', () => {

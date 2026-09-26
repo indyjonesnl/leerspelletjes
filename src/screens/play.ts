@@ -10,6 +10,10 @@ import { levelHref } from '../core/router';
 
 export const ADVANCE_DELAY_MS = 1000;
 
+/** Share of a round answered correctly for confetti and "endGreat" (8 of 10), and for "endGood" (5 of 10). */
+const GREAT = 0.8;
+const GOOD = 0.5;
+
 export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng = createRng()): Screen {
   const root = el('main', { class: 'play' });
   const live = el('p', { class: 'sr-only', 'aria-live': 'polite' });
@@ -69,7 +73,7 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
       finished = true;
       render();
       live.textContent = t(lang(), 'score', { score: round.score, total: round.length });
-      if (round.score >= 8) confetti(root);
+      if (round.score >= round.length * GREAT) confetti(root);
     }
   }
 
@@ -179,7 +183,7 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
   function renderEnd(): void {
     const L = lang();
     const score = round.score;
-    const message = score >= 8 ? 'endGreat' : score >= 5 ? 'endGood' : 'endPractice';
+    const message = score >= round.length * GREAT ? 'endGreat' : score >= round.length * GOOD ? 'endGood' : 'endPractice';
     const activeBefore = document.activeElement;
     const focusWasInPlay = (!!activeBefore && body.contains(activeBefore)) || focusNextQuestion;
     focusNextQuestion = false;
