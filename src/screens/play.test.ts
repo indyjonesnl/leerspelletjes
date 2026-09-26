@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { playScreen, ADVANCE_DELAY_MS } from './play';
 import { createRng } from '../core/rng';
+import { svgEl } from '../core/ui';
 import type { AppContext, Screen } from './types';
-import type { Game, Level } from '../core/types';
+import type { Game, Level, VisualState } from '../core/types';
 import type { Settings } from '../core/settings';
 
 const levels: Level[] = [
@@ -36,6 +37,44 @@ function makeGame(withImage = false): Game {
     },
   };
 }
+
+/** Three targets on a small SVG: a (10,10) key 1, b (50,10) key 2, c (10,50) no key. Answer: a. */
+function makeVisualGame(): Game {
+  let n = 0;
+  const targets: [string, number, number, string | undefined][] = [['a', 10, 10, '1'], ['b', 50, 10, '2'], ['c', 10, 50, undefined]];
+  return {
+    ...makeGame(),
+    makeQuestion: () => {
+      n++;
+      const id = n;
+      return {
+        key: `v${id}`,
+        prompt: { nl: `Waar ligt ${id}?`, en: `Where is ${id}?` },
+        answerOn: 'visual',
+        visual: ({ picked }: VisualState) => {
+          const svg = svgEl('svg', { class: 'map' });
+          for (const [cid, x, y, key] of targets) {
+            const cls = picked?.answerId === cid ? 'correct' : picked?.id === cid ? 'wrong' : '';
+            svg.append(svgEl('rect', {
+              class: cls, 'data-choice-id': cid, 'data-cx': x, 'data-cy': y, 'data-key': key,
+              tabindex: picked ? undefined : 0, 'aria-disabled': picked ? 'true' : undefined,
+            }));
+          }
+          return svg;
+        },
+        visualLabel: { hidden: { nl: 'kaart', en: 'map' }, revealed: { nl: 'Aapland', en: 'Apeland' } },
+        choices: [
+          { id: 'a', label: { nl: 'Aap', en: 'Ape' } },
+          { id: 'b', label: { nl: 'Beer', en: 'Bear' } },
+          { id: 'c', label: { nl: 'Cavia', en: 'Cavy' } },
+        ],
+        answerId: 'a',
+      };
+    },
+  };
+}
+const target = (id: string) => document.querySelector<SVGElement>(`[data-choice-id="${id}"]`)!;
+const tap = (node: Element) => node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
 function makeCtx(settings: Partial<Settings> = {}, available = true) {
   const speech = {
@@ -259,5 +298,80 @@ describe('playScreen', () => {
     document.querySelector<HTMLButtonElement>('button.continue')!.click();
     expect(text('.end h1')).toBe('4 van 5!');
     expect(text('.end p')).toBe('Super gedaan!');
+  });
+});
+
+describe('playScreen with answers on the visual', () => {
+  it('shows no answer buttons and labels the visual as a group', () => {
+    start(makeCtx().ctx, makeVisualGame());
+    expect(document.querySelectorAll('.choice')).toHaveLength(0);
+    const box = document.querySelector('.visual')!;
+    expect(box.getAttribute('role')).toBe('group');
+    expect(box.getAttribute('aria-label')).toBe('kaart');
+    expect(box.querySelector('svg')!.getAttribute('aria-hidden')).toBeNull();
+  });
+
+  it('answers correctly by tapping a target and hands the pick to the visual', () => {
+    start(makeCtx().ctx, makeVisualGame());
+    tap(target('a'));
+    expect(target('a').classList.contains('correct')).toBe(true);
+    expect(target('a').getAttribute('aria-disabled')).toBe('true');
+    expect(text('.feedback')).toBe('Goed zo!');
+    expect(document.querySelector('.visual')!.getAttribute('aria-label')).toBe('Aapland');
+    vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    expect(text('.progress')).toBe('Vraag 2 van 10');
+  });
+
+  it('shows the right answer after a wrong tap and ignores a second tap', () => {
+    start(makeCtx().ctx, makeVisualGame());
+    tap(target('b'));
+    tap(target('a'));
+    expect(target('b').classList.contains('wrong')).toBe(true);
+    expect(target('a').classList.contains('correct')).toBe(true);
+    expect(text('.feedback')).toBe('Bijna! Het goede antwoord is: Aap');
+    expect(document.querySelector('button.continue')).not.toBeNull();
+  });
+
+  it('number keys pick the target with that data-key', () => {
+    start(makeCtx().ctx, makeVisualGame());
+    press('3');
+    expect(document.querySelector('.feedback')).toBeNull();
+    press('2');
+    expect(target('b').classList.contains('wrong')).toBe(true);
+  });
+
+  it('arrow keys move focus to the nearest target and Enter answers', () => {
+    start(makeCtx().ctx, makeVisualGame());
+    target('a').focus();
+    press('ArrowRight');
+    expect(document.activeElement).toBe(target('b'));
+    press('ArrowLeft');
+    expect(document.activeElement).toBe(target('a'));
+    press('ArrowDown');
+    expect(document.activeElement).toBe(target('c'));
+    press('ArrowLeft');
+    expect(document.activeElement).toBe(target('c'));
+    press('Enter');
+    expect(target('c').classList.contains('wrong')).toBe(true);
+  });
+
+  it('keeps focus on the same target after a language change and moves it to the next question after a correct answer', () => {
+    const { ctx } = makeCtx();
+    const s = start(ctx, makeVisualGame());
+    target('b').focus();
+    ctx.settings = { ...ctx.settings, lang: 'en' };
+    s.update!();
+    expect(document.activeElement).toBe(target('b'));
+    target('a').focus();
+    tap(target('a'));
+    vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    expect(document.activeElement).toBe(target('a'));
+    expect(target('a').getAttribute('aria-disabled')).toBeNull();
+  });
+
+  it('reads only the question aloud on autoSpeak levels', () => {
+    const { ctx, speech } = makeCtx();
+    start(ctx, makeVisualGame(), levels[0]);
+    expect(speech.speak).toHaveBeenCalledWith('Waar ligt 1?', 'nl');
   });
 });

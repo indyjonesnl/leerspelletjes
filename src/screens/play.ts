@@ -7,12 +7,31 @@ import { el } from '../core/ui';
 import { questionSpeech } from '../core/speechText';
 import { confetti, playCorrect, playWrong } from '../core/feedback';
 import { levelHref } from '../core/router';
+import { nearestInDirection, type Direction } from '../core/spatial';
 
 export const ADVANCE_DELAY_MS = 1000;
 
 /** Share of a round answered correctly for confetti and "endGreat" (8 of 10), and for "endGood" (5 of 10). */
 const GREAT = 0.8;
 const GOOD = 0.5;
+
+/** Answer elements: choice buttons, or targets inside a visual (`answerOn: 'visual'`). */
+const ANSWER_SELECTOR = '.choice, [data-choice-id]';
+type Focusable = HTMLElement | SVGElement;
+const ARROWS: Record<string, Direction> = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' };
+
+function answerIdOf(node: Element): string | undefined {
+  if (!node.matches(ANSWER_SELECTOR)) return undefined;
+  return node.getAttribute('data-choice-id') ?? node.getAttribute('data-id') ?? undefined;
+}
+
+function isDisabled(node: Element): boolean {
+  return (node instanceof HTMLButtonElement && node.disabled) || node.getAttribute('aria-disabled') === 'true';
+}
+
+function centreOf(node: Element): { x: number; y: number } {
+  return { x: Number(node.getAttribute('data-cx')), y: Number(node.getAttribute('data-cy')) };
+}
 
 export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng = createRng()): Screen {
   const root = el('main', { class: 'play' });
@@ -94,8 +113,7 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
     const result = round.result;
 
     const activeBefore = document.activeElement;
-    const focusedChoiceId =
-      activeBefore instanceof HTMLElement && activeBefore.classList.contains('choice') ? activeBefore.dataset.id : undefined;
+    const focusedChoiceId = activeBefore instanceof Element ? answerIdOf(activeBefore) : undefined;
     const focusedHint = activeBefore instanceof HTMLElement && activeBefore.classList.contains('hint-button');
     const focusWasInPlay = !!activeBefore && body.contains(activeBefore);
 
@@ -114,10 +132,19 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
     }
     body.append(top);
 
+    const visualMode = q.answerOn === 'visual';
     if (q.visual) {
-      const visual = q.visual();
+      const picked = result && chosenId ? { id: chosenId, answerId: q.answerId } : null;
+      const visual = q.visual({ lang: L, picked });
       const box = el('div', { class: 'visual' }, visual);
-      if (q.visualLabel) {
+      if (visualMode) {
+        box.setAttribute('role', 'group');
+        if (q.visualLabel) box.setAttribute('aria-label', (result ? q.visualLabel.revealed : q.visualLabel.hidden)[L]);
+        box.addEventListener('click', (event) => {
+          const hit = event.target instanceof Element ? event.target.closest('[data-choice-id]') : null;
+          if (hit && !isDisabled(hit)) choose(hit.getAttribute('data-choice-id')!);
+        });
+      } else if (q.visualLabel) {
         box.setAttribute('role', 'img');
         box.setAttribute('aria-label', (result ? q.visualLabel.revealed : q.visualLabel.hidden)[L]);
         visual.setAttribute('aria-hidden', 'true');
@@ -141,21 +168,23 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
 
     body.append(el('p', { class: 'prompt' }, q.prompt[L]));
 
-    const grid = el('div', { class: 'choices' });
-    q.choices.forEach((c, i) => {
-      const isAnswer = result !== null && c.id === q.answerId;
-      const isWrongPick = result !== null && !result.correct && c.id === chosenId;
-      const classes = ['choice', isAnswer ? 'correct' : '', isWrongPick ? 'wrong' : ''].filter(Boolean).join(' ');
-      const button = el('button', { type: 'button', class: classes, 'data-id': c.id, disabled: result !== null },
-        el('span', { class: 'key', 'aria-hidden': 'true' }, String(i + 1)),
-        el('span', { class: 'label' }, c.label[L]),
-      );
-      if (isAnswer) button.append(el('span', { class: 'mark', role: 'img', 'aria-label': t(L, 'markRight') }, '✓'));
-      if (isWrongPick) button.append(el('span', { class: 'mark', role: 'img', 'aria-label': t(L, 'markWrong') }, '✗'));
-      button.addEventListener('click', () => choose(c.id));
-      grid.append(button);
-    });
-    body.append(grid);
+    if (!visualMode) {
+      const grid = el('div', { class: 'choices' });
+      q.choices.forEach((c, i) => {
+        const isAnswer = result !== null && c.id === q.answerId;
+        const isWrongPick = result !== null && !result.correct && c.id === chosenId;
+        const classes = ['choice', isAnswer ? 'correct' : '', isWrongPick ? 'wrong' : ''].filter(Boolean).join(' ');
+        const button = el('button', { type: 'button', class: classes, 'data-id': c.id, disabled: result !== null },
+          el('span', { class: 'key', 'aria-hidden': 'true' }, String(i + 1)),
+          el('span', { class: 'label' }, c.label[L]),
+        );
+        if (isAnswer) button.append(el('span', { class: 'mark', role: 'img', 'aria-label': t(L, 'markRight') }, '✓'));
+        if (isWrongPick) button.append(el('span', { class: 'mark', role: 'img', 'aria-label': t(L, 'markWrong') }, '✗'));
+        button.addEventListener('click', () => choose(c.id));
+        grid.append(button);
+      });
+      body.append(grid);
+    }
 
     if (result) {
       body.append(el('p', { class: 'feedback' }, result.correct ? t(L, 'correct') : `${t(L, 'wrong')} ${answerLabel()}`));
@@ -167,15 +196,15 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
     }
 
     if (focusedChoiceId) {
-      const same = body.querySelector<HTMLButtonElement>(`.choice[data-id="${focusedChoiceId}"]`);
-      if (same && !same.disabled) { same.focus(); return; }
+      const same = [...body.querySelectorAll<Focusable>(ANSWER_SELECTOR)].find((n) => answerIdOf(n) === focusedChoiceId);
+      if (same && !isDisabled(same)) { same.focus(); return; }
     }
     if (focusedHint) {
       body.querySelector<HTMLButtonElement>('.hint-button')?.focus();
       return;
     }
     if ((focusWasInPlay || focusNextQuestion) && result === null) {
-      body.querySelector<HTMLButtonElement>('.choice')?.focus();
+      body.querySelector<Focusable>(ANSWER_SELECTOR)?.focus();
       focusNextQuestion = false;
     }
   }
@@ -208,9 +237,38 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
     if (focusWasInPlay) again.focus();
   }
 
+  function onVisualKey(event: KeyboardEvent): void {
+    const n = Number(event.key);
+    if (Number.isInteger(n) && n >= 1) {
+      const numbered = body.querySelector(`[data-choice-id][data-key="${n}"]`);
+      if (numbered) {
+        event.preventDefault();
+        choose(numbered.getAttribute('data-choice-id')!);
+      }
+      return;
+    }
+    const active = document.activeElement;
+    if (!active || !active.matches('[data-choice-id]') || !body.contains(active)) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      choose(active.getAttribute('data-choice-id')!);
+      return;
+    }
+    const dir = ARROWS[event.key];
+    if (!dir) return;
+    event.preventDefault();
+    const others = [...body.querySelectorAll<Focusable>('[data-choice-id]')].filter((t) => t !== active && !isDisabled(t));
+    const i = nearestInDirection(centreOf(active), others.map(centreOf), dir);
+    if (i >= 0) others[i].focus();
+  }
+
   function onKey(event: KeyboardEvent): void {
     if (destroyed || finished) return;
     if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (round.current.answerOn === 'visual') {
+      onVisualKey(event);
+      return;
+    }
     const buttons = [...body.querySelectorAll<HTMLButtonElement>('.choice')];
     const n = Number(event.key);
     if (Number.isInteger(n) && n >= 1 && n <= buttons.length) {

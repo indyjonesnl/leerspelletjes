@@ -64,7 +64,7 @@ describe('makeClockQuestion', () => {
     const q5 = makeClockQuestion(CLOCK_LEVELS[4], createRng(1), []);
     expect(q5.choices[0].label.nl).toMatch(/'s (nachts|ochtends|middags|avonds)$/);
     expect(q5.visualLabel).toBeUndefined();
-    expect(q5.visual!().textContent).toMatch(/^\d\d:\d\d$/);
+    expect(q5.visual!({ lang: 'nl', picked: null }).textContent).toMatch(/^\d\d:\d\d$/);
   });
 
   it('hides the time from screen readers until answered (levels 1-4)', () => {

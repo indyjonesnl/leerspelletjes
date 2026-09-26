@@ -56,7 +56,7 @@ describe('makeFlagQuestion', () => {
 
   it('shows the flag image and reveals the country name only after answering', () => {
     const q = makeFlagQuestion(FLAG_LEVELS[0], createRng(1), []);
-    const img = q.visual!() as HTMLImageElement;
+    const img = q.visual!({ lang: 'nl', picked: null }) as HTMLImageElement;
     expect(img.tagName).toBe('IMG');
     expect(img.getAttribute('src')).toBe(flagUrl(q.answerId));
     expect(img.getAttribute('alt')).toBe('');

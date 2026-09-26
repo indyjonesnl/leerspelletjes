@@ -26,13 +26,19 @@ export interface Choice {
   label: Localized;
 }
 
+/** What a visual needs to draw itself; `picked` is set once the question is answered. */
+export interface VisualState {
+  lang: Lang;
+  picked: { id: string; answerId: string } | null;
+}
+
 export interface Question {
   /** Identity of the question, used to avoid repeats within a round. */
   key: string;
   prompt: Localized;
   /** Text read aloud instead of the prompt, e.g. "zes keer zeven". */
   speech?: Localized;
-  visual?: () => HTMLElement | SVGElement;
+  visual?: (state: VisualState) => HTMLElement | SVGElement;
   /** Accessible name of the visual: `hidden` before answering, `revealed` after. */
   visualLabel?: { hidden: Localized; revealed: Localized };
   /** Optional help the child can show, e.g. a dot grid. */
