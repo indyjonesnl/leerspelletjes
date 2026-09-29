@@ -17,12 +17,19 @@ export function countryName(code: string): Localized {
   return { nl: country.nl, en: country.en };
 }
 
-export function whereIs(code: string): Localized {
+/** The country name with its article: "de Verenigde Staten" / "the United States". */
+export function countryWithArticle(code: string): Localized {
   const name = countryName(code);
-  const nl = NL_ARTICLE[code] ? `${NL_ARTICLE[code]} ${name.nl}` : name.nl;
-  const en = EN_THE.has(code) ? `the ${name.en}` : name.en;
   return {
-    nl: `Waar ${NL_PLURAL.has(code) ? 'liggen' : 'ligt'} ${nl}?`,
-    en: `Where ${EN_PLURAL.has(code) ? 'are' : 'is'} ${en}?`,
+    nl: NL_ARTICLE[code] ? `${NL_ARTICLE[code]} ${name.nl}` : name.nl,
+    en: EN_THE.has(code) ? `the ${name.en}` : name.en,
+  };
+}
+
+export function whereIs(code: string): Localized {
+  const name = countryWithArticle(code);
+  return {
+    nl: `Waar ${NL_PLURAL.has(code) ? 'liggen' : 'ligt'} ${name.nl}?`,
+    en: `Where ${EN_PLURAL.has(code) ? 'are' : 'is'} ${name.en}?`,
   };
 }
