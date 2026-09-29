@@ -4,7 +4,26 @@ import type { RegionMap } from './types';
 
 /** The name would give the answer away, so every country is just "land". */
 const COUNTRY_LABEL: Localized = { nl: 'land', en: 'country' };
+const CITY_LABEL: Localized = { nl: 'stad', en: 'city' };
+export const DOT_RADIUS = 10;
 const MARK_SIZE = 48;
+
+export interface MapPoint { id: string; x: number; y: number; /** Hit radius in viewBox units. */ r: number }
+
+export interface MapViewOptions {
+  targets: ReadonlySet<string>;
+  state: VisualState;
+  /** Accessible label of area targets; default "land" / "country". */
+  targetLabel?: Localized;
+  /** Area drawn with the accent colour (not a target). */
+  highlight?: string;
+  /** 'other' (default): non-target areas are muted, as in the map game. 'plain': they keep the normal fill. */
+  untargeted?: 'other' | 'plain';
+  /** Tappable dots, drawn above the areas. */
+  points?: readonly MapPoint[];
+  /** Accessible label of point targets; default "stad" / "city". */
+  pointLabel?: Localized;
+}
 
 /** 'correct' for the answer and 'wrong' for a wrong pick once answered; '' otherwise. */
 export function feedbackClass(code: string, state: VisualState): '' | 'correct' | 'wrong' {
@@ -26,30 +45,49 @@ export function markEl(x: number, y: number, kind: 'correct' | 'wrong', fontSize
  *  browser stretching it to fill `width: 100%`, which would letterbox it and crop the map at the sides. */
 const MAX_HEIGHT_VH = 64;
 
-/** The region map. Countries in `targets` carry `data-choice-id` and show ✓/✗ once answered. */
-export function mapView(map: RegionMap, { targets, state }: { targets: ReadonlySet<string>; state: VisualState }): SVGSVGElement {
+/** Target attributes shared by areas and points. */
+function targetAttrs(id: string, x: number, y: number, label: Localized, state: VisualState) {
+  return {
+    'data-choice-id': id,
+    'data-cx': x,
+    'data-cy': y,
+    role: 'button',
+    'aria-label': label[state.lang],
+    tabindex: state.picked ? undefined : 0,
+    'aria-disabled': state.picked ? 'true' : undefined,
+  };
+}
+
+/** The region map. Areas in `targets` and all `points` carry `data-choice-id` and show ✓/✗ once answered. */
+export function mapView(map: RegionMap, opts: MapViewOptions): SVGSVGElement {
+  const { targets, state, targetLabel = COUNTRY_LABEL, highlight, untargeted = 'other', points = [], pointLabel = CITY_LABEL } = opts;
   const [, , w, h] = map.viewBox.split(' ').map(Number);
   const svg = svgEl('svg', { class: 'map', viewBox: map.viewBox, style: `max-width: calc(${MAX_HEIGHT_VH}vh * ${w} / ${h})` });
   svg.append(svgEl('path', { class: 'map-bg', d: map.background }));
   const marks: SVGTextElement[] = [];
   for (const c of map.countries) {
     if (!targets.has(c.code)) {
-      svg.append(svgEl('path', { class: 'country other', d: c.d }));
+      const kind = c.code === highlight ? 'highlight' : untargeted === 'other' ? 'other' : '';
+      svg.append(svgEl('path', { class: ['country', kind].filter(Boolean).join(' '), d: c.d }));
       continue;
     }
     const result = feedbackClass(c.code, state);
     svg.append(svgEl('path', {
       class: ['country', 'target', result].filter(Boolean).join(' '),
       d: c.d,
-      'data-choice-id': c.code,
-      'data-cx': c.cx,
-      'data-cy': c.cy,
-      role: 'button',
-      'aria-label': COUNTRY_LABEL[state.lang],
-      tabindex: state.picked ? undefined : 0,
-      'aria-disabled': state.picked ? 'true' : undefined,
+      ...targetAttrs(c.code, c.cx, c.cy, targetLabel, state),
     }));
     if (result) marks.push(markEl(c.cx, c.cy, result, MARK_SIZE));
+  }
+  for (const p of points) {
+    const result = feedbackClass(p.id, state);
+    const g = svgEl('g', { class: ['point', result].filter(Boolean).join(' '), ...targetAttrs(p.id, p.x, p.y, pointLabel, state) });
+    g.append(
+      svgEl('circle', { class: 'point-hit', cx: p.x, cy: p.y, r: p.r }),
+      svgEl('circle', { class: 'point-dot', cx: p.x, cy: p.y, r: DOT_RADIUS }),
+    );
+    svg.append(g);
+    if (result) marks.push(markEl(p.x, p.y - DOT_RADIUS - MARK_SIZE / 2, result, MARK_SIZE));
   }
   svg.append(...marks);
   return svg;

@@ -108,6 +108,14 @@ button { font: inherit; color: inherit; }
 .map-mark { font-weight: 700; paint-order: stroke; }
 .map-mark.correct { fill: #fff; stroke: var(--correct); stroke-width: 6px; }
 .map-mark.wrong { fill: #fff; stroke: var(--wrong); stroke-width: 6px; }
+.country.highlight { fill: var(--accent); }
+.point { cursor: pointer; }
+.point:focus { outline: none; }
+.point-hit { fill: transparent; }
+.point-dot { fill: var(--ink); stroke: #fff; stroke-width: 3; vector-effect: non-scaling-stroke; }
+.point:focus-visible .point-dot { stroke: var(--accent); stroke-width: 5; }
+.point.correct .point-dot { fill: var(--correct); }
+.point.wrong .point-dot { fill: var(--wrong); }
 .box-row-bg { fill: var(--bg); }
 .callout-line { stroke: var(--ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .callout-dot { fill: var(--accent); stroke: #fff; stroke-width: 2; vector-effect: non-scaling-stroke; }
@@ -187,5 +195,6 @@ button { font: inherit; color: inherit; }
    device's sticky hover, or the pointer resting on an answered spot, would hide the correct/wrong colour. */
 @media (hover: hover) {
   .country.target:not([aria-disabled='true']):hover { fill: #f2b35e; }
+  .point:not([aria-disabled='true']):hover .point-dot { fill: var(--accent); }
   .box:not([aria-disabled='true']):hover .box-frame { stroke: var(--accent); stroke-width: 4; }
 }
