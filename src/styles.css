@@ -8,6 +8,7 @@
   --tables: #6fcf97;
   --flags: #56ccf2;
   --map: #f2c94c;
+  --capitals: #bb6bd9;
   --accent: #6247e8;
   --correct: #237a46;
   --correct-bg: #e3f6ea;
@@ -55,6 +56,7 @@ button { font: inherit; color: inherit; }
 .tile-tables { background: var(--tables); }
 .tile-flags { background: var(--flags); }
 .tile-map { background: var(--map); }
+.tile-capitals { background: var(--capitals); }
 .home footer { margin-top: 32px; text-align: center; font-size: 16px; }
 
 /* Level picker and privacy */

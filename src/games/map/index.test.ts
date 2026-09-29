@@ -4,8 +4,8 @@ import { GAMES } from '../registry';
 import { mapGame } from './index';
 
 describe('mapGame', () => {
-  it('is registered last and loads its region before asking', async () => {
-    expect(GAMES.map((g) => g.id)).toEqual(['clock', 'tables', 'flags', 'map']);
+  it('is registered after flags and loads its region before asking', async () => {
+    expect(GAMES.map((g) => g.id)).toEqual(['clock', 'tables', 'flags', 'map', 'capitals']);
     const level = mapGame.levels[5];
     await mapGame.load!(level);
     const q = mapGame.makeQuestion(level, createRng(1), []);
