@@ -6,7 +6,10 @@ import type { RegionMap } from './types';
 const COUNTRY_LABEL: Localized = { nl: 'land', en: 'country' };
 const CITY_LABEL: Localized = { nl: 'stad', en: 'city' };
 export const DOT_RADIUS = 10;
+/** An answered dot grows, so that the level showing where a city is makes the right spot obvious. */
+export const ANSWERED_DOT_RADIUS = 26;
 const MARK_SIZE = 48;
+const POINT_MARK_SIZE = 84;
 
 export interface MapPoint { id: string; x: number; y: number; /** Hit radius in viewBox units. */ r: number }
 
@@ -23,6 +26,8 @@ export interface MapViewOptions {
   points?: readonly MapPoint[];
   /** Accessible label of point targets; default "stad" / "city". */
   pointLabel?: Localized;
+  /** Height cap of the SVG in vh (default 64); lower it when more than the prompt sits below the map. */
+  maxHeightVh?: number;
 }
 
 /** 'correct' for the answer and 'wrong' for a wrong pick once answered; '' otherwise. */
@@ -32,9 +37,9 @@ export function feedbackClass(code: string, state: VisualState): '' | 'correct' 
   return code === state.picked.id ? 'wrong' : '';
 }
 
-export function markEl(x: number, y: number, kind: 'correct' | 'wrong', fontSize: number): SVGTextElement {
+export function markEl(x: number, y: number, kind: 'correct' | 'wrong', fontSize: number, extraClass = ''): SVGTextElement {
   const text = svgEl('text', {
-    class: `map-mark ${kind}`, x, y, 'font-size': fontSize,
+    class: ['map-mark', extraClass, kind].filter(Boolean).join(' '), x, y, 'font-size': fontSize,
     'text-anchor': 'middle', 'dominant-baseline': 'central', 'aria-hidden': 'true',
   });
   text.textContent = kind === 'correct' ? '✓' : '✗';
@@ -60,9 +65,12 @@ function targetAttrs(id: string, x: number, y: number, label: Localized, state: 
 
 /** The region map. Areas in `targets` and all `points` carry `data-choice-id` and show ✓/✗ once answered. */
 export function mapView(map: RegionMap, opts: MapViewOptions): SVGSVGElement {
-  const { targets, state, targetLabel = COUNTRY_LABEL, highlight, untargeted = 'other', points = [], pointLabel = CITY_LABEL } = opts;
+  const { targets, state, targetLabel = COUNTRY_LABEL, highlight, untargeted = 'other', points = [], pointLabel = CITY_LABEL, maxHeightVh } = opts;
   const [, , w, h] = map.viewBox.split(' ').map(Number);
-  const svg = svgEl('svg', { class: 'map', viewBox: map.viewBox, style: `max-width: calc(${MAX_HEIGHT_VH}vh * ${w} / ${h})` });
+  const svg = svgEl('svg', {
+    class: 'map', viewBox: map.viewBox,
+    style: maxHeightVh === undefined ? `max-width: calc(${MAX_HEIGHT_VH}vh * ${w} / ${h})` : `max-height: ${maxHeightVh}vh; max-width: calc(${maxHeightVh}vh * ${w} / ${h})`,
+  });
   svg.append(svgEl('path', { class: 'map-bg', d: map.background }));
   const marks: SVGTextElement[] = [];
   for (const c of map.countries) {
@@ -81,13 +89,14 @@ export function mapView(map: RegionMap, opts: MapViewOptions): SVGSVGElement {
   }
   for (const p of points) {
     const result = feedbackClass(p.id, state);
+    const dotR = result ? ANSWERED_DOT_RADIUS : DOT_RADIUS;
     const g = svgEl('g', { class: ['point', result].filter(Boolean).join(' '), ...targetAttrs(p.id, p.x, p.y, pointLabel, state) });
     g.append(
       svgEl('circle', { class: 'point-hit', cx: p.x, cy: p.y, r: p.r }),
-      svgEl('circle', { class: 'point-dot', cx: p.x, cy: p.y, r: DOT_RADIUS }),
+      svgEl('circle', { class: 'point-dot', cx: p.x, cy: p.y, r: dotR }),
     );
     svg.append(g);
-    if (result) marks.push(markEl(p.x, p.y - DOT_RADIUS - MARK_SIZE / 2, result, MARK_SIZE));
+    if (result) marks.push(markEl(p.x, p.y - dotR - POINT_MARK_SIZE / 2, result, POINT_MARK_SIZE, 'point-mark'));
   }
   svg.append(...marks);
   return svg;

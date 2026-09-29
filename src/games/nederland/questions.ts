@@ -14,6 +14,8 @@ const CREDIT: Localized = { nl: 'Kaart: CBS, Kadaster (CC BY 4.0)', en: 'Map: CB
 /** Capitals with the same name as their province: "Waar ligt de stad Groningen?". */
 const SAME_NAME = new Set(['GR', 'UT']);
 const ALL = new Set(PROVINCES.map((p) => p.code));
+/** Level 2 has four answer buttons under the map, so the map gets less of the screen than the 64vh default. */
+const CHOICE_MAP_VH = 25;
 const NONE: ReadonlySet<string> = new Set();
 
 /** The map with the CC BY credit underneath (outside the SVG, so it does not change the map's aspect ratio). */
@@ -53,7 +55,7 @@ function capitalNameQuestion(rng: Rng, previous: readonly Question[]): Question 
   return {
     key: answer.code,
     prompt: { nl: `Wat is de hoofdstad van ${answer.name.nl}?`, en: `What is the capital of ${answer.name.en}?` },
-    visual: (state) => withCredit(mapView(map, { targets: NONE, state, highlight: answer.code, untargeted: 'plain' }), state.lang),
+    visual: (state) => withCredit(mapView(map, { targets: NONE, state, highlight: answer.code, untargeted: 'plain', maxHeightVh: CHOICE_MAP_VH }), state.lang),
     visualLabel: { hidden: MAP_LABEL, revealed: answer.name },
     choices: options.map((code) => ({ id: code, label: provinceByCode(code).capital })),
     answerId: answer.code,

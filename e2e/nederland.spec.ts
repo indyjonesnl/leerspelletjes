@@ -81,10 +81,15 @@ test('the Netherlands map keeps its aspect ratio and the prompt stays above the 
   const [, , w, h] = (await svg.getAttribute('viewBox'))!.split(' ').map(Number);
   const box = (await svg.boundingBox())!;
   expect(Math.abs(box.width / box.height - w / h) / (w / h)).toBeLessThan(0.02);
-  // The map fills the available width: the container's width, or the height cap (0.64 × viewport height) at this aspect ratio.
+  // The map fills the available width: the container's width, or this level's height cap at this aspect ratio.
   const container = (await page.locator('.visual').boundingBox())!;
   const viewportHeight = page.viewportSize()!.height;
-  expect(box.width).toBeGreaterThanOrEqual(Math.min(container.width, (0.64 * viewportHeight * w) / h) - 2);
+  const cap = parseFloat(await svg.evaluate((e) => getComputedStyle(e).maxHeight));
+  expect(box.width).toBeGreaterThanOrEqual(Math.min(container.width, (cap * w) / h) - 2);
   const p = (await page.locator('.prompt').boundingBox())!;
   expect(p.y + p.height).toBeLessThanOrEqual(viewportHeight);
+  // Level 2 is a choice question: all four answer buttons fit without scrolling too.
+  await expect(page.locator('.choice')).toHaveCount(4);
+  const last = (await page.locator('.choice').last().boundingBox())!;
+  expect(last.y + last.height).toBeLessThanOrEqual(viewportHeight);
 });

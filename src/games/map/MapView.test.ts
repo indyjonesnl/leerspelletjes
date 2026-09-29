@@ -49,4 +49,22 @@ describe('mapView', () => {
     expect(answered.querySelector('[data-choice-id="AA"]')!.getAttribute('aria-disabled')).toBe('true');
     expect(answered.querySelectorAll('.map-mark')).toHaveLength(2);
   });
+
+  it('draws an answered point bigger, with a point-mark glyph', () => {
+    const points = [{ id: 'AA', x: 50, y: 50, r: 30 }, { id: 'BB', x: 250, y: 50, r: 30 }];
+    const answered = mapView(MAP, { targets: new Set(), state: { lang: 'nl', picked: { id: 'BB', answerId: 'AA' } }, points });
+    expect(answered.querySelector('[data-choice-id="AA"] .point-dot')!.getAttribute('r')).toBe('26');
+    expect(answered.querySelector('[data-choice-id="BB"] .point-dot')!.getAttribute('r')).toBe('26');
+    expect([...answered.querySelectorAll('.map-mark')].every((m) => m.classList.contains('point-mark'))).toBe(true);
+    const country = mapView(MAP, { targets: new Set(['AA']), state: { lang: 'nl', picked: { id: 'AA', answerId: 'AA' } } });
+    expect(country.querySelector('.map-mark')!.classList.contains('point-mark')).toBe(false);
+  });
+
+  it('caps the map height at 64vh by default and at maxHeightVh when given', () => {
+    const def = mapView(MAP, { targets: new Set(), state: idle });
+    expect(def.getAttribute('style')).toBe('max-width: calc(64vh * 1000 / 800)');
+    const low = mapView(MAP, { targets: new Set(), state: idle, maxHeightVh: 40 });
+    expect(low.getAttribute('style')).toContain('max-height: 40vh');
+    expect(low.getAttribute('style')).toContain('calc(40vh * 1000 / 800)');
+  });
 });
