@@ -4,5 +4,6 @@ import { tablesGame } from './tables';
 import { flagsGame } from './flags';
 import { mapGame } from './map';
 import { capitalsGame } from './capitals';
+import { nederlandGame } from './nederland';
 
-export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame];
+export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame];

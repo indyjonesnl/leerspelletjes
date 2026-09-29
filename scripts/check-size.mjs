@@ -7,8 +7,8 @@ const LIMIT = 200 * 1024;
 const dist = new URL('../dist/', import.meta.url);
 const assets = new URL('assets/', dist);
 
-/** Map region chunks from src/games/map/data/, loaded when a map level opens. */
-const REGION_CHUNK = /^(europe|americas|africa|asia-oceania)-[\w-]+\.js$/;
+/** Map chunks (src/games/map/data/ regions and the Netherlands map), loaded when a map level opens. */
+const REGION_CHUNK = /^(europe|americas|africa|asia-oceania|nl)-[\w-]+\.js$/;
 
 const isFirstLoad = (file) =>
   !REGION_CHUNK.test(file) && (/\.(js|css)$/.test(file) || (/\.woff2$/.test(file) && /-latin-\d+-/.test(file)));

@@ -9,6 +9,7 @@
   --flags: #56ccf2;
   --map: #f2c94c;
   --capitals: #bb6bd9;
+  --nederland: #f2994a;
   --accent: #6247e8;
   --correct: #237a46;
   --correct-bg: #e3f6ea;
@@ -57,6 +58,9 @@ button { font: inherit; color: inherit; }
 .tile-flags { background: var(--flags); }
 .tile-map { background: var(--map); }
 .tile-capitals { background: var(--capitals); }
+.tile-nederland { background: var(--nederland); }
+.nl-map { margin: 0; }
+.map-credit { margin: 4px 0 0; font-size: 0.75rem; color: var(--muted); text-align: center; }
 .home footer { margin-top: 32px; text-align: center; font-size: 16px; }
 
 /* Level picker and privacy */
