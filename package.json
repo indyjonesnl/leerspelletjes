@@ -16,6 +16,7 @@
     "prebuild": "node scripts/copy-flags.mjs",
     "gen:countries": "node scripts/gen-countries.mjs",
     "gen:maps": "node scripts/gen-maps.mjs",
+    "gen:nl": "node scripts/gen-nl.mjs",
     "size": "npm run build && node scripts/check-size.mjs"
   },
   "devDependencies": {
