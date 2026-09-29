@@ -4,7 +4,8 @@ import type { Localized } from '../../../core/types';
  * Capital of each of the 193 countries, as school atlases give it.
  * Conventions where a country has more than one or a disputed capital: NL Amsterdam, BO Sucre, ZA Pretoria,
  * CI Yamoussoukro, MY Kuala Lumpur, LK Sri Jayewardenepura Kotte, IL Jeruzalem, CH Bern, NR Yaren,
- * UA Kyiv (current Dutch government spelling).
+ * BN Bandar Seri Begawan, BI Gitega (Bujumbura is the economic capital), SZ Mbabane (Lobamba is the royal and
+ * legislative capital), UA Kyiv (current Dutch government spelling).
  */
 export const CAPITALS: Readonly<Record<string, Localized>> = {
   AD: { nl: 'Andorra la Vella', en: 'Andorra la Vella' },
