@@ -30,6 +30,10 @@ describe('country data', () => {
     }
   });
 
+  it('uses the names Dutch schools teach', () => {
+    expect(COUNTRIES.find((c) => c.code === 'BY')).toMatchObject({ nl: 'Wit-Rusland', en: 'Belarus' });
+  });
+
   it('has a flag SVG for every country', () => {
     for (const c of COUNTRIES) {
       expect(existsSync(`${flagsDir}${c.code.toLowerCase()}.svg`), c.code).toBe(true);
