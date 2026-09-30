@@ -158,11 +158,13 @@ button { font: inherit; color: inherit; }
 .dot-grid { width: min(260px, 70vw); height: auto; }
 .dot { fill: var(--accent); }
 .prompt { margin: 12px 0; font-size: 30px; font-weight: 700; text-align: center; }
-.choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+/* At most two answers per row: four in a row leaves too little room for long country and city names. */
+.choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(220px, calc(50% - 7px)), 1fr)); gap: 14px; }
 .choice {
   position: relative; min-height: 76px; padding: 12px 48px;
   border: 3px solid var(--line); border-radius: var(--radius); background: var(--card);
   box-shadow: 0 4px 0 var(--line); font-size: 24px; font-weight: 700; cursor: pointer;
+  overflow-wrap: anywhere; hyphens: auto;
 }
 .choice .key { position: absolute; top: 50%; left: 14px; transform: translateY(-50%); color: var(--muted); font-size: 14px; }
 .choice .mark { position: absolute; top: 50%; right: 16px; transform: translateY(-50%); font-size: 28px; }

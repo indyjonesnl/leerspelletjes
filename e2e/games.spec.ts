@@ -77,3 +77,19 @@ test('language choice is remembered', async ({ page }) => {
   await page.reload();
   await expect(page.locator('.brand')).toHaveText('Learning Games');
 });
+
+test('long answers stay inside their buttons', async ({ page }) => {
+  // The longest single words among country and capital names: they cannot wrap at a space.
+  const long = ['Democratische Republiek Congo', 'Marshalleilanden', 'Salomonseilanden', 'Yamoussoukro', 'Sri Jayewardenepura Kotte', 'Saint Vincent en de Grenadines'];
+  await page.goto('./#/flags/6');
+  const choice = page.locator('.choice').first();
+  await expect(choice).toBeVisible();
+  const overflowing = await choice.evaluate((btn, names) => {
+    const label = btn.querySelector('.label')!;
+    return names.filter((name) => {
+      label.textContent = name;
+      return btn.scrollWidth > btn.clientWidth + 1;
+    });
+  }, long);
+  expect(overflowing).toEqual([]);
+});
