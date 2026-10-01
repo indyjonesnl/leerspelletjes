@@ -3,7 +3,7 @@
 Free educational games for primary school children (groep 1–8), in Dutch and English.
 No accounts, no cookies, no tracking.
 
-Games: clock reading, times tables, flags, finding countries on the map, capitals, and the Dutch provinces.
+Games: clock reading, times tables, flags, finding countries on the map, capitals, and the Dutch provinces (map, capitals and flags). Flags, capitals, the map game and the Dutch provinces have a "Leer eerst" study screen for every level.
 
 ## Development
 
@@ -21,6 +21,10 @@ npm run size       # build and check the 200 KB first-load budget
 2. Add it to `src/games/registry.ts`.
 3. Add a tile icon in `public/icons/<id>.svg` and a `.tile-<id>` colour in `src/styles.css`.
 4. Add unit tests for question generation.
+
+## Learn mode
+
+Every level of Flags, Capitals, "Waar ligt het?" and Nederland has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (clock, times tables) show no link. Nothing about what a child has studied is stored.
 
 ## Country data
 
