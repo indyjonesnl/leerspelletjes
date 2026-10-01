@@ -51,6 +51,16 @@ describe('levelsScreen', () => {
     expect(el.querySelector('.levels-grid')).not.toBeNull();
     expect(el.querySelector('h1')!.textContent).toBe('Demo NL');
   });
+
+  it('adds a "Leer eerst" link per level only for games with study screens', () => {
+    const studyGame: Game = { ...game, study: () => document.createElement('div') };
+    const { el } = levelsScreen(makeCtx(), studyGame);
+    const links = [...el.querySelectorAll<HTMLAnchorElement>('a.learn-link')];
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['#/demo/1/learn', '#/demo/2/learn']);
+    expect(links[0].textContent).toBe('Leer eerst');
+    expect(levelsScreen(makeCtx('en'), studyGame).el.querySelector('a.learn-link')!.textContent).toBe('Learn first');
+    expect(levelsScreen(makeCtx(), game).el.querySelector('a.learn-link')).toBeNull();
+  });
 });
 
 describe('privacyScreen', () => {

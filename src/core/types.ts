@@ -50,6 +50,13 @@ export interface Question {
   answerId: string;
 }
 
+/** What a study view needs: the language, and a way to read text aloud when the device can. */
+export interface StudyContext {
+  lang: Lang;
+  /** Reads text aloud. Absent when sound is off or the device has no voice for `lang`. */
+  speak?: (text: string) => void;
+}
+
 export interface Game {
   id: string;
   title: Localized;
@@ -59,5 +66,7 @@ export interface Game {
   levels: Level[];
   /** Loads what the level needs before its first question (e.g. a map). */
   load?(level: Level): Promise<void>;
+  /** The study view of a level (the "Leer eerst" screen). Absent: no study screens and no link. */
+  study?(level: Level, study: StudyContext): HTMLElement;
   makeQuestion(level: Level, rng: Rng, previous: readonly Question[]): Question;
 }

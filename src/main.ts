@@ -13,6 +13,7 @@ import { homeScreen } from './screens/home';
 import { levelsScreen } from './screens/levels';
 import { privacyScreen } from './screens/privacy';
 import { playScreen } from './screens/play';
+import { learnScreen } from './screens/learn';
 
 const storage = getStorage();
 const app = document.getElementById('app')!;
@@ -52,6 +53,7 @@ function createScreen(route: Route): Screen {
     case 'privacy': return privacyScreen(ctx);
     case 'levels': return levelsScreen(ctx, route.game);
     case 'play': return playScreen(ctx, route.game, route.level);
+    case 'learn': return learnScreen(ctx, route.game, route.level);
   }
 }
 

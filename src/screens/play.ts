@@ -7,6 +7,7 @@ import { el } from '../core/ui';
 import { questionSpeech } from '../core/speechText';
 import { confetti, playCorrect, playWrong } from '../core/feedback';
 import { levelHref } from '../core/router';
+import { loadStatus } from './loadStatus';
 import { nearestInDirection, type Direction } from '../core/spatial';
 
 export const ADVANCE_DELAY_MS = 1000;
@@ -42,14 +43,7 @@ export function playScreen(ctx: AppContext, game: Game, level: Level, rng: Rng =
   let destroyed = false;
 
   function renderStatus(): void {
-    const L = ctx.settings.lang;
-    if (!failed) {
-      root.replaceChildren(el('p', { class: 'loading', role: 'status' }, t(L, 'loading')));
-      return;
-    }
-    const retry = el('button', { type: 'button', class: 'big-button' }, t(L, 'retry'));
-    retry.addEventListener('click', attempt);
-    root.replaceChildren(el('section', { class: 'end' }, el('p', { role: 'alert' }, t(L, 'loadFailed')), retry));
+    root.replaceChildren(loadStatus(ctx.settings.lang, failed, attempt));
   }
 
   function attempt(): void {

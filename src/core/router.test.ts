@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { resolveRoute, gameHref, levelHref } from './router';
+import { resolveRoute, gameHref, levelHref, learnHref } from './router';
 import type { Game, Level } from './types';
 
 const level: Level = { id: '3', label: { nl: '', en: '' }, example: { nl: '', en: '' }, autoSpeak: false };
@@ -31,5 +31,25 @@ describe('hrefs', () => {
   it('builds hash links', () => {
     expect(gameHref(game)).toBe('#/clock');
     expect(levelHref(game, level)).toBe('#/clock/3');
+  });
+});
+
+describe('learn route', () => {
+  const studyGame: Game = { ...game, study: () => document.createElement('div') };
+
+  it('resolves #/<game>/<level>/learn for games with study screens', () => {
+    expect(resolveRoute('#/clock/3/learn', [studyGame])).toEqual({ name: 'learn', game: studyGame, level });
+  });
+
+  it('sends everything else that mentions learn home', () => {
+    expect(resolveRoute('#/clock/3/learn', games)).toBeNull(); // the game has no study screen
+    expect(resolveRoute('#/clock/9/learn', [studyGame])).toBeNull(); // unknown level
+    expect(resolveRoute('#/clock/learn', [studyGame])).toBeNull();
+    expect(resolveRoute('#/clock/3/learn/x', [studyGame])).toBeNull();
+    expect(resolveRoute('#/nope/3/learn', [studyGame])).toBeNull();
+  });
+
+  it('builds the learn link', () => {
+    expect(learnHref(game, level)).toBe('#/clock/3/learn');
   });
 });

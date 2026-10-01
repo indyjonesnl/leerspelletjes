@@ -21,6 +21,11 @@ export const nl = {
   loading: 'Laden…',
   loadFailed: 'Het spel kon niet laden.',
   retry: 'Probeer opnieuw',
+  learnFirst: 'Leer eerst',
+  practiseNow: 'Nu oefenen',
+  backToLevels: 'Terug naar de niveaus',
+  capital: 'Hoofdstad',
+  capitalIs: 'De hoofdstad is {city}.',
   or: 'of',
   privacy: 'Privacy',
   privacyBody:

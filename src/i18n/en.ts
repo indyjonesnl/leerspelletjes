@@ -23,6 +23,11 @@ export const en: Record<StringKey, string> = {
   loading: 'Loading…',
   loadFailed: "Couldn't load the game.",
   retry: 'Try again',
+  learnFirst: 'Learn first',
+  practiseNow: 'Practise now',
+  backToLevels: 'Back to the levels',
+  capital: 'Capital',
+  capitalIs: 'The capital is {city}.',
   or: 'or',
   privacy: 'Privacy',
   privacyBody:

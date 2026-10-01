@@ -78,6 +78,25 @@ button { font: inherit; color: inherit; }
 .level-label { font-size: 24px; font-weight: 700; }
 .level-example { color: var(--muted); font-size: 18px; }
 .privacy p { max-width: 60ch; }
+.levels li.with-learn { display: flex; flex-direction: column; gap: 6px; }
+.learn-link {
+  align-self: flex-start; display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px;
+  border: 3px solid var(--line); border-radius: 999px; background: var(--card);
+  font-size: 18px; font-weight: 700; text-decoration: none;
+}
+
+/* Learn */
+.learn-title { margin: 8px 0; font-size: 34px; }
+.learn h2 { margin: 12px 0 8px; font-size: 26px; }
+.learn h3 { margin: 20px 0 8px; font-size: 22px; color: var(--muted); }
+.learn-actions { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 20px 0 8px; }
+.learn-actions .big-button { margin: 0; }
+.back-link { display: inline-flex; align-items: center; min-height: 48px; padding: 0 16px; font-weight: 700; }
+/* A long card grid keeps "Nu oefenen" within reach. */
+.learn:has(.study-grid) .learn-actions {
+  position: sticky; bottom: 0; padding: 8px 0 12px; background: var(--bg);
+  box-shadow: 0 -8px 12px -8px rgb(0 0 0 / 0.2);
+}
 
 /* Play */
 .play { position: relative; min-height: 70vh; overflow: hidden; }
