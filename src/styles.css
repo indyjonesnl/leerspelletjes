@@ -262,3 +262,10 @@ button { font: inherit; color: inherit; }
 .chip .study-flag { width: 36px; height: 27px; }
 .inset-stage { display: flex; justify-content: center; margin: 8px 0; }
 .inset-stage:empty { display: none; }
+
+.cap-dot { fill: var(--ink); stroke: #fff; stroke-width: 3; vector-effect: non-scaling-stroke; cursor: pointer; }
+.study-label {
+  fill: var(--ink); font-family: inherit; font-weight: 700; pointer-events: none;
+  paint-order: stroke; stroke: #fff; stroke-width: 7px; stroke-linejoin: round;
+}
+.study-label.city { fill: var(--accent); }

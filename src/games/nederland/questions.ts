@@ -20,7 +20,7 @@ const CHOICE_MAP_VH = 25;
 const NONE: ReadonlySet<string> = new Set();
 
 /** The map with the CC BY credit underneath (outside the SVG, so it does not change the map's aspect ratio). */
-function withCredit(map: SVGSVGElement, lang: Lang): HTMLElement {
+export function withCredit(map: SVGSVGElement, lang: Lang): HTMLElement {
   return el('figure', { class: 'nl-map' }, map, el('figcaption', { class: 'map-credit' }, CREDIT[lang]));
 }
 
