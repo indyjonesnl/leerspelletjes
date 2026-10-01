@@ -9,6 +9,9 @@ import { LOOK_ALIKES } from './lookalikes';
 // Use node:url's URL explicitly so this resolves to a real file:// path.
 const flagsDir = fileURLToPath(new NodeURL('../../../node_modules/flag-icons/flags/4x3/', import.meta.url));
 
+/** Dutch names that add the name schools used to teach: "Belarus (Wit-Rusland)". */
+const FORMER_NAME = new Set(['BY']);
+
 describe('country data', () => {
   it('has the 193 UN member states with unique codes', () => {
     expect(COUNTRIES).toHaveLength(193);
@@ -26,12 +29,13 @@ describe('country data', () => {
       expect(c.nl.length, c.code).toBeGreaterThan(2);
       expect(c.en.length, c.code).toBeGreaterThan(2);
       expect(c.en, c.code).not.toMatch(/[&()]/);
-      expect(c.nl, c.code).not.toMatch(/[&()]/);
+      // Parentheses are leftovers from the source data, except where we add a former name on purpose.
+      if (!FORMER_NAME.has(c.code)) expect(c.nl, c.code).not.toMatch(/[&()]/);
     }
   });
 
   it('uses the names Dutch schools teach', () => {
-    expect(COUNTRIES.find((c) => c.code === 'BY')).toMatchObject({ nl: 'Wit-Rusland', en: 'Belarus' });
+    expect(COUNTRIES.find((c) => c.code === 'BY')).toMatchObject({ nl: 'Belarus (Wit-Rusland)', en: 'Belarus' });
   });
 
   it('has a flag SVG for every country', () => {

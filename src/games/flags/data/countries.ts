@@ -28,7 +28,7 @@ export const COUNTRIES: readonly Country[] = [
   { code: 'BS', continent: 'americas', nl: "Bahama’s", en: "Bahamas" },
   { code: 'BT', continent: 'asia', nl: "Bhutan", en: "Bhutan" },
   { code: 'BW', continent: 'africa', nl: "Botswana", en: "Botswana" },
-  { code: 'BY', continent: 'europe', nl: "Wit-Rusland", en: "Belarus" },
+  { code: 'BY', continent: 'europe', nl: "Belarus (Wit-Rusland)", en: "Belarus" },
   { code: 'BZ', continent: 'americas', nl: "Belize", en: "Belize" },
   { code: 'CA', continent: 'americas', nl: "Canada", en: "Canada" },
   { code: 'CD', continent: 'africa', nl: "Democratische Republiek Congo", en: "DR Congo" },

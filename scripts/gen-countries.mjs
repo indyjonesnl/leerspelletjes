@@ -16,7 +16,7 @@ const CONTINENTS = {
 const EXPECTED = { europe: 44, americas: 35, africa: 54, asia: 46, oceania: 14 };
 
 const OVERRIDES = {
-  nl: { BY: 'Wit-Rusland', CD: 'Democratische Republiek Congo', ST: 'São Tomé en Príncipe' },
+  nl: { BY: 'Belarus (Wit-Rusland)', CD: 'Democratische Republiek Congo', ST: 'São Tomé en Príncipe' },
   en: { CD: 'DR Congo', CG: 'Republic of the Congo', TR: 'Turkey' },
 };
 
