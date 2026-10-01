@@ -20,9 +20,10 @@ const round = (levelIndex: number, seed: number) => {
 };
 
 describe('NL_LEVELS', () => {
-  it('has three levels of 12 questions', () => {
-    expect(NL_LEVELS.map((l) => [l.id, l.roundLength])).toEqual([['1', 12], ['2', 12], ['3', 12]]);
+  it('has four levels of 12 questions', () => {
+    expect(NL_LEVELS.map((l) => [l.id, l.roundLength])).toEqual([['1', 12], ['2', 12], ['3', 12], ['4', 12]]);
     expect(NL_LEVELS.filter((l) => l.autoSpeak).map((l) => l.id)).toEqual(['1']);
+    expect(NL_LEVELS[3].label).toEqual({ nl: 'Vlaggen', en: 'Flags' });
   });
 });
 
@@ -93,5 +94,35 @@ describe('level 3: capitals on the map', () => {
     expect(prompt('GR')).toEqual({ nl: 'Waar ligt de stad Groningen?', en: 'Where is the city of Groningen?' });
     expect(prompt('UT')).toEqual({ nl: 'Waar ligt de stad Utrecht?', en: 'Where is the city of Utrecht?' });
     expect(prompt('ZH')).toEqual({ nl: 'Waar ligt Den Haag?', en: 'Where is The Hague?' });
+  });
+});
+
+describe('level 4: flags', () => {
+  it('asks every province once per round', () => {
+    expect(round(3, 1).map((q) => q.answerId).sort()).toEqual(PROVINCES.map((p) => p.code).sort());
+  });
+
+  it('shows the province flag and offers four different provinces, one of them right', () => {
+    for (let seed = 0; seed < 24; seed++) {
+      const q = makeNlQuestion(NL_LEVELS[3], createRng(seed), []);
+      const province = byCode.get(q.answerId)!;
+      expect(q.answerOn ?? 'choices').toBe('choices');
+      expect(q.prompt).toEqual({ nl: 'Van welke provincie is deze vlag?', en: 'Which province has this flag?' });
+      expect(q.choices).toHaveLength(4);
+      expect(new Set(q.choices.map((c) => c.id)).size).toBe(4);
+      expect(q.choices.filter((c) => c.id === q.answerId)).toHaveLength(1);
+      for (const c of q.choices) expect(c.label).toEqual(byCode.get(c.id)!.name);
+      const img = render(q) as HTMLImageElement;
+      expect(img.tagName).toBe('IMG');
+      expect(img.getAttribute('src')).toBe(`flags-nl/${province.code.toLowerCase()}.svg`);
+      expect(img.classList.contains('flag-province')).toBe(true);
+      expect(img.getAttribute('alt')).toBe('');
+    }
+  });
+
+  it('keeps the name out of the accessible label until answered', () => {
+    const q = makeNlQuestion(NL_LEVELS[3], createRng(4), []);
+    expect(q.visualLabel!.hidden).toEqual({ nl: 'vlag', en: 'flag' });
+    expect(q.visualLabel!.revealed).toEqual(byCode.get(q.answerId)!.name);
   });
 });

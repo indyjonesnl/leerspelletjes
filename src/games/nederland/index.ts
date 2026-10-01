@@ -9,8 +9,8 @@ export const nederlandGame: Game = {
   icon: 'icons/nederland.svg',
   pickerLayout: 'list',
   levels: NL_LEVELS,
-  async load() {
-    await loadNl();
+  async load(level) {
+    if (level.id !== '4') await loadNl(); // the flag level has no map
   },
   makeQuestion: makeNlQuestion,
 };

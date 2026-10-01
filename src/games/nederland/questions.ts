@@ -4,6 +4,7 @@ import { el } from '../../core/ui';
 import { mapView, type MapPoint } from '../map/MapView';
 import { hitRadii } from '../map/points';
 import type { RegionMap } from '../map/types';
+import { provinceFlagUrl } from './flags';
 import { getNl } from './load';
 import { PROVINCES, provinceByCode, type Province } from './provinces';
 
@@ -83,8 +84,25 @@ function capitalMapQuestion(rng: Rng, previous: readonly Question[]): Question {
   };
 }
 
+const FLAG_LABEL: Localized = { nl: 'vlag', en: 'flag' };
+
+function flagQuestion(rng: Rng, previous: readonly Question[]): Question {
+  const answer = pick(rng, previous);
+  const others = rng.shuffle(PROVINCES.filter((p) => p.code !== answer.code)).slice(0, 3);
+  const options = rng.shuffle([answer, ...others]);
+  return {
+    key: answer.code,
+    prompt: { nl: 'Van welke provincie is deze vlag?', en: 'Which province has this flag?' },
+    visual: () => el('img', { src: provinceFlagUrl(answer.code), alt: '', class: 'flag flag-province' }),
+    visualLabel: { hidden: FLAG_LABEL, revealed: answer.name },
+    choices: options.map((p) => ({ id: p.code, label: p.name })),
+    answerId: answer.code,
+  };
+}
+
 export function makeNlQuestion(level: Level, rng: Rng, previous: readonly Question[]): Question {
   if (level.id === '1') return provinceQuestion(rng, previous);
   if (level.id === '2') return capitalNameQuestion(rng, previous);
+  if (level.id === '4') return flagQuestion(rng, previous);
   return capitalMapQuestion(rng, previous);
 }
