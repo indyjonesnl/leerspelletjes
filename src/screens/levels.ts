@@ -14,7 +14,10 @@ export function levelsScreen(ctx: AppContext, game: Game): Screen {
         el('span', { class: 'level-example' }, level.example[lang]),
       ),
     );
-    if (game.study) item.append(el('a', { class: 'learn-link', href: learnHref(game, level) }, t(lang, 'learnFirst')));
+    if (game.study) item.append(el('a', {
+      class: 'learn-link', href: learnHref(game, level),
+      'aria-label': `${t(lang, 'learnFirst')}: ${level.label[lang]}`,
+    }, t(lang, 'learnFirst')));
     list.append(item);
   }
   const main = el('main', { class: 'levels-screen' },

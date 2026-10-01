@@ -12,10 +12,13 @@ export function learnScreen(ctx: AppContext, game: Game, level: Level): Screen {
   let failed = false;
   let destroyed = false;
   const lang = () => ctx.settings.lang;
+  const canSpeakNow = () => ctx.settings.sound && ctx.speech.isAvailable(lang());
+  let speakingBuilt = false;
 
   function studyContext(): StudyContext {
     const L = lang();
-    const canSpeak = ctx.settings.sound && ctx.speech.isAvailable(L);
+    const canSpeak = canSpeakNow();
+    speakingBuilt = canSpeak;
     return { lang: L, speak: canSpeak ? (text) => ctx.speech.speak(text, L) : undefined };
   }
 
@@ -60,7 +63,7 @@ export function learnScreen(ctx: AppContext, game: Game, level: Level): Screen {
   }
 
   const stopWatchingVoices = ctx.speech.onVoicesChanged(() => {
-    if (ready) render();
+    if (ready && canSpeakNow() !== speakingBuilt) render();
   });
   attempt();
 

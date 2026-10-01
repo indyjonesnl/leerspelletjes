@@ -26,6 +26,21 @@ describe('countryInfo', () => {
   });
 });
 
+describe('countryInfo over every level pool', () => {
+  it('has a name and capital in both languages for every country of every level', () => {
+    expect(Object.keys(MAP_CONFIG)).toHaveLength(9);
+    for (const [id, config] of Object.entries(MAP_CONFIG)) {
+      for (const country of levelPool(config, getRegion(config.region))) {
+        for (const lang of ['nl', 'en'] as const) {
+          const info = countryInfo(country.code, lang);
+          expect(info.name, `${id} ${country.code} ${lang}`).toMatch(/\S/);
+          expect(info.capital, `${id} ${country.code} ${lang}`).toMatch(/\S/);
+        }
+      }
+    }
+  });
+});
+
 describe('mapGame.study', () => {
   it('is the map study view', () => {
     expect(mapGame.study).toBe(mapStudy);

@@ -123,4 +123,21 @@ describe('learnScreen', () => {
     voicesChanged();
     expect(game.seen.at(-1)!.speak).toBeDefined();
   });
+
+  it('does not rebuild on a voices event that changes nothing, but does when speech goes away', () => {
+    const { ctx, speech } = makeCtx({}, false);
+    let voicesChanged!: () => void;
+    speech.onVoicesChanged.mockImplementation((callback: () => void) => { voicesChanged = callback; return () => {}; });
+    const game = makeGame();
+    learnScreen(ctx, game, level);
+    speech.isAvailable.mockReturnValue(true);
+    voicesChanged();
+    const builds = game.seen.length;
+    voicesChanged();
+    expect(game.seen).toHaveLength(builds);
+    speech.isAvailable.mockReturnValue(false);
+    voicesChanged();
+    expect(game.seen).toHaveLength(builds + 1);
+    expect(game.seen.at(-1)!.speak).toBeUndefined();
+  });
 });

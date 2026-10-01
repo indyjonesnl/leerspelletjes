@@ -58,6 +58,12 @@ describe('levelsScreen', () => {
     const links = [...el.querySelectorAll<HTMLAnchorElement>('a.learn-link')];
     expect(links.map((a) => a.getAttribute('href'))).toEqual(['#/demo/1/learn', '#/demo/2/learn']);
     expect(links[0].textContent).toBe('Leer eerst');
+    expect(links.map((a) => a.getAttribute('aria-label'))).toEqual(
+      game.levels.map((l) => `Leer eerst: ${l.label.nl}`),
+    );
+    expect(
+      [...levelsScreen(makeCtx('en'), studyGame).el.querySelectorAll('a.learn-link')].map((a) => a.getAttribute('aria-label')),
+    ).toEqual(game.levels.map((l) => `Learn first: ${l.label.en}`));
     expect(levelsScreen(makeCtx('en'), studyGame).el.querySelector('a.learn-link')!.textContent).toBe('Learn first');
     expect(levelsScreen(makeCtx(), game).el.querySelector('a.learn-link')).toBeNull();
   });
