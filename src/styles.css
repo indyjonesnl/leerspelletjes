@@ -247,3 +247,17 @@ button { font: inherit; color: inherit; }
 .info-text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
 .info-name { font-size: 26px; overflow-wrap: anywhere; }
 .info-capital { color: var(--muted); font-size: 20px; overflow-wrap: anywhere; }
+
+/* Study maps */
+.study-map .country.target.selected, .study-map .country.target.selected:hover { fill: var(--accent); }
+.study-map .point.selected .point-dot { fill: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 4px 14px 4px 8px;
+  border: 3px solid var(--line); border-radius: 999px; background: var(--card);
+  font-size: 18px; font-weight: 700; cursor: pointer;
+}
+.chip[aria-pressed='true'] { border-color: var(--accent); background: var(--accent); color: #fff; }
+.chip .study-flag { width: 36px; height: 27px; }
+.inset-stage { display: flex; justify-content: center; margin: 8px 0; }
+.inset-stage:empty { display: none; }

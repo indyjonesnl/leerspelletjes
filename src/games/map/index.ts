@@ -2,6 +2,7 @@ import type { Game } from '../../core/types';
 import { MAP_CONFIG, MAP_LEVELS } from './levels';
 import { loadRegion } from './regions';
 import { makeMapQuestion } from './questions';
+import { mapStudy } from './study';
 
 export const mapGame: Game = {
   id: 'map',
@@ -13,4 +14,5 @@ export const mapGame: Game = {
     await loadRegion(MAP_CONFIG[level.id].region);
   },
   makeQuestion: makeMapQuestion,
+  study: mapStudy,
 };

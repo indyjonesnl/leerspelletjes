@@ -67,4 +67,11 @@ describe('mapView', () => {
     expect(low.getAttribute('style')).toContain('max-height: 40vh');
     expect(low.getAttribute('style')).toContain('calc(40vh * 1000 / 800)');
   });
+
+  it('labels each area target with its own name when labelOf is given', () => {
+    const labelOf = (id: string) => ({ nl: `naam ${id}`, en: `name ${id}` });
+    const labels = (svg: SVGSVGElement) => [...svg.querySelectorAll('[data-choice-id]')].map((t) => t.getAttribute('aria-label'));
+    expect(labels(mapView(MAP, { targets: new Set(['AA', 'BB']), state: idle, labelOf }))).toEqual(['naam AA', 'naam BB']);
+    expect(labels(mapView(MAP, { targets: new Set(['AA']), state: { lang: 'en', picked: null }, labelOf }))).toEqual(['name AA']);
+  });
 });

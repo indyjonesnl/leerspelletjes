@@ -18,6 +18,8 @@ export interface MapViewOptions {
   state: VisualState;
   /** Accessible label of area targets; default "land" / "country". */
   targetLabel?: Localized;
+  /** Accessible name per area target, overriding `targetLabel` (the study screens say the real names). */
+  labelOf?: (id: string) => Localized;
   /** Area drawn with the accent colour (not a target). */
   highlight?: string;
   /** 'other' (default): non-target areas are muted, as in the map game. 'plain': they keep the normal fill. */
@@ -65,7 +67,7 @@ function targetAttrs(id: string, x: number, y: number, label: Localized, state: 
 
 /** The region map. Areas in `targets` and all `points` carry `data-choice-id` and show ✓/✗ once answered. */
 export function mapView(map: RegionMap, opts: MapViewOptions): SVGSVGElement {
-  const { targets, state, targetLabel = COUNTRY_LABEL, highlight, untargeted = 'other', points = [], pointLabel = CITY_LABEL, maxHeightVh } = opts;
+  const { targets, state, targetLabel = COUNTRY_LABEL, labelOf, highlight, untargeted = 'other', points = [], pointLabel = CITY_LABEL, maxHeightVh } = opts;
   const [, , w, h] = map.viewBox.split(' ').map(Number);
   const svg = svgEl('svg', {
     class: 'map', viewBox: map.viewBox,
@@ -83,7 +85,7 @@ export function mapView(map: RegionMap, opts: MapViewOptions): SVGSVGElement {
     svg.append(svgEl('path', {
       class: ['country', 'target', result].filter(Boolean).join(' '),
       d: c.d,
-      ...targetAttrs(c.code, c.cx, c.cy, targetLabel, state),
+      ...targetAttrs(c.code, c.cx, c.cy, labelOf ? labelOf(c.code) : targetLabel, state),
     }));
     if (result) marks.push(markEl(c.cx, c.cy, result, MARK_SIZE));
   }
