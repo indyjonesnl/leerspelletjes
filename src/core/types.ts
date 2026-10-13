@@ -66,6 +66,8 @@ export interface Game {
   icon: string;
   pickerLayout: 'list' | 'grid';
   levels: Level[];
+  /** Automatically advance after correct answers; defaults to true. False always shows Continue. */
+  autoAdvance?: boolean;
   /** Type an answer letter directly; 1–4 still select answer-button positions. */
   letterInput?: boolean;
   /** Replace an unanswered question when the language changes; finish answered questions once. */

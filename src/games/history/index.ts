@@ -13,6 +13,7 @@ export const historyGame: Game = {
   icon: 'icons/history.svg',
   pickerLayout: 'list',
   levels,
+  autoAdvance: false,
   study: historyStudy,
   makeQuestion: makeHistoryQuestion,
 };

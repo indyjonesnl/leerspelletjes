@@ -117,7 +117,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     if (ctx.settings.sound) (result.correct ? playCorrect : playWrong)();
     render();
     live.textContent = result.correct ? t(lang(), 'correct') : `${t(lang(), 'wrong')} ${answerLabel()}`;
-    if (result.correct) {
+    if (result.correct && game.autoAdvance !== false) {
       focusNextQuestion = wasFocusedInPlay;
       if (wasFocusedInPlay && round.current.answerOn === 'interactive') body.querySelector<HTMLElement>('.feedback')?.focus();
       timer = setTimeout(advance, ADVANCE_DELAY_MS);
@@ -239,7 +239,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
         class: 'feedback',
         tabindex: result.correct && q.answerOn === 'interactive' ? '-1' : undefined,
       }, result.correct ? t(L, 'correct') : `${t(L, 'wrong')} ${answerLabel()}`));
-      if (!result.correct) {
+      if (!result.correct || game.autoAdvance === false) {
         const next = el('button', { type: 'button', class: 'continue' }, t(L, 'continue'));
         next.addEventListener('click', advance);
         body.append(next);

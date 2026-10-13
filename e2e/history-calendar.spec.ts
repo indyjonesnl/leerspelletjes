@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { MONTHS } from '../src/games/calendar/data';
+import { HISTORY_EVENTS } from '../src/games/history/data';
 
 async function finishChoiceQuestion(page: Page) {
   await page.locator('.choice').first().click();
@@ -16,9 +17,17 @@ async function playHistoryRound(page: Page, level: 'dutch' | 'world') {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     expect(await page.locator('.history-event').count()).toBe(0);
     await expect(page.getByRole('article')).toHaveCount(0);
-    await page.locator('.choice').first().click();
+    if (question === 1) {
+      const ids = await page.locator('.choice').evaluateAll((buttons) => buttons.map((button) => (button as HTMLElement).dataset.id!));
+      const earliest = HISTORY_EVENTS[level].filter((event) => ids.includes(event.id)).sort((a, b) => a.year - b.year)[0];
+      await page.locator(`.choice[data-id="${earliest.id}"]`).click();
+      await page.waitForTimeout(1500);
+      await expect(page.locator('.progress')).toHaveText('Vraag 1 van 10');
+    } else {
+      await page.locator('.choice').first().click();
+    }
     await expect(page.locator('.feedback')).toBeVisible();
-    const wrong = await page.locator('.continue').count() > 0;
+    await expect(page.locator('.continue')).toBeVisible();
     await expect(page.locator('.history-event')).toHaveCount(4);
     expect(await page.locator('.history-event-year').count()).toBe(4);
     await expect(page.getByRole('link', { name: /Source|Bron/ })).toHaveCount(4);
@@ -26,7 +35,7 @@ async function playHistoryRound(page: Page, level: 'dutch' | 'world') {
     await expect(page.getByRole('heading', { level: 3 })).toHaveCount(4);
     const firstYear = (await page.locator('.history-event-year').first().textContent())!;
     await expect(page.getByText(firstYear, { exact: true })).toBeVisible();
-    if (wrong) await page.locator('.continue').click();
+    await page.locator('.continue').press('Enter');
   }
   await expect(page.locator('.end h1')).toContainText('van 10!');
 }
