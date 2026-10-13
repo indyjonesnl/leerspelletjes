@@ -2,6 +2,7 @@ import type { Level, Question, Rng } from '../../core/types';
 import { el } from '../../core/ui';
 import { addDays, daysInMonth, weekdayForDate } from './calendar';
 import { formatCalendarDate, MONTHS, WEEKDAY_HEADINGS, WEEKDAYS } from './data';
+import { createMonthBoard } from './monthBoard';
 
 export const MONTH_IDS = MONTHS.map((month) => month.id);
 const weekdayByIndex = (index: number) => WEEKDAYS[(index + 7) % 7];
@@ -48,14 +49,15 @@ function makeMonthQuestion(rng: Rng): Question {
   }
   const labels = (sequence: string[], lang: 'nl' | 'en') => sequence.map((id) => MONTHS[monthIndex(id)].name[lang]).join(' → ');
   const choices = rng.shuffle([...permutations].map(([id, sequence]) => ({ id, label: { nl: labels(sequence, 'nl'), en: labels(sequence, 'en') } })));
+  const initialOrder = rng.shuffle(canonical);
   return {
     key: `months:${canonical.join(',')}`,
     prompt: { nl: 'Zet deze vier maanden van vroeg naar laat in het jaar.', en: 'Put these four months in order from earliest to latest in the year.' },
     speech: { nl: 'Kies de volgorde van januari naar december.', en: 'Choose the order from January to December.' },
     answerId,
     choices,
-    visual: ({ lang }) => el('p', { class: 'calendar-month-question' },
-      lang === 'nl' ? 'Welke volgorde begint het vroegst in het jaar?' : 'Which order starts earliest in the year?'),
+    answerOn: 'interactive',
+    visual: ({ lang, picked, submitAnswer }) => createMonthBoard(canonical, initialOrder, lang, picked !== null, submitAnswer ?? (() => {})),
   };
 }
 

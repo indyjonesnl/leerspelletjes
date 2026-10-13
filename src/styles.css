@@ -359,3 +359,33 @@ button { font: inherit; color: inherit; }
 .body-study-card { padding: 1rem; }
 .body-study-card .body-diagram { width: 120px; height: auto; }
 .body-location { color: var(--muted); font-size: .9rem; }
+
+/* Calendar Quest */
+.calendar-grid-wrap { width: min(100%, 440px); margin: 0 auto; }
+.calendar-grid-title { margin: 0 0 8px; text-align: center; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.calendar-weekday-heading { padding: 4px 1px; color: var(--muted); font-size: 13px; font-weight: 700; text-align: center; }
+.calendar-grid-empty, .calendar-day { display: grid; min-height: 38px; place-items: center; }
+.calendar-day { border: 2px solid var(--line); border-radius: 9px; background: var(--card); }
+.calendar-day-marked { border-color: var(--accent); background: #fff0bf; box-shadow: inset 0 0 0 2px var(--accent); font-weight: 800; }
+.calendar-elapsed-card { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 16px; border: 3px solid var(--line); border-radius: var(--radius); background: var(--card); font-size: 20px; }
+.calendar-study-days, .calendar-study-months { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 6px; padding-left: 28px; }
+.calendar-study-days li, .calendar-study-months li { padding: 6px; }
+.calendar-study-example { margin: 10px 0; }
+.month-board { width: min(100%, 580px); margin: 0 auto; }
+.month-instructions { margin: 8px 0 14px; color: var(--muted); text-align: center; }
+.month-tray-heading, .month-slots-heading { margin: 12px 0 6px; font-size: 18px; }
+.month-tile-tray { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: 48px; }
+.month-tile, .month-slot {
+  min-height: 48px; border: 3px solid var(--line); border-radius: 12px; background: var(--card);
+  color: var(--ink); font: inherit; font-weight: 700; cursor: pointer;
+}
+.month-tile { padding: 7px 12px; touch-action: none; user-select: none; }
+.month-tile.is-selected, .month-slot:focus-visible { border-color: var(--accent); outline: 3px solid color-mix(in srgb, var(--accent), transparent 68%); outline-offset: 2px; }
+.month-slots { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.month-board-row { display: flex; min-width: 0; }
+.month-slot { flex: 1; text-align: left; padding: 7px 12px; }
+.month-live { min-height: 1.5em; margin: 6px 0; color: var(--muted); }
+.month-check { display: block; margin: 12px auto 0; }
+.month-correct-order { padding: 10px; border-radius: 10px; background: var(--card); font-weight: 700; text-align: center; }
+.month-tile:disabled, .month-slot:disabled { cursor: default; opacity: .75; }
