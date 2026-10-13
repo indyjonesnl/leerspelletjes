@@ -18,6 +18,7 @@ const GOOD = 0.5;
 
 /** Answer elements: choice buttons, or targets inside a visual (`answerOn: 'visual'`). */
 const ANSWER_SELECTOR = '.choice, [data-choice-id]';
+const INTERACTIVE_FOCUS_SELECTOR = '[data-interactive-focus]';
 type Focusable = HTMLElement | SVGElement;
 const ARROWS: Record<string, Direction> = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' };
 
@@ -118,6 +119,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     live.textContent = result.correct ? t(lang(), 'correct') : `${t(lang(), 'wrong')} ${answerLabel()}`;
     if (result.correct) {
       focusNextQuestion = wasFocusedInPlay;
+      if (wasFocusedInPlay && round.current.answerOn === 'interactive') body.querySelector<HTMLElement>('.feedback')?.focus();
       timer = setTimeout(advance, ADVANCE_DELAY_MS);
     } else {
       body.querySelector<HTMLButtonElement>('.continue')?.focus();
@@ -158,6 +160,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
 
     const activeBefore = document.activeElement;
     const focusedChoiceId = activeBefore instanceof Element ? answerIdOf(activeBefore) : undefined;
+    const focusedInteractiveKey = activeBefore instanceof HTMLElement ? activeBefore.dataset.interactiveFocus : undefined;
     const focusedHint = activeBefore instanceof HTMLElement && activeBefore.classList.contains('hint-button');
     const focusWasInPlay = !!activeBefore && body.contains(activeBefore);
 
@@ -232,7 +235,10 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     }
 
     if (result) {
-      body.append(el('p', { class: 'feedback' }, result.correct ? t(L, 'correct') : `${t(L, 'wrong')} ${answerLabel()}`));
+      body.append(el('p', {
+        class: 'feedback',
+        tabindex: result.correct && q.answerOn === 'interactive' ? '-1' : undefined,
+      }, result.correct ? t(L, 'correct') : `${t(L, 'wrong')} ${answerLabel()}`));
       if (!result.correct) {
         const next = el('button', { type: 'button', class: 'continue' }, t(L, 'continue'));
         next.addEventListener('click', advance);
@@ -240,6 +246,11 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
       }
     }
 
+    if (focusedInteractiveKey) {
+      const same = [...body.querySelectorAll<HTMLButtonElement>(INTERACTIVE_FOCUS_SELECTOR)]
+        .find((node) => node.dataset.interactiveFocus === focusedInteractiveKey);
+      if (same && !same.disabled) { same.focus(); return; }
+    }
     if (focusedChoiceId) {
       const same = [...body.querySelectorAll<Focusable>(ANSWER_SELECTOR)].find((n) => answerIdOf(n) === focusedChoiceId);
       if (same && !isDisabled(same)) { same.focus(); return; }
@@ -249,7 +260,8 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
       return;
     }
     if ((focusWasInPlay || focusNextQuestion) && result === null) {
-      body.querySelector<Focusable>(ANSWER_SELECTOR)?.focus();
+      (body.querySelector<Focusable>(ANSWER_SELECTOR)
+        ?? body.querySelector<Focusable>('[data-interactive-initial-focus]'))?.focus();
       focusNextQuestion = false;
     }
   }

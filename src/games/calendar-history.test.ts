@@ -48,7 +48,7 @@ describe('History Timeline and Calendar Quest integration', () => {
     for (const level of historyGame.levels) {
       const question = historyGame.makeQuestion(level, createRng(4), []);
       const visual = question.visual!({ lang: 'en', picked: null });
-      const before = `${visual.textContent} ${question.visualLabel!.hidden.en}`;
+      const before = visual.textContent ?? '';
       expect(visual.querySelectorAll('.history-event')).toHaveLength(0);
       for (const event of HISTORY_EVENTS[level.id as keyof typeof HISTORY_EVENTS]) {
         expect(before).not.toContain(String(event.year));
@@ -56,6 +56,7 @@ describe('History Timeline and Calendar Quest integration', () => {
       }
       const after = question.visual!({ lang: 'en', picked: { id: question.answerId, answerId: question.answerId } });
       expect(after.querySelectorAll('.history-event')).toHaveLength(4);
+      expect(question.visualLabel).toBeUndefined();
     }
   });
 });

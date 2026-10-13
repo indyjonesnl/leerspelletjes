@@ -36,10 +36,6 @@ export function makeHistoryQuestion(level: Level, rng: Rng, previous: readonly Q
     },
     choices,
     answerId: earliest.id,
-    visualLabel: {
-      hidden: { nl: 'Tijdlijn verborgen tot je antwoord geeft.', en: 'Timeline stays hidden until you answer.' },
-      revealed: { nl: 'Gebeurtenissen op volgorde met jaartallen.', en: 'Events in order with years.' },
-    },
     visual: ({ lang, picked }) => {
       const root = el('section', { class: 'history-timeline', 'aria-live': 'polite' });
       if (!picked) {

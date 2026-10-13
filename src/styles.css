@@ -386,7 +386,7 @@ button { font: inherit; color: inherit; }
 .month-tile.is-selected, .month-slot:focus-visible { border-color: var(--accent); outline: 3px solid color-mix(in srgb, var(--accent), transparent 68%); outline-offset: 2px; }
 .month-slots { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .month-board-row { display: flex; min-width: 0; }
-.month-slot { flex: 1; text-align: left; padding: 7px 12px; }
+.month-slot { flex: 1; text-align: left; padding: 7px 12px; touch-action: none; }
 .month-live { min-height: 1.5em; margin: 6px 0; color: var(--muted); }
 .month-check { display: block; margin: 12px auto 0; }
 .month-correct-order { padding: 10px; border-radius: 10px; background: var(--card); font-weight: 700; text-align: center; }

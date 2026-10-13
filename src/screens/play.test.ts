@@ -74,6 +74,38 @@ function makeVisualGame(): Game {
     },
   };
 }
+
+function makeInteractiveGame(): Game {
+  let n = 0;
+  return {
+    ...makeGame(),
+    makeQuestion: () => {
+      n++;
+      return {
+        key: `interactive-${n}`,
+        prompt: { nl: 'Zet de maanden op volgorde', en: 'Arrange the months' },
+        answerOn: 'interactive',
+        visual: ({ submitAnswer, picked }: VisualState) => {
+          const section = document.createElement('section');
+          const tile = document.createElement('button');
+          tile.dataset.interactiveFocus = 'tile';
+          tile.dataset.interactiveInitialFocus = 'true';
+          tile.textContent = 'January';
+          tile.addEventListener('click', () => submitAnswer?.('wrong'));
+          const check = document.createElement('button');
+          check.dataset.interactiveFocus = 'check';
+          check.textContent = 'Check';
+          check.disabled = picked !== null;
+          check.addEventListener('click', () => submitAnswer?.('a'));
+          section.append(tile, check);
+          return section;
+        },
+        choices: [{ id: 'a', label: { nl: 'A', en: 'A' } }, { id: 'wrong', label: { nl: 'B', en: 'B' } }],
+        answerId: 'a',
+      };
+    },
+  };
+}
 const target = (id: string) => document.querySelector<SVGElement>(`[data-choice-id="${id}"]`)!;
 const tap = (node: Element) => node.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -233,6 +265,35 @@ describe('playScreen', () => {
     continueButton.click();
     expect(text('.progress')).toBe('Vraag 2 van 10');
     expect(document.activeElement).toBe(choice('a'));
+  });
+
+  it('preserves interactive focus during updates and moves it to the next board after answering', () => {
+    const { ctx } = makeCtx();
+    const s = start(ctx, makeInteractiveGame());
+    const tile = document.querySelector<HTMLButtonElement>('[data-interactive-focus="tile"]')!;
+    tile.focus();
+    ctx.settings = { ...ctx.settings, lang: 'en' };
+    s.update!();
+    expect(document.activeElement).toBe(document.querySelector('[data-interactive-focus="tile"]'));
+
+    const check = document.querySelector<HTMLButtonElement>('[data-interactive-focus="check"]')!;
+    check.focus();
+    check.click();
+    expect(document.activeElement).toBe(document.querySelector('.feedback'));
+    vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    expect(text('.progress')).toBe('Question 2 of 10');
+    expect(document.activeElement).toBe(document.querySelector('[data-interactive-initial-focus]'));
+  });
+
+  it('returns keyboard focus to the next interactive board after Continue', () => {
+    const s = start(makeCtx().ctx, makeInteractiveGame());
+    document.querySelector<HTMLButtonElement>('[data-interactive-focus="tile"]')!.focus();
+    document.querySelector<HTMLButtonElement>('[data-interactive-focus="tile"]')!.click();
+    const next = document.querySelector<HTMLButtonElement>('.continue')!;
+    expect(document.activeElement).toBe(next);
+    next.click();
+    expect(document.activeElement).toBe(document.querySelector('[data-interactive-initial-focus]'));
+    s.destroy?.();
   });
 
   it('does nothing after being destroyed mid-advance', () => {

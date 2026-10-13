@@ -6,6 +6,7 @@ interface BoardState {
   tray: string[];
   slots: (string | null)[];
   selected: { id: string; slot: number | null } | null;
+  focusKey?: string;
 }
 
 const states = new WeakMap<readonly string[], BoardState>();
@@ -34,7 +35,7 @@ export function createMonthBoard(
   const live = el('p', { class: 'month-live', 'aria-live': 'polite', 'aria-atomic': 'true' });
   const labels = { empty: lang === 'nl' ? 'Kies een maand' : 'Choose a month' };
   const disabled = submitted;
-  const check = el('button', { type: 'button', class: 'button month-check', disabled }, lang === 'nl' ? 'Controleer volgorde' : 'Check order');
+  const check = el('button', { type: 'button', class: 'button month-check', disabled, 'data-interactive-focus': 'check-order' }, lang === 'nl' ? 'Controleer volgorde' : 'Check order');
   let pointerPending: { id: string; sourceSlot: number | null; pointerId: number; x: number; y: number } | null = null;
   let dragActive = false;
   let suppressNextClick = false;
@@ -57,6 +58,7 @@ export function createMonthBoard(
       state!.slots[sourceSlot] = displaced;
     }
     state!.selected = null;
+    state!.focusKey = `slot:${targetSlot}`;
     render();
     announce(`${monthName(id, lang)} ${lang === 'nl' ? 'staat nu op plek' : 'is now in position'} ${targetSlot + 1}.`);
   }
@@ -81,13 +83,14 @@ export function createMonthBoard(
 
   function render() {
     const focused = board.contains(document.activeElement) ? document.activeElement as HTMLElement : null;
-    const focusMonth = focused?.dataset.monthId;
-    const focusSlot = focused?.dataset.slotIndex;
-    tray.replaceChildren(...state!.tray.map((id) => {
+    const focusedKey = focused?.dataset.interactiveFocus;
+    tray.replaceChildren(...state!.tray.map((id, index) => {
       const selected = state!.selected?.id === id;
       const button = el('button', {
         type: 'button', class: `month-tile${selected ? ' is-selected' : ''}`,
         'data-month-id': id,
+        'data-interactive-focus': `month:${id}`,
+        ...(index === 0 ? { 'data-interactive-initial-focus': 'true' } : {}),
         'aria-pressed': String(selected),
         'aria-label': `${monthName(id, lang)}${selected ? (lang === 'nl' ? ', gekozen' : ', selected') : ''}`,
         disabled,
@@ -99,6 +102,8 @@ export function createMonthBoard(
       const slot = el('li', { class: 'month-board-row' },
         el('button', {
           type: 'button', class: 'month-slot', 'data-slot-index': String(index), 'data-month-id': id ?? '',
+          'data-interactive-focus': `slot:${index}`,
+          ...(index === 0 ? { 'data-interactive-initial-focus': 'true' } : {}),
           'aria-label': `${lang === 'nl' ? 'Plek' : 'Position'} ${index + 1}${id ? `, ${monthName(id, lang)}` : `, ${labels.empty}`}`,
           disabled,
         }, `${index + 1}. ${id ? monthName(id, lang) : labels.empty}`),
@@ -109,6 +114,7 @@ export function createMonthBoard(
           state!.slots[index] = null;
           state!.tray.push(id);
           state!.selected = null;
+          state!.focusKey = `month:${id}`;
           render();
           announce(`${monthName(id, lang)} ${lang === 'nl' ? 'terug bij de maanden.' : 'returned to the month tray.'}`);
         } else if (state!.selected) placeMonth(state!.selected.id, state!.selected.slot, index);
@@ -118,8 +124,12 @@ export function createMonthBoard(
       return slot;
     }));
     board.dataset.selectedMonth = state!.selected?.id ?? '';
-    if (focusMonth) board.querySelector<HTMLButtonElement>(`[data-month-id="${focusMonth}"]`)?.focus();
-    else if (focusSlot !== undefined) board.querySelector<HTMLButtonElement>(`[data-slot-index="${focusSlot}"]`)?.focus();
+    const focusKey = state!.focusKey ?? focusedKey;
+    state!.focusKey = undefined;
+    if (focusKey) {
+      [...board.querySelectorAll<HTMLButtonElement>('[data-interactive-focus]')]
+        .find((button) => button.dataset.interactiveFocus === focusKey && !button.disabled)?.focus();
+    }
   }
 
   board.append(instruction, trayHeading, tray, slotsHeading, slots, live, check);
@@ -148,7 +158,10 @@ export function createMonthBoard(
   });
   board.addEventListener('pointerup', (event) => {
     if (!pointerPending || pointerPending.pointerId !== event.pointerId) return;
-    const target = event.target as HTMLElement;
+    // Touch pointers are implicitly captured by their source button, so event.target can still
+    // be the tile even when the finger is over a different slot. Resolve the actual drop point.
+    const target = (document.elementFromPoint?.(event.clientX, event.clientY) as HTMLElement | null)
+      ?? event.target as HTMLElement;
     const slot = target.closest<HTMLButtonElement>('.month-slot');
     if (dragActive && slot) {
       placeMonth(pointerPending.id, pointerPending.sourceSlot, Number(slot.dataset.slotIndex));
