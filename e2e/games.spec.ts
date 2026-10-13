@@ -15,7 +15,7 @@ async function playRound(page: Page) {
   await expect(page.locator('.end h1')).toContainText('van 10!');
 }
 
-for (const [game, level] of [['clock', '1'], ['tables', '7'], ['flags', '1']] as const) {
+for (const [game, level] of [['clock', '1'], ['tables', '7'], ['flags', '1'], ['money', 'euros'], ['words', 'short'], ['patterns', 'shapes']] as const) {
   test(`plays a full ${game} round`, async ({ page }) => {
     await page.goto('./');
     await page.locator(`a.tile-${game}`).click();
@@ -27,6 +27,60 @@ for (const [game, level] of [['clock', '1'], ['tables', '7'], ['flags', '1']] as
     await expect(page.locator('.tiles')).toBeVisible();
   });
 }
+
+for (const [game, level] of [['money', 'change'], ['words', 'long'], ['patterns', 'growing']] as const) {
+  test(`${game} switches language with stable choices and fits on screen`, async ({ page }, testInfo) => {
+    await page.goto('./');
+    const icon = page.locator(`.tile-${game} img`);
+    await expect(icon).toBeVisible();
+    expect(await icon.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    await page.goto(`./#/${game}/${level}`);
+    const choices = await page.locator('.choice').evaluateAll((buttons) => buttons.map((b) => b.getAttribute('data-id')));
+    await expect(page.locator('.visual')).toBeVisible();
+    await page.getByRole('button', { name: 'EN', exact: true }).click();
+    await expect(page.locator('.progress')).toHaveText('Question 1 of 10');
+    expect(await page.locator('.choice').evaluateAll((buttons) => buttons.map((b) => b.getAttribute('data-id')))).toEqual(choices);
+    if (game === 'words') {
+      const options = await page.locator('.choice .label').allTextContents();
+      const letters = (await page.locator('.word-letter').allTextContents()).join('').toLowerCase().split('').sort().join('');
+      expect(options.filter((word) => [...word].sort().join('') === letters).length).toBeGreaterThan(0);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    const overflowing = await page.locator('.visual, .choice').evaluateAll((elements) => elements.filter((e) => e.scrollWidth > e.clientWidth + 1).length);
+    expect(overflowing).toBe(0);
+    await page.screenshot({ path: testInfo.outputPath('game.png'), fullPage: true });
+    await page.keyboard.press('1');
+    await expect(page.locator('.choice.correct')).toBeVisible();
+  });
+}
+
+test('word builder exposes the scrambled letters to screen readers', async ({ page }) => {
+  await page.goto('./#/words/short');
+  const letters = await page.locator('.word-letter').allTextContents();
+  const spelling = letters.map((letter) => letter.toLowerCase()).join(', ');
+  await expect(page.locator('.word-letters')).toMatchAriaSnapshot(`- group "${spelling}"`);
+});
+
+test('money coins show local images with accessible values', async ({ page }, testInfo) => {
+  await page.goto('./#/money/cents');
+  const coins = page.locator('img.money-piece');
+  await expect(coins.first()).toBeVisible();
+  expect(await coins.count()).toBeGreaterThan(1);
+  for (const coin of await coins.all()) {
+    await expect(coin).toHaveAttribute('alt', /^€ \d+,\d{2}$/);
+    expect(await coin.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  }
+  await expect(page.locator('.coin-credit')).toContainText('European Central Bank');
+  for (const filename of ['1-cent.jpg', '2-cent.jpg', '5-cent.jpg', '10-cent.png', '20-cent.jpg', '50-cent.jpg', '1-euro.jpg', '2-euro.jpg']) {
+    const response = await page.request.get(`./coins/${filename}`);
+    expect(response.ok()).toBe(true);
+    expect(response.headers()['content-type']).toMatch(/^image\//);
+  }
+  await page.getByRole('button', { name: 'EN', exact: true }).click();
+  await expect(coins.first()).toHaveAttribute('alt', /^€\d+\.\d{2}$/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('coins.png'), fullPage: true });
+});
 
 test('flag images load', async ({ page }) => {
   await page.goto('./#/flags/2');

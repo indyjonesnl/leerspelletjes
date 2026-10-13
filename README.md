@@ -3,7 +3,11 @@
 Free educational games for primary school children (groep 1–8), in Dutch and English.
 No accounts, no cookies, no tracking.
 
-Games: clock reading, times tables, flags, finding countries on the map, capitals, and the Dutch provinces (map, capitals and flags). Flags, capitals, the map game and the Dutch provinces have a "Leer eerst" study screen for every level.
+Games: clock reading, times tables, flags, finding countries on the map, capitals, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, and Pattern Puzzles. Flags, capitals, the map game and the Dutch provinces have a "Leer eerst" study screen for every level.
+
+Money & Change has four levels: counting euro coins, counting euros and cents, adding prices, and calculating change. Calculations use integer cents. Word Builder has three word-length levels with Dutch and English vocabulary, picture clues, and scrambled letters; children choose the correctly spelled word from four options. Its read-aloud clues describe the picture without giving away the spelling. Pattern Puzzles has four levels: repeating shapes, counting sequences, missing numbers, and growing steps. Each new game uses the shared ten-question rounds, answer buttons, keyboard controls, feedback, and score screen.
+
+Euro coin images are served locally from `public/coins/`, using unmodified ECB common-side images with a visible source credit. The coins are displayed in proportion to their real diameters. Source files and reuse terms are recorded in `public/coins/README.md`.
 
 ## Development
 
