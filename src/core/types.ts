@@ -64,6 +64,10 @@ export interface Game {
   icon: string;
   pickerLayout: 'list' | 'grid';
   levels: Level[];
+  /** Type an answer letter directly; 1–4 still select answer-button positions. */
+  letterInput?: boolean;
+  /** Replace an unanswered question when the language changes; finish answered questions once. */
+  refreshOnLanguageChange?: boolean;
   /** Loads what the level needs before its first question (e.g. a map). */
   load?(level: Level): Promise<void>;
   /** The study view of a level (the "Leer eerst" screen). Absent: no study screens and no link. */

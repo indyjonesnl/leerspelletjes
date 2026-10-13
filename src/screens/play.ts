@@ -89,6 +89,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
   let destroyed = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let speakerShown = ctx.speech.isAvailable(ctx.settings.lang);
+  let lastLang = ctx.settings.lang;
   /** Whether focus should move to the first choice once the next question is shown (set when a
    *  correct answer is chosen while focus is in the play area; the answered choice is disabled and
    *  removed before the auto-advance timer fires, so real focus can't carry it across the wait). */
@@ -210,6 +211,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     }
 
     body.append(el('p', { class: 'prompt' }, q.prompt[L]));
+    if (game.letterInput) body.append(el('p', { class: 'answer-help' }, t(L, 'letterInputHelp')));
 
     if (!visualMode) {
       const grid = el('div', { class: 'choices' });
@@ -308,6 +310,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
   function onKey(event: KeyboardEvent): void {
     if (destroyed || finished) return;
     if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (game.letterInput && event.repeat) return;
     if (round.current.answerOn === 'visual') {
       onVisualKey(event);
       return;
@@ -317,6 +320,14 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     if (Number.isInteger(n) && n >= 1 && n <= buttons.length) {
       event.preventDefault();
       choose(buttons[n - 1].dataset.id!);
+      return;
+    }
+    if (game.letterInput && /^[a-z]$/i.test(event.key)) {
+      if (!body.contains(document.activeElement)) return;
+      event.preventDefault();
+      const letter = event.key.toUpperCase();
+      const matching = round.current.choices.find((c) => c.label[lang()] === letter);
+      choose(matching?.id ?? `typed:${letter}`);
       return;
     }
     const i = buttons.indexOf(document.activeElement as HTMLButtonElement);
@@ -340,12 +351,32 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
   });
 
   showQuestion();
+  // The screen is attached by the caller after this function returns.
+  const entryFocusTimer = game.letterInput ? setTimeout(() => {
+    if (!destroyed && !finished && !round.result && root.isConnected) {
+      body.querySelector<HTMLButtonElement>('.choice')?.focus({ preventScroll: true });
+    }
+  }, 0) : undefined;
 
   return {
     el: root,
     update() {
       ctx.speech.stop();
       speakerShown = ctx.speech.isAvailable(lang());
+      const changedLanguage = lastLang !== lang();
+      lastLang = lang();
+      if (changedLanguage && game.refreshOnLanguageChange && !finished) {
+        focusNextQuestion = true;
+        if (round.result) advance();
+        else if (round.replaceCurrent('language-change')) {
+          chosenId = null;
+          hintShown = false;
+          showQuestion();
+        }
+        return;
+      }
+      // A settings button can retain focus even when its value did not change.
+      if (game.letterInput && !finished && !round.result) focusNextQuestion = true;
       render();
       live.textContent = finished
         ? t(lang(), 'score', { score: round.score, total: round.length })
@@ -353,6 +384,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     },
     destroy() {
       destroyed = true;
+      clearTimeout(entryFocusTimer);
       clearTimeout(timer);
       document.removeEventListener('keydown', onKey);
       stopWatchingVoices();

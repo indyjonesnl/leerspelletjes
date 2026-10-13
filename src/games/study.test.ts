@@ -4,7 +4,7 @@ import { GAMES } from './registry';
 describe('study screens', () => {
   it('exist for the geography games', () => {
     expect(GAMES.filter((g) => g.study).map((g) => g.id)).toEqual(['flags', 'map', 'capitals', 'nederland']);
-    expect(GAMES.filter((g) => !g.study).map((g) => g.id)).toEqual(['clock', 'tables', 'money', 'words', 'patterns']);
+    expect(GAMES.filter((g) => !g.study).map((g) => g.id)).toEqual(['clock', 'tables', 'money', 'words', 'patterns', 'initials']);
   });
 
   it('render a heading and something to look at on every level, in both languages', async () => {

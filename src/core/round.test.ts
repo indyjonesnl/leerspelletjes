@@ -102,6 +102,21 @@ describe('Round', () => {
     expect(round.current.key).toBe(key);
   });
 
+  it('allows language changes beyond the image-replacement limit without consuming questions or score', () => {
+    const round = new Round(fakeGame(manyKeys), level, createRng(4));
+    round.answer('right');
+    round.next();
+    for (let i = 0; i < 12; i++) {
+      expect(round.replaceCurrent('language-change')).toBe(true);
+      expect(round.index).toBe(1);
+      expect(round.score).toBe(1);
+      expect(round.result).toBeNull();
+    }
+    // Language changes must not consume retries reserved for failing images.
+    for (let i = 0; i < 5; i++) expect(round.replaceCurrent()).toBe(true);
+    expect(round.replaceCurrent()).toBe(false);
+  });
+
   it('uses the level round length when set', () => {
     const short: Level = { ...level, roundLength: 5 };
     const round = new Round(fakeGame(manyKeys), short, createRng(1));

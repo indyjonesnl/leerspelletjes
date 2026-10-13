@@ -9,6 +9,7 @@ export const en: Record<StringKey, string> = {
   questionProgress: 'Question {n} of {total}',
   speak: 'Read aloud',
   help: 'Help me',
+  letterInputHelp: 'Click a letter, type the letter, or choose with 1–4.',
   correct: 'Well done!',
   wrong: 'Almost! The right answer is:',
   markRight: 'Right',

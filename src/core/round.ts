@@ -60,10 +60,10 @@ export class Round {
     return true;
   }
 
-  /** Swaps an unanswered question (e.g. its image failed to load). The old one is never asked again. */
-  replaceCurrent(): boolean {
-    if (this._result || this.replacements >= MAX_REPLACEMENTS) return false;
-    this.replacements++;
+  /** Swaps an unanswered question. Only failed images consume the limited retry allowance. */
+  replaceCurrent(reason: 'image-error' | 'language-change' = 'image-error'): boolean {
+    if (this._result || (reason === 'image-error' && this.replacements >= MAX_REPLACEMENTS)) return false;
+    if (reason === 'image-error') this.replacements++;
     this.current = this.generate();
     return true;
   }

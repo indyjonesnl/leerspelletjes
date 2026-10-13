@@ -7,6 +7,7 @@ export const nl = {
   questionProgress: 'Vraag {n} van {total}',
   speak: 'Lees voor',
   help: 'Help mij',
+  letterInputHelp: 'Klik op een letter, typ de letter of kies met 1–4.',
   correct: 'Goed zo!',
   wrong: 'Bijna! Het goede antwoord is:',
   markRight: 'Goed',

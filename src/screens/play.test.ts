@@ -5,6 +5,7 @@ import { svgEl } from '../core/ui';
 import type { AppContext, Screen } from './types';
 import type { Game, Level, VisualState } from '../core/types';
 import type { Settings } from '../core/settings';
+import { GAMES } from '../games/registry';
 
 const levels: Level[] = [
   { id: '1', label: { nl: 'Een', en: 'One' }, example: { nl: '', en: '' }, autoSpeak: true },
@@ -91,6 +92,7 @@ let screen: Screen | undefined;
 function start(ctx: AppContext, game = makeGame(), level = levels[1]): Screen {
   screen = playScreen(ctx, game, level, createRng(1));
   document.body.replaceChildren(screen.el);
+  if (game.letterInput) vi.advanceTimersByTime(0);
   return screen;
 }
 const text = (selector: string) => document.querySelector(selector)?.textContent ?? null;
@@ -377,6 +379,179 @@ describe('playScreen with answers on the visual', () => {
 });
 
 const flush = async () => { await Promise.resolve(); await Promise.resolve(); };
+
+describe('First Letters play', () => {
+  function initialGame(): Game {
+    const found = GAMES.find((g) => g.id === 'initials');
+    expect(found).toBeDefined();
+    return found!;
+  }
+  function begin() {
+    const g = initialGame();
+    const { ctx } = makeCtx({ sound: false });
+    const s = start(ctx, g, g.levels[0]);
+    return { ctx, s, g };
+  }
+  const pictureWord = () => document.querySelector('.initial-picture')!.getAttribute('aria-label')!;
+  const initial = () => pictureWord()[0].toUpperCase();
+
+  it('focuses an answer on entry so typing works immediately', () => {
+    begin();
+    expect(document.activeElement).toBe(document.querySelector('.choice'));
+  });
+
+  it('ignores letter input while header controls have focus', () => {
+    begin();
+    const headerButton = document.createElement('button');
+    headerButton.textContent = 'NL';
+    document.body.append(headerButton);
+    headerButton.focus();
+    press(initial());
+    expect(document.querySelector('.feedback')).toBeNull();
+    document.querySelector<HTMLButtonElement>('.choice')!.focus();
+    press(initial());
+    expect(text('.feedback')).toBe('Goed zo!');
+  });
+
+  it('types the actual initial instead of selecting A/B/C/D by position', () => {
+    begin();
+    const expected = initial();
+    press(expected.toLowerCase());
+    expect(document.querySelector('.choice.correct .label')!.textContent).toBe(expected);
+    expect(document.querySelector('.choice.wrong')).toBeNull();
+    expect(text('.feedback')).toBe('Goed zo!');
+  });
+
+  it.each(['A', 'B', 'C', 'D'])('treats %s as a letter answer even when its button is third', (letter) => {
+    const g = initialGame();
+    const wrong = [...'ABCDEFG'].filter((c) => c !== letter).slice(0, 3);
+    const ordered = [wrong[0], wrong[1], letter, wrong[2]];
+    start(makeCtx({ sound: false }).ctx, {
+      ...g,
+      makeQuestion: () => ({
+        key: 'letter-position', prompt: { nl: 'Eerste letter?', en: 'First letter?' },
+        choices: ordered.map((c) => ({ id: c, label: { nl: c, en: c } })),
+        answerId: letter,
+      }),
+    }, g.levels[0]);
+    press(letter);
+    expect(text('.feedback')).toBe('Goed zo!');
+    expect(document.querySelectorAll('.choice')[2].classList.contains('correct')).toBe(true);
+  });
+
+  it('counts a typed wrong letter even when it is not an offered choice', () => {
+    begin();
+    const labels = [...document.querySelectorAll('.choice .label')].map((b) => b.textContent);
+    const absent = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].find((c) => !labels.includes(c))!;
+    press(absent);
+    expect(text('.feedback')).toContain('Bijna!');
+    expect(document.querySelector('.continue')).not.toBeNull();
+    expect(document.querySelector('.choice.correct .label')!.textContent).toBe(initial());
+  });
+
+  it('uses number keys for option positions', () => {
+    begin();
+    const label = document.querySelector('.choice .label')!.textContent;
+    press('1');
+    expect(document.querySelector('.choice.correct .label')!.textContent).toBe(initial());
+    expect(text('.feedback')).toContain(label === initial() ? 'Goed zo!' : 'Bijna!');
+  });
+
+  it('ignores held keys and letter shortcuts with modifiers', () => {
+    begin();
+    const key = initial();
+    for (const options of [{ repeat: true }, { ctrlKey: true }, { metaKey: true }, { altKey: true }]) {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key, ...options }));
+      expect(document.querySelector('.feedback')).toBeNull();
+    }
+  });
+
+  it('replaces an unanswered picture when switching languages, including after many switches', () => {
+    const { ctx, s } = begin();
+    press(initial());
+    vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    for (let i = 0; i < 50; i++) {
+      const previous = document.querySelector('.initial-picture')!.textContent;
+      ctx.settings = { ...ctx.settings, lang: ctx.settings.lang === 'nl' ? 'en' : 'nl' };
+      s.update!();
+      expect(document.querySelector('.initial-picture')!.textContent).not.toBe(previous);
+      expect(text('.progress')).toContain('2');
+      expect(document.querySelector('.feedback')).toBeNull();
+    }
+    press(initial());
+    vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    for (let i = 2; i < 10; i++) {
+      press(initial());
+      vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    }
+    expect(text('.end h1')).toBe('10 van 10!');
+  });
+
+  it('keeps the same question when only sound changes', () => {
+    const { ctx, s } = begin();
+    const before = pictureWord();
+    ctx.settings = { ...ctx.settings, sound: true };
+    s.update!();
+    expect(pictureWord()).toBe(before);
+  });
+
+  it('restores typing after selecting the current language without replacing the picture', () => {
+    const { ctx, s } = begin();
+    const before = pictureWord();
+    const language = document.createElement('button');
+    language.textContent = 'NL';
+    document.body.append(language);
+    language.focus();
+    ctx.settings = { ...ctx.settings, lang: 'nl' };
+    s.update!();
+    expect(pictureWord()).toBe(before);
+    press(initial());
+    expect(text('.feedback')).toBe('Goed zo!');
+  });
+
+  it('advances an answered question once on a language change and cancels its timer', () => {
+    const { ctx, s } = begin();
+    press(initial());
+    ctx.settings = { ...ctx.settings, lang: 'en' };
+    s.update!();
+    expect(text('.progress')).toBe('Question 2 of 10');
+    expect(document.querySelector('.feedback')).toBeNull();
+    const next = pictureWord();
+    vi.advanceTimersByTime(2 * ADVANCE_DELAY_MS);
+    expect(text('.progress')).toBe('Question 2 of 10');
+    expect(pictureWord()).toBe(next);
+  });
+
+  it('does not count a wrong answer twice when switching language', () => {
+    const { ctx, s } = begin();
+    const wrong = initial() === 'Z' ? 'X' : 'Z';
+    press(wrong);
+    ctx.settings = { ...ctx.settings, lang: 'en' };
+    s.update!();
+    expect(text('.progress')).toBe('Question 2 of 10');
+    for (let i = 1; i < 10; i++) {
+      press(initial());
+      vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    }
+    expect(text('.end h1')).toBe('9 out of 10!');
+  });
+
+  it('finishes an answered final question when switching language and keeps the result', () => {
+    const { ctx, s } = begin();
+    for (let i = 0; i < 9; i++) {
+      press(initial());
+      vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    }
+    press(initial());
+    ctx.settings = { ...ctx.settings, lang: 'en' };
+    s.update!();
+    expect(text('.end h1')).toBe('10 out of 10!');
+    vi.advanceTimersByTime(2 * ADVANCE_DELAY_MS);
+    ctx.settings = { ...ctx.settings, lang: 'nl' };
+    s.update!();
+    expect(text('.end h1')).toBe('10 van 10!');
+  });
+});
 
 describe('playScreen with game.load', () => {
   it('waits for load before the first question', async () => {
