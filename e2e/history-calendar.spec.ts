@@ -40,22 +40,31 @@ async function playHistoryRound(page: Page, level: 'dutch' | 'world') {
   await expect(page.locator('.end h1')).toContainText('van 10!');
 }
 
-async function solveMonthQuestion(page: Page) {
-  const available = await page.locator('.month-tile').evaluateAll((tiles) => tiles.map((tile) => (tile as HTMLElement).dataset.monthId!));
-  const canonical = MONTHS.map((month) => month.id).filter((id) => available.includes(id));
-  for (const [index, id] of canonical.entries()) {
-    const slot = page.locator('.month-slot').nth(index);
-    if (await slot.getAttribute('data-month-id') === id) continue;
-    if (await page.locator(`.month-tile[data-month-id="${id}"]`).count()) {
-      await page.locator(`.month-tile[data-month-id="${id}"]`).click();
-      await slot.click();
-    } else {
-      await page.locator(`.month-slot[data-month-id="${id}"]`).click();
-      await slot.click();
+async function monthOrder(page: Page) {
+  return page.locator('.month-card').evaluateAll((cards) => cards.map((card) => (card as HTMLElement).dataset.monthId!));
+}
+
+async function arrangeMonths(page: Page, reverse = false, keyboard = false) {
+  const available = await monthOrder(page);
+  const ordered = MONTHS.map((month) => month.id).filter((id) => available.includes(id));
+  if (reverse) ordered.reverse();
+  for (const [index, id] of ordered.entries()) {
+    while ((await monthOrder(page)).indexOf(id) > index) {
+      const row = page.locator(`.month-card[data-month-id="${id}"]`);
+      if (keyboard) {
+        await row.locator('.month-handle').focus();
+        await page.keyboard.press('ArrowUp');
+      } else await row.locator('.month-move-up').click();
     }
   }
+}
+
+async function solveMonthQuestion(page: Page) {
+  await arrangeMonths(page);
   await page.locator('.month-check').click();
   await expect(page.locator('.month-correct-order')).toBeVisible();
+  await expect(page.locator('.continue')).toBeVisible();
+  await page.locator('.continue').click();
 }
 
 async function playCalendarRound(page: Page, level: 'weekdays' | 'months' | 'dates' | 'elapsed') {
@@ -87,143 +96,77 @@ for (const level of ['weekdays', 'months', 'dates', 'elapsed'] as const) {
   });
 }
 
-test('month ordering supports pointer drag, tap, keyboard moves, and language changes without losing state', async ({ page }) => {
+test('the single month list previews mouse insertion and preserves ordering through language changes', async ({ page }) => {
   await page.goto('./#/calendar/months');
-  const tile = page.locator('.month-tile').first();
-  const tileId = (await tile.getAttribute('data-month-id'))!;
-  const tileBox = (await tile.boundingBox())!;
-  const slot = page.locator('.month-slot').first();
-  const slotBox = (await slot.boundingBox())!;
-  await page.mouse.move(tileBox.x + tileBox.width / 2, tileBox.y + tileBox.height / 2);
+  const before = await monthOrder(page);
+  const source = page.locator('.month-handle').first();
+  const sourceBox = (await source.boundingBox())!;
+  const destinationBox = (await page.locator('.month-card').last().boundingBox())!;
+  await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
   await page.mouse.down();
-  await page.mouse.move(slotBox.x + slotBox.width / 2, slotBox.y + slotBox.height / 2, { steps: 5 });
+  await page.mouse.move(destinationBox.x + destinationBox.width / 2, destinationBox.y + destinationBox.height - 4, { steps: 8 });
+  await expect(page.locator('.month-drag-ghost')).toBeVisible();
+  await expect(page.locator('.month-card.is-dragging')).toBeVisible();
+  await page.keyboard.press('Escape');
+  expect(await monthOrder(page)).toEqual(before);
+  await expect(page.locator('.month-drag-ghost')).toHaveCount(0);
   await page.mouse.up();
-  await expect(slot).toHaveAttribute('data-month-id', tileId);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-
+  await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(destinationBox.x + destinationBox.width / 2, destinationBox.y + destinationBox.height - 4, { steps: 8 });
+  await page.mouse.up();
+  const expected = [...before.slice(1), before[0]];
+  expect(await monthOrder(page)).toEqual(expected);
+  await expect(page.locator('.month-drag-ghost')).toHaveCount(0);
   await page.getByRole('button', { name: 'EN', exact: true }).click();
-  await expect(page.locator('.progress')).toHaveText('Question 1 of 10');
-  await expect(slot).toHaveAttribute('data-month-id', tileId);
-  const touchTile = page.locator('.month-tile').first();
-  const touchId = (await touchTile.getAttribute('data-month-id'))!;
-  const touchTileBox = (await touchTile.boundingBox())!;
-  const secondSlot = page.locator('.month-slot').nth(1);
-  const secondSlotBox = (await secondSlot.boundingBox())!;
-  await page.touchscreen.tap(touchTileBox.x + touchTileBox.width / 2, touchTileBox.y + touchTileBox.height / 2);
-  await page.touchscreen.tap(secondSlotBox.x + secondSlotBox.width / 2, secondSlotBox.y + secondSlotBox.height / 2);
-  await expect(secondSlot).toHaveAttribute('data-month-id', touchId);
-
-  const keyboardTile = page.locator('.month-tile').first();
-  const keyboardId = (await keyboardTile.getAttribute('data-month-id'))!;
-  await keyboardTile.focus();
-  await page.keyboard.press('Enter');
-  await page.locator('.month-slot').nth(0).focus();
-  await page.keyboard.press('Enter');
-  await expect(page.locator('.month-slot').nth(0)).toHaveAttribute('data-month-id', keyboardId);
-  await page.locator('.month-slot').nth(0).press('ArrowDown');
-  await expect(page.locator('.month-slot').nth(1)).toHaveAttribute('data-month-id', keyboardId);
+  expect(await monthOrder(page)).toEqual(expected);
+  await page.locator('.month-move-up').nth(1).tap();
+  expect(await monthOrder(page)).toEqual([expected[1], expected[0], ...expected.slice(2)]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
-test('month ordering supports real touch dragging from the tray into a slot', async ({ page }) => {
+test('real touch dragging reorders months and cancels safely', async ({ page }) => {
   await page.goto('./#/calendar/months');
-  const tile = page.locator('.month-tile').first();
-  const monthId = (await tile.getAttribute('data-month-id'))!;
-  const tileBox = (await tile.boundingBox())!;
-  const slot = page.locator('.month-slot').first();
-  const slotBox = (await slot.boundingBox())!;
+  const before = await monthOrder(page);
   const session = await page.context().newCDPSession(page);
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchStart',
-    touchPoints: [{ id: 1, x: tileBox.x + tileBox.width / 2, y: tileBox.y + tileBox.height / 2 }],
-  });
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchMove',
-    touchPoints: [{ id: 1, x: slotBox.x + slotBox.width / 2, y: slotBox.y + slotBox.height / 2 }],
-  });
-  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await expect(slot).toHaveAttribute('data-month-id', monthId);
-
-  const sourceBox = (await slot.boundingBox())!;
-  const secondSlot = page.locator('.month-slot').nth(1);
-  const secondBox = (await secondSlot.boundingBox())!;
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchStart',
-    touchPoints: [{ id: 2, x: sourceBox.x + sourceBox.width / 2, y: sourceBox.y + sourceBox.height / 2 }],
-  });
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchMove',
-    touchPoints: [{ id: 2, x: secondBox.x + secondBox.width / 2, y: secondBox.y + secondBox.height / 2 }],
-  });
-  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await expect(slot).toHaveAttribute('data-month-id', '');
-  await expect(secondSlot).toHaveAttribute('data-month-id', monthId);
-
-  const outsideBox = (await page.locator('.prompt').boundingBox())!;
-  const placedBox = (await secondSlot.boundingBox())!;
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchStart',
-    touchPoints: [{ id: 3, x: placedBox.x + placedBox.width / 2, y: placedBox.y + placedBox.height / 2 }],
-  });
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchMove',
-    touchPoints: [{ id: 3, x: outsideBox.x + outsideBox.width / 2, y: outsideBox.y + outsideBox.height / 2 }],
-  });
-  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-  await expect(secondSlot).toHaveAttribute('data-month-id', monthId);
-  await expect(page.locator('.month-board')).not.toHaveAttribute('data-dragging-month', /.+/);
-
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchStart',
-    touchPoints: [{ id: 4, x: placedBox.x + placedBox.width / 2, y: placedBox.y + placedBox.height / 2 }],
-  });
-  await session.send('Input.dispatchTouchEvent', {
-    type: 'touchMove',
-    touchPoints: [{ id: 4, x: slotBox.x + slotBox.width / 2, y: slotBox.y + slotBox.height / 2 }],
-  });
-  await session.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
-  await expect(secondSlot).toHaveAttribute('data-month-id', monthId);
-  await expect(page.locator('.month-board')).not.toHaveAttribute('data-dragging-month', /.+/);
+  async function drag(ending: 'touchEnd' | 'touchCancel', outside = false) {
+    const source = (await page.locator('.month-handle').first().boundingBox())!;
+    const destination = (await page.locator('.month-card').last().boundingBox())!;
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ id: 1, x: source.x + source.width / 2, y: source.y + source.height / 2 }] });
+    await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ id: 1, x: outside ? 1 : destination.x + destination.width / 2, y: destination.y + destination.height - 4 }] });
+    await expect(page.locator('.month-drag-ghost')).toBeVisible();
+    await session.send('Input.dispatchTouchEvent', { type: ending, touchPoints: [] });
+    await expect(page.locator('.month-drag-ghost')).toHaveCount(0);
+  }
+  await drag('touchEnd');
+  const expected = [...before.slice(1), before[0]];
+  expect(await monthOrder(page)).toEqual(expected);
+  await drag('touchCancel');
+  expect(await monthOrder(page)).toEqual(expected);
+  await drag('touchEnd', true);
+  expect(await monthOrder(page)).toEqual(expected);
   await session.detach();
 });
 
-test('keyboard users keep focus through correct and incorrect month answers', async ({ page }) => {
+test('keyboard users reorder months and continue after both correct and wrong feedback', async ({ page }) => {
   await page.goto('./#/calendar/months');
-  const canonical = MONTHS.map((month) => month.id);
-
-  async function arrange(reverse: boolean) {
-    const available = await page.locator('.month-tile').evaluateAll((tiles) => tiles.map((tile) => (tile as HTMLElement).dataset.monthId!));
-    const ordered = canonical.filter((id) => available.includes(id));
-    const months = reverse ? [...ordered].reverse() : ordered;
-    for (const [index, id] of months.entries()) {
-      const target = page.locator('.month-slot').nth(index);
-      if (await target.getAttribute('data-month-id') === id) continue;
-      const trayTile = page.locator(`.month-tile[data-month-id="${id}"]`);
-      if (await trayTile.count()) {
-        await trayTile.focus();
-        await page.keyboard.press('Enter');
-      } else {
-        const source = page.locator(`.month-slot[data-month-id="${id}"]`);
-        await source.focus();
-        await page.keyboard.press('Enter');
-      }
-      await target.focus();
-      await page.keyboard.press('Enter');
-    }
-    await page.locator('.month-check').focus();
-    await page.keyboard.press('Enter');
-  }
-
-  await arrange(false);
-  await expect(page.locator('.feedback')).toBeVisible();
-  await page.waitForTimeout(1100);
+  await arrangeMonths(page, false, true);
+  await page.locator('.month-check').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.feedback')).toHaveText('Goed zo!');
+  await expect(page.locator('.continue')).toBeFocused();
+  await page.waitForTimeout(1500);
+  await expect(page.locator('.progress')).toHaveText('Vraag 1 van 10');
+  await page.keyboard.press('Enter');
   await expect(page.locator('.progress')).toHaveText('Vraag 2 van 10');
-  await expect(page.locator('[data-interactive-initial-focus]').first()).toBeFocused();
-
-  await arrange(true);
+  await expect(page.locator('.month-handle').first()).toBeFocused();
+  await arrangeMonths(page, true, true);
+  await page.locator('.month-check').focus();
+  await page.keyboard.press('Enter');
   await expect(page.locator('.continue')).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('.progress')).toHaveText('Vraag 3 van 10');
-  await expect(page.locator('[data-interactive-initial-focus]').first()).toBeFocused();
+  await expect(page.locator('.month-handle').first()).toBeFocused();
 });
 
 test('History Timeline and Calendar Quest offer study links in both languages', async ({ page }) => {

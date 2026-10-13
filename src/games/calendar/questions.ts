@@ -50,13 +50,15 @@ function makeMonthQuestion(rng: Rng): Question {
   const labels = (sequence: string[], lang: 'nl' | 'en') => sequence.map((id) => MONTHS[monthIndex(id)].name[lang]).join(' → ');
   const choices = rng.shuffle([...permutations].map(([id, sequence]) => ({ id, label: { nl: labels(sequence, 'nl'), en: labels(sequence, 'en') } })));
   const initialOrder = rng.shuffle(canonical);
+  if (initialOrder.join(',') === answerId) initialOrder.push(initialOrder.shift()!);
   return {
     key: `months:${canonical.join(',')}`,
-    prompt: { nl: 'Zet deze vier maanden van vroeg naar laat in het jaar.', en: 'Put these four months in order from earliest to latest in the year.' },
+    prompt: { nl: 'Zet de maanden op volgorde.', en: 'Put the months in order.' },
     speech: { nl: 'Kies de volgorde van januari naar december.', en: 'Choose the order from January to December.' },
     answerId,
     choices,
     answerOn: 'interactive',
+    autoAdvance: false,
     visual: ({ lang, picked, submitAnswer }) => createMonthBoard(canonical, initialOrder, lang, picked !== null, submitAnswer ?? (() => {})),
   };
 }

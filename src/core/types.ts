@@ -35,6 +35,8 @@ export interface VisualState {
 }
 
 export interface Question {
+  /** False keeps answer feedback visible until Continue, even after a correct answer. */
+  autoAdvance?: boolean;
   /** Identity of the question, used to avoid repeats within a round. */
   key: string;
   prompt: Localized;

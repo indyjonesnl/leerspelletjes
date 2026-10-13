@@ -374,20 +374,26 @@ button { font: inherit; color: inherit; }
 .calendar-study-days, .calendar-study-months { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 6px; padding-left: 28px; }
 .calendar-study-days li, .calendar-study-months li { padding: 6px; }
 .calendar-study-example { margin: 10px 0; }
-.month-board { width: min(100%, 580px); margin: 0 auto; }
-.month-instructions { margin: 8px 0 14px; color: var(--muted); text-align: center; }
-.month-tray-heading, .month-slots-heading { margin: 12px 0 6px; font-size: 18px; }
-.month-tile-tray { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: 48px; }
-.month-tile, .month-slot {
-  min-height: 48px; border: 3px solid var(--line); border-radius: 12px; background: var(--card);
-  color: var(--ink); font: inherit; font-weight: 700; cursor: pointer;
-}
-.month-tile { padding: 7px 12px; touch-action: none; user-select: none; }
-.month-tile.is-selected, .month-slot:focus-visible { border-color: var(--accent); outline: 3px solid color-mix(in srgb, var(--accent), transparent 68%); outline-offset: 2px; }
-.month-slots { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.month-board-row { display: flex; min-width: 0; }
-.month-slot { flex: 1; text-align: left; padding: 7px 12px; touch-action: none; }
-.month-live { min-height: 1.5em; margin: 6px 0; color: var(--muted); }
-.month-check { display: block; margin: 12px auto 0; }
-.month-correct-order { padding: 10px; border-radius: 10px; background: var(--card); font-weight: 700; text-align: center; }
-.month-tile:disabled, .month-slot:disabled { cursor: default; opacity: .75; }
+/* One sortable list, with drag handles and visible alternative controls. */
+.month-board { width: min(100%, 500px); margin: 0 auto; }
+.month-instructions { margin: 4px 0 12px; color: var(--muted); font-size: 16px; text-align: center; }
+.month-order-caption { margin: 0 0 6px; color: var(--muted); font-size: 13px; text-align: center; }
+.month-order-end { margin: 6px 0 0; }
+.month-list { position: relative; display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.month-card { position: relative; display: flex; align-items: center; min-height: 64px; gap: 6px; padding: 4px 8px; border: 2px solid var(--line); border-radius: 14px; background: var(--card); }
+.month-position { display: grid; flex: 0 0 24px; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: #f0eadf; color: var(--muted); font-size: 13px; font-weight: 700; }
+.month-handle { display: flex; flex: 1; align-items: center; min-width: 0; min-height: 48px; gap: 8px; padding: 4px; border: 0; border-radius: 8px; background: transparent; font-weight: 700; font-size: 20px; text-align: left; touch-action: none; user-select: none; cursor: grab; }
+.month-name { overflow-wrap: anywhere; }
+.month-grip { flex: 0 0 auto; color: var(--muted); font-size: 26px; font-weight: 400; }
+.month-move-controls { display: flex; flex: 0 0 auto; gap: 4px; }
+.month-move-up, .month-move-down { display: grid; width: 44px; height: 44px; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 10px; background: #f8f5ef; font-size: 24px; font-weight: 700; cursor: pointer; touch-action: manipulation; }
+.month-move-up:disabled, .month-move-down:disabled { opacity: .3; cursor: default; }
+.month-handle:disabled { cursor: default; }
+.month-card.is-right { border-color: #5b9474; }
+.month-card.is-dragging { border: 2px dashed var(--accent); background: #efebff; }
+.month-card.is-dragging > * { opacity: 0; }
+.month-card.is-dragging::after { position: absolute; inset: 0; display: grid; place-items: center; color: var(--accent); font-size: 16px; content: attr(data-drop-label); }
+.month-drag-ghost { position: fixed; z-index: 100; display: flex; align-items: center; gap: 12px; padding: 12px 20px; border: 2px solid var(--accent); border-radius: 14px; background: var(--card); box-shadow: 0 8px 24px #35266c33; pointer-events: none; font-size: 20px; font-weight: 700; }
+.month-check { display: block; width: min(100%, 280px); min-height: 52px; margin: 16px auto 0; padding: 10px 16px; border: 0; border-radius: 14px; background: var(--accent); color: #fff; font-size: 20px; font-weight: 700; cursor: pointer; }
+.month-check:disabled { opacity: .55; cursor: default; }
+.month-correct-order { margin: 12px 0 0; padding: 12px; border-radius: 10px; background: #eef5ef; font-size: 16px; text-align: center; }

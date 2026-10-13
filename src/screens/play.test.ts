@@ -7,6 +7,7 @@ import type { Game, Level, VisualState } from '../core/types';
 import type { Settings } from '../core/settings';
 import { GAMES } from '../games/registry';
 import { historyGame } from '../games/history';
+import { calendarGame } from '../games/calendar';
 
 const levels: Level[] = [
   { id: '1', label: { nl: 'Een', en: 'One' }, example: { nl: '', en: '' }, autoSpeak: true },
@@ -192,6 +193,25 @@ describe('playScreen', () => {
     expect(text('.progress')).toBe('Vraag 1 van 10');
     document.querySelector<HTMLButtonElement>('button.continue')!.click();
     expect(text('.progress')).toBe('Vraag 2 van 10');
+  });
+
+  it('keeps a checked month arrangement until Continue and focuses the next list', () => {
+    const level = calendarGame.levels.find((level) => level.id === 'months')!;
+    const question = calendarGame.makeQuestion(level, createRng(1), []);
+    start(makeCtx({ sound: false }, false).ctx, calendarGame, level);
+    expect(document.querySelector('.prompt')!.compareDocumentPosition(document.querySelector('.month-board')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const order = () => [...document.querySelectorAll<HTMLElement>('.month-card')].map((card) => card.dataset.monthId);
+    for (const [index, id] of question.answerId.split(',').entries()) {
+      while (order().indexOf(id) > index) document.querySelector<HTMLButtonElement>(`.month-card[data-month-id="${id}"] .month-move-up`)!.click();
+    }
+    document.querySelector<HTMLButtonElement>('.month-check')!.focus();
+    document.querySelector<HTMLButtonElement>('.month-check')!.click();
+    vi.advanceTimersByTime(30_000);
+    expect(text('.progress')).toBe('Vraag 1 van 10');
+    expect(document.activeElement).toBe(document.querySelector('.continue'));
+    document.querySelector<HTMLButtonElement>('.continue')!.click();
+    expect(text('.progress')).toBe('Vraag 2 van 10');
+    expect(document.activeElement).toBe(document.querySelector('.month-handle'));
   });
 
   it('answers with number keys', () => {

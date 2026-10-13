@@ -66,6 +66,10 @@ describe('Calendar Quest', () => {
     for (let seed = 0; seed < 30; seed++) {
       const q = makeCalendarQuestion(level, createRng(seed), []);
       const ids = q.choices.map((choice) => choice.id.split(','));
+      const visual = q.visual!({ lang: 'en', picked: null });
+      const initial = [...visual.querySelectorAll<HTMLElement>('.month-card')].map((card) => card.dataset.monthId).join(',');
+      expect(initial).not.toBe(q.answerId);
+      expect(q.autoAdvance).toBe(false);
       expect(new Set(ids).size).toBe(4);
       expect(ids.every((sequence) => sequence.every((id) => (MONTH_IDS as readonly string[]).includes(id)))).toBe(true);
       expect(q.choices.filter((choice) => choice.id === q.answerId)).toHaveLength(1);

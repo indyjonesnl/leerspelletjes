@@ -117,7 +117,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     if (ctx.settings.sound) (result.correct ? playCorrect : playWrong)();
     render();
     live.textContent = result.correct ? t(lang(), 'correct') : `${t(lang(), 'wrong')} ${answerLabel()}`;
-    if (result.correct && game.autoAdvance !== false) {
+    if (result.correct && game.autoAdvance !== false && round.current.autoAdvance !== false) {
       focusNextQuestion = wasFocusedInPlay;
       if (wasFocusedInPlay && round.current.answerOn === 'interactive') body.querySelector<HTMLElement>('.feedback')?.focus();
       timer = setTimeout(advance, ADVANCE_DELAY_MS);
@@ -179,6 +179,9 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     }
     body.append(top);
 
+    // An assembled answer needs its instruction before the controls, including for screen readers.
+    if (q.answerOn === 'interactive') body.append(el('p', { class: 'prompt' }, q.prompt[L]));
+
     const visualMode = q.answerOn === 'visual';
     if (q.visual) {
       const picked = result && chosenId ? { id: chosenId, answerId: q.answerId } : null;
@@ -213,7 +216,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
       if (hintShown) body.append(el('div', { class: 'hint' }, q.hint()));
     }
 
-    body.append(el('p', { class: 'prompt' }, q.prompt[L]));
+    if (q.answerOn !== 'interactive') body.append(el('p', { class: 'prompt' }, q.prompt[L]));
     if (game.letterInput) body.append(el('p', { class: 'answer-help' }, t(L, 'letterInputHelp')));
 
     if (!visualMode && q.answerOn !== 'interactive') {
@@ -239,7 +242,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
         class: 'feedback',
         tabindex: result.correct && q.answerOn === 'interactive' ? '-1' : undefined,
       }, result.correct ? t(L, 'correct') : `${t(L, 'wrong')} ${answerLabel()}`));
-      if (!result.correct || game.autoAdvance === false) {
+      if (!result.correct || game.autoAdvance === false || q.autoAdvance === false) {
         const next = el('button', { type: 'button', class: 'continue' }, t(L, 'continue'));
         next.addEventListener('click', advance);
         body.append(next);

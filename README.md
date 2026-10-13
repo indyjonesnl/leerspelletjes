@@ -23,7 +23,7 @@ Body Explorer has organ recognition, organ functions, and parts of the skeleton,
 
 History Timeline has separate Dutch and world-history levels. Each asks which of four events happened first, then reveals the dated chronological order with child-friendly explanations and source links. After every answer, the timeline remains visible until the player chooses Continue. Its bilingual Learn First timelines cover each level's event pool; ancient dates are marked approximate, and BCE dates use Dutch `v.Chr.` / English `BCE` without a year zero. Event references are listed in `src/games/history/sources.md`.
 
-Calendar Quest has weekday, month-ordering, calendar-reading, and elapsed-day levels. Children can arrange months by dragging, selecting a month and slot, or using the keyboard; the date levels include leap years and month boundaries. All four levels have bilingual Learn First examples.
+Calendar Quest has weekday, month-ordering, calendar-reading, and elapsed-day levels. Children arrange four shuffled month cards in a single list, using visible drag feedback, up/down buttons, or keyboard arrows. Checked month answers stay visible until Continue; the date levels include leap years and month boundaries. All four levels have bilingual Learn First examples.
 
 ## Development
 
