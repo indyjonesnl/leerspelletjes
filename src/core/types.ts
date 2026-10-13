@@ -30,6 +30,8 @@ export interface Choice {
 export interface VisualState {
   lang: Lang;
   picked: { id: string; answerId: string } | null;
+  /** Lets an interactive visual submit an assembled answer through the shared round flow. */
+  submitAnswer?: (id: string) => void;
 }
 
 export interface Question {
@@ -44,7 +46,7 @@ export interface Question {
   /** Optional help the child can show, e.g. a dot grid. */
   hint?: () => HTMLElement | SVGElement;
   /** 'choices' (default): answer buttons. 'visual': the visual's `[data-choice-id]` elements are the answers. */
-  answerOn?: 'choices' | 'visual';
+  answerOn?: 'choices' | 'visual' | 'interactive';
   /** The possible answers with their names. With answer buttons: 3 or 4 options, shuffled, containing the answer once. */
   choices: Choice[];
   answerId: string;

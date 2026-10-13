@@ -56,4 +56,13 @@ describe('questionSpeech', () => {
     };
     expect(questionSpeech(q, 'nl', true)).toBe('Waar ligt Duitsland?');
   });
+
+  it('interactive question speech omits hidden choices', () => {
+    const q: Question = {
+      ...question,
+      answerOn: 'interactive',
+      prompt: { nl: 'Zet ze op volgorde.', en: 'Put them in order.' },
+    };
+    expect(questionSpeech(q, 'en', true)).toBe('Put them in order.');
+  });
 });

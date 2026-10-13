@@ -179,7 +179,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     const visualMode = q.answerOn === 'visual';
     if (q.visual) {
       const picked = result && chosenId ? { id: chosenId, answerId: q.answerId } : null;
-      const visual = q.visual({ lang: L, picked });
+      const visual = q.visual({ lang: L, picked, submitAnswer: q.answerOn === 'interactive' ? choose : undefined });
       const box = el('div', { class: 'visual' }, visual);
       if (visualMode) {
         box.setAttribute('role', 'group');
@@ -213,7 +213,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     body.append(el('p', { class: 'prompt' }, q.prompt[L]));
     if (game.letterInput) body.append(el('p', { class: 'answer-help' }, t(L, 'letterInputHelp')));
 
-    if (!visualMode) {
+    if (!visualMode && q.answerOn !== 'interactive') {
       const grid = el('div', { class: 'choices' });
       q.choices.forEach((c, i) => {
         const isAnswer = result !== null && c.id === q.answerId;

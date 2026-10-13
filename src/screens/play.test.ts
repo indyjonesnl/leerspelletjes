@@ -303,6 +303,52 @@ describe('playScreen', () => {
   });
 });
 
+describe('playScreen with interactive answers', () => {
+  function makeInteractiveGame(answer: string): Game {
+    return {
+      ...makeGame(),
+      makeQuestion: () => ({
+        key: 'arrangement',
+        prompt: { nl: 'Zet de maanden in de goede volgorde.', en: 'Put the months in the right order.' },
+        answerOn: 'interactive',
+        visual: ({ submitAnswer }: VisualState) => {
+          const board = document.createElement('div');
+          const check = document.createElement('button');
+          check.className = 'check-arrangement';
+          check.textContent = 'Controleer';
+          check.addEventListener('click', () => submitAnswer?.(answer));
+          board.append(check);
+          return board;
+        },
+        choices: [
+          { id: 'right', label: { nl: 'januari, februari, maart, april', en: 'January, February, March, April' } },
+          { id: 'wrong', label: { nl: 'andere volgorde', en: 'another order' } },
+        ],
+        answerId: 'right',
+      }),
+    };
+  }
+
+  it('interactive visual answer submits through shared scoring', () => {
+    start(makeCtx().ctx, makeInteractiveGame('right'));
+    expect(document.querySelectorAll('.choice')).toHaveLength(0);
+    document.querySelector<HTMLButtonElement>('.check-arrangement')!.click();
+    expect(text('.feedback')).toBe('Goed zo!');
+    vi.advanceTimersByTime(ADVANCE_DELAY_MS);
+    expect(text('.progress')).toBe('Vraag 2 van 10');
+  });
+
+  it('wrong interactive answer reveals the answer and waits for continue', () => {
+    start(makeCtx().ctx, makeInteractiveGame('wrong'));
+    document.querySelector<HTMLButtonElement>('.check-arrangement')!.click();
+    expect(text('.feedback')).toContain('januari, februari, maart, april');
+    vi.advanceTimersByTime(5000);
+    expect(text('.progress')).toBe('Vraag 1 van 10');
+    document.querySelector<HTMLButtonElement>('.continue')!.click();
+    expect(text('.progress')).toBe('Vraag 2 van 10');
+  });
+});
+
 describe('playScreen with answers on the visual', () => {
   it('shows no answer buttons and labels the visual as a group', () => {
     start(makeCtx().ctx, makeVisualGame());
