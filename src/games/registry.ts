@@ -12,5 +12,7 @@ import { initialsGame } from './initials';
 import { fractionsGame } from './fractions';
 import { trafficGame } from './traffic';
 import { animalsGame } from './animals';
+import { solarGame } from './solar';
+import { bodyGame } from './body';
 
-export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame];
+export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame, solarGame, bodyGame];

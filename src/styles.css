@@ -329,3 +329,33 @@ button { font: inherit; color: inherit; }
   paint-order: stroke; stroke: #fff; stroke-width: 7px; stroke-linejoin: round;
 }
 .study-label.city { fill: var(--accent); }
+
+/* Science games */
+.tile-solar { background: #c9d5f7; }
+.tile-body { background: #f6c4b6; }
+.solar-visual { margin: 0; text-align: center; width: 100%; }
+.solar-picture { display: block; width: 100%; max-width: 400px; height: 180px; object-fit: contain; margin: 0 auto; }
+.solar-clue { margin: 10px 0; }
+.solar-name { font-weight: 700; }
+.solar-credit { display: block; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.solar-order { width: 100%; }
+.solar-direction, .solar-scale { font-size: 16px; text-align: center; }
+.solar-slots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 0; list-style: none; }
+.solar-slot { display: flex; flex-direction: column; align-items: center; min-width: 0; border: 2px solid var(--line); border-radius: 12px; padding: 6px 2px; background: var(--card); }
+.solar-slot .solar-picture { height: 48px; }
+.solar-slot .solar-name { font-size: 13px; overflow-wrap: anywhere; text-align: center; }
+.solar-position { font-size: 13px; color: var(--muted); }
+.solar-gap { border-style: dashed; }
+.solar-missing { height: 67px; font-size: 36px; color: var(--accent); }
+.solar-order-credits { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; }
+.solar-order-credits .solar-credit { font-size: 10px; }
+.study-grid.solar-study-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.solar-study-grid .solar-picture { height: 150px; }
+.solar-study-grid h2 { margin: 4px 0; font-size: 24px; }
+.solar-study-grid p { margin: 4px 0; }
+.body-diagram { display: block; margin: 0 auto; }
+.visual > .body-diagram { max-height: min(48vh, 410px); width: auto; }
+.body-study-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.body-study-card { padding: 1rem; }
+.body-study-card .body-diagram { width: 120px; height: auto; }
+.body-location { color: var(--muted); font-size: .9rem; }

@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { GAMES } from './registry';
 
 describe('study screens', () => {
-  it('exist for geography and traffic signs', () => {
-    expect(GAMES.filter((g) => g.study).map((g) => g.id)).toEqual(['flags', 'map', 'capitals', 'nederland', 'traffic']);
+  it('exist for geography, traffic signs, and science', () => {
+    expect(GAMES.filter((g) => g.study).map((g) => g.id)).toEqual(['flags', 'map', 'capitals', 'nederland', 'traffic', 'solar', 'body']);
     expect(GAMES.filter((g) => !g.study).map((g) => g.id)).toEqual(['clock', 'tables', 'money', 'words', 'patterns', 'initials', 'fractions', 'animals']);
   });
 
