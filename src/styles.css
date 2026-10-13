@@ -14,6 +14,9 @@
   --words: #f5acc4;
   --patterns: #b9b3f4;
   --initials: #99d9df;
+  --fractions: #f6d4a4;
+  --traffic: #a7c8ef;
+  --animals: #addbbb;
   --accent: #6247e8;
   --correct: #237a46;
   --correct-bg: #e3f6ea;
@@ -67,6 +70,9 @@ button { font: inherit; color: inherit; }
 .tile-words { background: var(--words); }
 .tile-patterns { background: var(--patterns); }
 .tile-initials { background: var(--initials); }
+.tile-fractions { background: var(--fractions); }
+.tile-traffic { background: var(--traffic); }
+.tile-animals { background: var(--animals); }
 .nl-map { margin: 0; width: 100%; }
 .map-credit { margin: 4px 0 0; font-size: 0.75rem; color: var(--muted); text-align: center; }
 .home footer { margin-top: 32px; text-align: center; font-size: 16px; }
@@ -130,6 +136,21 @@ button { font: inherit; color: inherit; }
 .initial-picture { font-size: 120px; line-height: 1.2; }
 .initial-word { font-size: 26px; font-weight: 700; color: var(--accent); }
 .answer-help { margin: -4px 0 16px; color: var(--muted); font-size: 16px; text-align: center; }
+.fraction-visual { display: block; width: min(100%, 320px); max-height: 260px; margin: 16px auto; }
+.fraction-circle { width: min(100%, 240px); }
+.fraction-piece { vector-effect: non-scaling-stroke; }
+.traffic-sign { display: block; width: min(220px, 65vw); height: auto; max-height: 230px; }
+.study-grid.traffic-study-grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.study-frame .traffic-sign { width: 100%; height: 100%; max-height: 128px; }
+.traffic-action { margin: 6px 0; font-size: 18px; line-height: 1.4; color: var(--muted); }
+.animal-visual { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.animal-picture { width: min(216px, 65vw); height: 216px; object-fit: contain; }
+.animal-silhouette { filter: brightness(0); }
+.animal-clue { max-width: 36rem; margin: 0; text-align: center; line-height: 1.5; }
+.animal-mystery { display: grid; place-items: center; width: 160px; height: 160px; border-radius: 50%; background: #fff3cf; color: #526c55; font-size: 96px; font-weight: 700; }
+.animal-name { margin: 0; font-size: 26px; font-weight: 700; }
+.animal-credit { font-size: 12px; color: var(--muted); }
+.animal-credit a { color: inherit; }
 .word-letters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 100%; }
 .word-letter {
   display: inline-flex; align-items: center; justify-content: center;

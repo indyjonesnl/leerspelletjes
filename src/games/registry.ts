@@ -9,5 +9,8 @@ import { moneyGame } from './money';
 import { wordsGame } from './words';
 import { patternsGame } from './patterns';
 import { initialsGame } from './initials';
+import { fractionsGame } from './fractions';
+import { trafficGame } from './traffic';
+import { animalsGame } from './animals';
 
-export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame];
+export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame];

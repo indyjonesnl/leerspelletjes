@@ -3,13 +3,19 @@
 Free educational games for primary school children (groep 1–8), in Dutch and English.
 No accounts, no cookies, no tracking.
 
-Games: clock reading, times tables, flags, finding countries on the map, capitals, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, Pattern Puzzles, and First Letters (Beginletters). Flags, capitals, the map game and the Dutch provinces have a "Leer eerst" study screen for every level.
+Games: clock reading, times tables, flags, finding countries on the map, capitals, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, Pattern Puzzles, First Letters (Beginletters), Fraction Match, Traffic Signs, and Animal Detective. Flags, capitals, the map game, the Dutch provinces, and Traffic Signs have a "Leer eerst" study screen for every level.
 
 Money & Change has four levels: counting euro coins, counting euros and cents, adding prices, and calculating change. Calculations use integer cents. Word Builder has three word-length levels with Dutch and English vocabulary, picture clues, and scrambled letters; children choose the correctly spelled word from four options. Its read-aloud clues describe the picture without giving away the spelling. Pattern Puzzles has four levels: repeating shapes, counting sequences, missing numbers, and growing steps. Each new game uses the shared ten-question rounds, answer buttons, keyboard controls, feedback, and score screen.
 
 Euro coin images are served locally from `public/coins/`, using unmodified ECB common-side images with a visible source credit. The coins are displayed in proportion to their real diameters. Source files and reuse terms are recorded in `public/coins/README.md`.
 
 First Letters uses 36 familiar pictures and their Dutch/English names. Children click one of four letters, type the actual first letter (case-insensitive), or use 1–4 to choose a button position. A/B/C/D are letter answers, never positional shortcuts. Read-aloud names the object; its written name appears after answering. A typed letter outside the offered choices counts as a wrong answer. Typing is active while focus is in the play area; an answer receives focus automatically on entry and after a language switch. Held keys and Ctrl/Alt/Meta shortcuts are ignored. Switching language replaces an unanswered picture while preserving score and progress; an answered question advances once into the new language, with its pending timer cancelled. This behaviour is opt-in (`Game.letterInput` and `Game.refreshOnLanguageChange`); other games keep their existing controls and language-switch behaviour.
+
+Fraction Match has four levels: match equal shaded SVG parts to fractions, find equivalent fractions, convert to terminating decimals, and convert to percentages. It uses integer arithmetic and cross multiplication so every question has exactly one correct option; Dutch decimals use commas.
+
+Traffic Signs uses 18 Dutch RVV signs in both interface languages, with levels for recognition, walking/cycling, and interpreting the sign in a short situation. Every level offers study cards with meanings, actions, and optional read-aloud. The SVG signs are drawn locally; meaning references are recorded in `src/games/traffic/sources.md`.
+
+Animal Detective uses 14 familiar animals, with picture, silhouette-with-clue, and riddle levels. Silhouettes reveal the coloured illustration after answering; riddles reveal the animal only after answering. OpenMoji illustrations are stored in `public/animals/`, with visible attribution and source/license details in `public/animals/README.md`. All three new games use standard ten-question rounds and numbered answer shortcuts. Language switching keeps the same question and score.
 
 ## Development
 
@@ -30,7 +36,7 @@ npm run size       # build and check the 200 KB first-load budget
 
 ## Learn mode
 
-Every level of Flags, Capitals, "Waar ligt het?" and Nederland has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (clock, times tables) show no link. Nothing about what a child has studied is stored.
+Every level of Flags, Capitals, "Waar ligt het?", Nederland and Traffic Signs has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (for example clock and times tables) show no link. Nothing about what a child has studied is stored.
 
 ## Country data
 
