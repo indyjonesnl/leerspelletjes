@@ -90,7 +90,7 @@ export function createMonthBoard(
         'data-month-id': id,
         'aria-pressed': String(selected),
         'aria-label': `${monthName(id, lang)}${selected ? (lang === 'nl' ? ', gekozen' : ', selected') : ''}`,
-        draggable: 'true', disabled,
+        disabled,
       }, monthName(id, lang));
       button.addEventListener('click', () => selectMonth(id, null));
       return button;
@@ -98,7 +98,7 @@ export function createMonthBoard(
     slots.replaceChildren(...state!.slots.map((id, index) => {
       const slot = el('li', { class: 'month-board-row' },
         el('button', {
-          type: 'button', class: 'month-slot', 'data-slot-index': String(index),
+          type: 'button', class: 'month-slot', 'data-slot-index': String(index), 'data-month-id': id ?? '',
           'aria-label': `${lang === 'nl' ? 'Plek' : 'Position'} ${index + 1}${id ? `, ${monthName(id, lang)}` : `, ${labels.empty}`}`,
           disabled,
         }, `${index + 1}. ${id ? monthName(id, lang) : labels.empty}`),

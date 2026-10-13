@@ -29,6 +29,13 @@ describe('History Timeline', () => {
     expect(chronologicalEvents(sample).map((event) => event.id)).toEqual(['a', 'b', 'c']);
   });
 
+  it('formats astronomical BCE years without exposing year zero and marks estimates', () => {
+    expect(formatHistoryYear(0, false, 'nl')).toBe('1 v.Chr.');
+    expect(formatHistoryYear(-1, false, 'en')).toBe('2 BCE');
+    expect(formatHistoryYear(-3099, true, 'nl')).toBe('ca. 3100 v.Chr.');
+    expect(formatHistoryYear(-3099, true, 'en')).toBe('c. 3100 BCE');
+  });
+
   it('generates four distinct events and reveals dates and chronology only after an answer', () => {
     for (const level of historyGame.levels) {
       const q = makeHistoryQuestion(level, createRng(19), []);

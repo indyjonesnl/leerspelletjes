@@ -3,7 +3,7 @@ import { GAMES } from './registry';
 
 describe('study screens', () => {
   it('exist for geography, traffic signs, and science', () => {
-    expect(GAMES.filter((g) => g.study).map((g) => g.id)).toEqual(['flags', 'map', 'capitals', 'nederland', 'traffic', 'solar', 'body']);
+    expect(GAMES.filter((g) => g.study).map((g) => g.id)).toEqual(['flags', 'map', 'capitals', 'nederland', 'traffic', 'solar', 'body', 'history', 'calendar']);
     expect(GAMES.filter((g) => !g.study).map((g) => g.id)).toEqual(['clock', 'tables', 'money', 'words', 'patterns', 'initials', 'fractions', 'animals']);
   });
 
@@ -15,7 +15,7 @@ describe('study screens', () => {
           const root = game.study!(level, { lang });
           const where = `${game.id} level ${level.id} (${lang})`;
           expect(root.querySelector('h2'), where).not.toBeNull();
-          expect(root.querySelector('.study-card, .country.target, button.chip'), where).not.toBeNull();
+          expect(root.querySelector('.study-card, .country.target, button.chip, .history-study-event, .calendar-study-days, .calendar-study-months, .calendar-study-example'), where).not.toBeNull();
         }
       }
     }

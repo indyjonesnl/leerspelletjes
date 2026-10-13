@@ -14,5 +14,7 @@ import { trafficGame } from './traffic';
 import { animalsGame } from './animals';
 import { solarGame } from './solar';
 import { bodyGame } from './body';
+import { historyGame } from './history';
+import { calendarGame } from './calendar';
 
-export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame, solarGame, bodyGame];
+export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame, solarGame, bodyGame, historyGame, calendarGame];

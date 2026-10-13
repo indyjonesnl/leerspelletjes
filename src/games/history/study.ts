@@ -23,9 +23,9 @@ export function historyStudy(level: Level, { lang, speak }: StudyContext): HTMLE
   });
   return el('section', { class: 'study history-study' },
     el('h2', {}, title),
-    el('p', { class: 'subtitle' }, lang === 'nl'
+    el('p', { class: 'subtitle' }, `${level.example[lang]} ${lang === 'nl'
       ? 'Bekijk de gebeurtenissen van vroeger naar later. Sommige oude jaartallen zijn ongeveer.'
-      : 'Explore events from earlier to later. Some ancient dates are approximate.'),
+      : 'Explore events from earlier to later. Some ancient dates are approximate.'}`),
     el('ol', { class: 'history-study-list' }, ...cards),
   );
 }

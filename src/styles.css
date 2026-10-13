@@ -73,6 +73,8 @@ button { font: inherit; color: inherit; }
 .tile-fractions { background: var(--fractions); }
 .tile-traffic { background: var(--traffic); }
 .tile-animals { background: var(--animals); }
+.tile-history { background: #ead8b6; }
+.tile-calendar { background: #c5e5d9; }
 .nl-map { margin: 0; width: 100%; }
 .map-credit { margin: 4px 0 0; font-size: 0.75rem; color: var(--muted); text-align: center; }
 .home footer { margin-top: 32px; text-align: center; font-size: 16px; }

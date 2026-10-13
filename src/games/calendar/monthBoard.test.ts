@@ -31,7 +31,7 @@ describe('accessible month ordering board', () => {
     const { root } = build();
     place(root, 'jan', 0);
     expect(root.querySelector('[data-slot-index="0"]')?.textContent).toContain('January');
-    expect(root.querySelector('[data-month-id="jan"]')).toBeNull();
+    expect(root.querySelector('.month-tile[data-month-id="jan"]')).toBeNull();
   });
 
   it('supports keyboard selection and arrow-key movement', () => {
@@ -82,6 +82,6 @@ describe('accessible month ordering board', () => {
     first.querySelector<HTMLButtonElement>('[data-slot-index="0"]')!.click();
     const second = q.visual!({ lang: 'nl', picked: null, submitAnswer: vi.fn() });
     expect(second.querySelector('[data-slot-index="0"]')?.textContent).toContain(MONTHS.find((month) => month.id === firstId)!.name.nl);
-    expect(second.querySelector(`[data-month-id="${firstId}"]`)).toBeNull();
+    expect(second.querySelector(`.month-tile[data-month-id="${firstId}"]`)).toBeNull();
   });
 });
