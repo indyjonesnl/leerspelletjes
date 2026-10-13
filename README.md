@@ -3,7 +3,7 @@
 Free educational games for primary school children (groep 1–8), in Dutch and English.
 No accounts, no cookies, no tracking.
 
-Games: clock reading, times tables, flags, finding countries on the map, capitals, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, Pattern Puzzles, First Letters (Beginletters), Fraction Match, Traffic Signs, Animal Detective, Solar System, Body Explorer, History Timeline, and Calendar Quest. Flags, capitals, the map game, the Dutch provinces, Traffic Signs, Solar System, Body Explorer, History Timeline, and Calendar Quest have a "Leer eerst" study screen for every level.
+Games: clock reading, times tables, flags, finding countries on the map, capitals, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, Pattern Puzzles, First Letters (Beginletters), Fraction Match, Traffic Signs, Animal Detective, Solar System, Body Explorer, and Calendar Quest. Flags, capitals, the map game, the Dutch provinces, Traffic Signs, Solar System, Body Explorer, and Calendar Quest have a "Leer eerst" study screen for every level.
 
 Money & Change has four levels: counting euro coins, counting euros and cents, adding prices, and calculating change. Calculations use integer cents. Word Builder has three word-length levels with Dutch and English vocabulary, picture clues, and scrambled letters; children choose the correctly spelled word from four options. Its read-aloud clues describe the picture without giving away the spelling. Pattern Puzzles has four levels: repeating shapes, counting sequences, missing numbers, and growing steps. Each new game uses the shared ten-question rounds, answer buttons, keyboard controls, feedback, and score screen.
 
@@ -20,8 +20,6 @@ Animal Detective uses 14 familiar animals, with picture, silhouette-with-clue, a
 Solar System has planet recognition, missing planets in Sun-outward order, and space riddles. Recognition rounds cover all eight planets; the other levels use ten questions. NASA images are served locally with visible credits and source details in `public/solar/README.md`. Numbered order diagrams explicitly use simplified sizes and distances.
 
 Body Explorer has organ recognition, organ functions, and parts of the skeleton, with ten-question rounds. Original SVG diagrams highlight the target in orange and describe its location for read-aloud and screen readers. The front views simplify anatomy and make organs behind other organs visible; references are in `src/games/body/Sources.md`. Both science games offer study cards for every level, Dutch/English translations, and numbered keyboard answers.
-
-History Timeline has separate Dutch and world-history levels. Each asks which of four events happened first, then reveals the dated chronological order with child-friendly explanations and source links. After every answer, the timeline remains visible until the player chooses Continue. Its bilingual Learn First timelines cover each level's event pool; ancient dates are marked approximate, and BCE dates use Dutch `v.Chr.` / English `BCE` without a year zero. Event references are listed in `src/games/history/sources.md`.
 
 Calendar Quest has weekday, month-ordering, calendar-reading, and elapsed-day levels. Children arrange four shuffled month cards in a single list, using visible drag feedback, up/down buttons, or keyboard arrows. Checked month answers stay visible until Continue; the date levels include leap years and month boundaries. All four levels have bilingual Learn First examples.
 
@@ -44,7 +42,7 @@ npm run size       # build and check the 200 KB first-load budget
 
 ## Learn mode
 
-Every level of Flags, Capitals, "Waar ligt het?", Nederland, Traffic Signs, Solar System, Body Explorer, History Timeline, and Calendar Quest has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (for example clock and times tables) show no link. Nothing about what a child has studied is stored.
+Every level of Flags, Capitals, "Waar ligt het?", Nederland, Traffic Signs, Solar System, Body Explorer, and Calendar Quest has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (for example clock and times tables) show no link. Nothing about what a child has studied is stored.
 
 ## Country data
 

@@ -6,7 +6,6 @@ import type { AppContext, Screen } from './types';
 import type { Game, Level, VisualState } from '../core/types';
 import type { Settings } from '../core/settings';
 import { GAMES } from '../games/registry';
-import { historyGame } from '../games/history';
 import { calendarGame } from '../games/calendar';
 
 const levels: Level[] = [
@@ -162,26 +161,6 @@ describe('playScreen', () => {
     vi.advanceTimersByTime(1);
     expect(text('.progress')).toBe('Vraag 2 van 10');
   });
-
-  for (const level of historyGame.levels) for (const lang of ['nl', 'en'] as const) {
-    it(`keeps a correct ${level.id} history timeline visible until Continue (${lang})`, () => {
-      const question = historyGame.makeQuestion(level, createRng(1), []);
-      start(makeCtx({ lang, sound: false }, false).ctx, historyGame, level);
-      const correct = choice(question.answerId);
-      correct.focus();
-      correct.click();
-      const next = document.querySelector<HTMLButtonElement>('.continue');
-      expect(next).not.toBeNull();
-      expect(document.activeElement).toBe(next);
-      vi.advanceTimersByTime(30_000);
-      expect(text('.progress')).toBe(lang === 'nl' ? 'Vraag 1 van 10' : 'Question 1 of 10');
-      expect(document.querySelectorAll('.history-event')).toHaveLength(4);
-      next!.click();
-      expect(text('.progress')).toBe(lang === 'nl' ? 'Vraag 2 van 10' : 'Question 2 of 10');
-      expect(document.querySelectorAll('.history-event')).toHaveLength(0);
-      expect(document.activeElement).toBe(document.querySelector('.choice'));
-    });
-  }
 
   it('waits for the continue button after a wrong answer', () => {
     start(makeCtx().ctx);

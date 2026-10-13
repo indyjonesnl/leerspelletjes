@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="History Timeline">
-  <rect x="5" y="8" width="54" height="48" rx="12" fill="#f2e8d5"/>
-  <path d="M18 19v26M31 19v26M44 19v26" stroke="#b7a98d" stroke-width="3" stroke-linecap="round"/>
-  <circle cx="18" cy="24" r="5" fill="#d97745"/><circle cx="31" cy="36" r="5" fill="#528b78"/><circle cx="44" cy="27" r="5" fill="#5273a2"/>
-  <path d="M14 50h36" stroke="#665b4c" stroke-width="3" stroke-linecap="round"/>
-</svg>

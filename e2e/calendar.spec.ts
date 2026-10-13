@@ -1,6 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
 import { MONTHS } from '../src/games/calendar/data';
-import { HISTORY_EVENTS } from '../src/games/history/data';
 
 async function finishChoiceQuestion(page: Page) {
   await page.locator('.choice').first().click();
@@ -8,36 +7,6 @@ async function finishChoiceQuestion(page: Page) {
   const wrong = await page.locator('.continue').count();
   if (wrong) await page.locator('.continue').click();
   return wrong > 0;
-}
-
-async function playHistoryRound(page: Page, level: 'dutch' | 'world') {
-  await page.goto(`./#/history/${level}`);
-  for (let question = 1; question <= 10; question++) {
-    await expect(page.locator('.progress')).toHaveText(`Vraag ${question} van 10`);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    expect(await page.locator('.history-event').count()).toBe(0);
-    await expect(page.getByRole('article')).toHaveCount(0);
-    if (question === 1) {
-      const ids = await page.locator('.choice').evaluateAll((buttons) => buttons.map((button) => (button as HTMLElement).dataset.id!));
-      const earliest = HISTORY_EVENTS[level].filter((event) => ids.includes(event.id)).sort((a, b) => a.year - b.year)[0];
-      await page.locator(`.choice[data-id="${earliest.id}"]`).click();
-      await page.waitForTimeout(1500);
-      await expect(page.locator('.progress')).toHaveText('Vraag 1 van 10');
-    } else {
-      await page.locator('.choice').first().click();
-    }
-    await expect(page.locator('.feedback')).toBeVisible();
-    await expect(page.locator('.continue')).toBeVisible();
-    await expect(page.locator('.history-event')).toHaveCount(4);
-    expect(await page.locator('.history-event-year').count()).toBe(4);
-    await expect(page.getByRole('link', { name: /Source|Bron/ })).toHaveCount(4);
-    await expect(page.getByRole('article')).toHaveCount(4);
-    await expect(page.getByRole('heading', { level: 3 })).toHaveCount(4);
-    const firstYear = (await page.locator('.history-event-year').first().textContent())!;
-    await expect(page.getByText(firstYear, { exact: true })).toBeVisible();
-    await page.locator('.continue').press('Enter');
-  }
-  await expect(page.locator('.end h1')).toContainText('van 10!');
 }
 
 async function monthOrder(page: Page) {
@@ -76,15 +45,6 @@ async function playCalendarRound(page: Page, level: 'weekdays' | 'months' | 'dat
     else await finishChoiceQuestion(page);
   }
   await expect(page.locator('.end h1')).toContainText('van 10!');
-}
-
-for (const level of ['dutch', 'world'] as const) {
-  test(`plays a complete ${level} History Timeline round and reveals its chronology`, async ({ page }) => {
-    await page.goto('./');
-    await page.locator('.tile-history').click();
-    await expect(page.locator(`a.level[href="#/history/${level}"]`)).toBeVisible();
-    await playHistoryRound(page, level);
-  });
 }
 
 for (const level of ['weekdays', 'months', 'dates', 'elapsed'] as const) {
@@ -169,8 +129,8 @@ test('keyboard users reorder months and continue after both correct and wrong fe
   await expect(page.locator('.month-handle').first()).toBeFocused();
 });
 
-test('History Timeline and Calendar Quest offer study links in both languages', async ({ page }) => {
-  for (const [game, levels] of [['history', ['dutch', 'world']], ['calendar', ['weekdays', 'months', 'dates', 'elapsed']]] as const) {
+test('Calendar Quest offers study links in both languages', async ({ page }) => {
+  for (const [game, levels] of [['calendar', ['weekdays', 'months', 'dates', 'elapsed']]] as const) {
     await page.goto(`./#/${game}`);
     await expect(page.locator('.learn-link')).toHaveCount(levels.length);
     for (const level of levels) {
@@ -182,5 +142,14 @@ test('History Timeline and Calendar Quest offer study links in both languages', 
       await expect(page.getByRole('link', { name: 'Practise now' })).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     }
+  }
+});
+
+test('removed history links return home and no history tile is shown', async ({ page }) => {
+  for (const route of ['', '#/history', '#/history/dutch', '#/history/world', '#/history/dutch/learn', '#/history/world/learn']) {
+    await page.goto(`./${route}`);
+    await expect(page.locator('.home')).toBeVisible();
+    await expect(page.locator('.tile-calendar')).toBeVisible();
+    await expect(page.locator('.tile-history')).toHaveCount(0);
   }
 });
