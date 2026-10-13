@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Calendar Quest">
+  <rect x="7" y="11" width="50" height="46" rx="9" fill="#e6f1ed" stroke="#47796b" stroke-width="3"/>
+  <path d="M7 24h50M20 7v9M44 7v9" fill="none" stroke="#47796b" stroke-width="4" stroke-linecap="round"/>
+  <g fill="#d97745"><circle cx="21" cy="34" r="3"/><circle cx="32" cy="34" r="3"/><circle cx="43" cy="34" r="3"/></g>
+  <g fill="#5273a2"><circle cx="21" cy="45" r="3"/><circle cx="32" cy="45" r="3"/><circle cx="43" cy="45" r="3"/></g>
+</svg>
