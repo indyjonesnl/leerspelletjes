@@ -3,7 +3,7 @@
 Free educational games for primary school children (groep 1–8), in Dutch and English.
 No accounts, no cookies, no tracking.
 
-Games: clock reading, times tables, flags, finding countries on the map, capitals, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, Pattern Puzzles, First Letters (Beginletters), Fraction Match, Traffic Signs, Animal Detective, Solar System, Body Explorer, and Calendar Quest. Flags, capitals, the map game, the Dutch provinces, Traffic Signs, Solar System, Body Explorer, and Calendar Quest have a "Leer eerst" study screen for every level.
+Games: clock reading, times tables, flags, finding countries on the map, capitals, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, Pattern Puzzles, First Letters (Beginletters), Fraction Match, Traffic Signs, Animal Detective, Solar System, Body Explorer, Calendar Quest, Number Jumps (Rekensprongen), Spelling Detective, Reading Detective (Leesdetective), and Measure Master (Meetmeester). Flags, capitals, the map game, the Dutch provinces, Traffic Signs, Solar System, Body Explorer, Calendar Quest, Number Jumps, Spelling Detective, Reading Detective, and Measure Master have a "Leer eerst" study screen for every level.
 
 Money & Change has four levels: counting euro coins, counting euros and cents, adding prices, and calculating change. Calculations use integer cents. Word Builder has three word-length levels with Dutch and English vocabulary, picture clues, and scrambled letters; children choose the correctly spelled word from four options. Its read-aloud clues describe the picture without giving away the spelling. Pattern Puzzles has four levels: repeating shapes, counting sequences, missing numbers, and growing steps. Each new game uses the shared ten-question rounds, answer buttons, keyboard controls, feedback, and score screen.
 
@@ -22,6 +22,14 @@ Solar System has planet recognition, missing planets in Sun-outward order, and s
 Body Explorer has organ recognition, organ functions, and parts of the skeleton, with ten-question rounds. Original SVG diagrams highlight the target in orange and describe its location for read-aloud and screen readers. The front views simplify anatomy and make organs behind other organs visible; references are in `src/games/body/Sources.md`. Both science games offer study cards for every level, Dutch/English translations, and numbered keyboard answers.
 
 Calendar Quest has weekday, month-ordering, calendar-reading, and elapsed-day levels. Children arrange four shuffled month cards in a single list, using visible drag feedback, up/down buttons, or keyboard arrows. Checked month answers stay visible until Continue; the date levels include leap years and month boundaries. All four levels have bilingual Learn First examples.
+
+Number Jumps (Rekensprongen) practises addition and subtraction to 100, crossing tens, and missing numbers. Optional empty number lines show intermediate checkpoints while keeping the final result unknown; after answering, worked steps explain a strategy. Its four bilingual lessons cover tens/ones splitting and bridging.
+
+Spelling Detective practises Dutch ng/nk, eer/oor/eur, diminutives, and introductory long/short vowel spelling. Each sentence has one missing word and four curated spelling choices. The interface and lessons are bilingual; exercises remain Dutch, with Dutch text language tags and an optional Dutch voice even when the interface is English. Lessons offer spoken examples in Dutch.
+
+Reading Detective (Leesdetective) uses 12 original three-sentence stories in Dutch and English, with levels for finding information, main ideas, cause/effect, and vocabulary from context. Reading is not automatically narrated. After either answer outcome, relevant evidence is highlighted and explained.
+
+Measure Master (Meetmeester) covers cm/m/kg/l units, pencil lengths on a ruler (including shifted starts), scale readings in kilograms, and comparisons of whole litres. Original local SVG diagrams present the same measurement evidence visually and through accessible descriptions. All four groep-4 additions offer Learn First, ten-question rounds, numbered keyboard answers, and feedback that remains visible until Continue.
 
 ## Development
 
@@ -42,7 +50,7 @@ npm run size       # build and check the 200 KB first-load budget
 
 ## Learn mode
 
-Every level of Flags, Capitals, "Waar ligt het?", Nederland, Traffic Signs, Solar System, Body Explorer, and Calendar Quest has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (for example clock and times tables) show no link. Nothing about what a child has studied is stored.
+Every level of Flags, Capitals, "Waar ligt het?", Nederland, Traffic Signs, Solar System, Body Explorer, Calendar Quest, Number Jumps, Spelling Detective, Reading Detective, and Measure Master has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (for example clock and times tables) show no link. Nothing about what a child has studied is stored.
 
 ## Country data
 

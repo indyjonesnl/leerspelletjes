@@ -74,6 +74,10 @@ button { font: inherit; color: inherit; }
 .tile-traffic { background: var(--traffic); }
 .tile-animals { background: var(--animals); }
 .tile-calendar { background: #c5e5d9; }
+.tile-arithmetic { background: #b9dbf0; }
+.tile-spelling { background: #f1c6aa; }
+.tile-reading { background: #d6c8ed; }
+.tile-measure { background: #cde2ac; }
 .nl-map { margin: 0; width: 100%; }
 .map-credit { margin: 4px 0 0; font-size: 0.75rem; color: var(--muted); text-align: center; }
 .home footer { margin-top: 32px; text-align: center; font-size: 16px; }
@@ -396,3 +400,30 @@ button { font: inherit; color: inherit; }
 .month-check { display: block; width: min(100%, 280px); min-height: 52px; margin: 16px auto 0; padding: 10px 16px; border: 0; border-radius: 14px; background: var(--accent); color: #fff; font-size: 20px; font-weight: 700; cursor: pointer; }
 .month-check:disabled { opacity: .55; cursor: default; }
 .month-correct-order { margin: 12px 0 0; padding: 12px; border-radius: 10px; background: #eef5ef; font-size: 16px; text-align: center; }
+
+/* Group 4: clear questions, short lessons, and persistent worked answers. */
+.arithmetic-visual, .spelling-question, .measure-visual { width: min(100%, 480px); margin: 0 auto; }
+.arithmetic-equation { margin: 12px 0; text-align: center; font-size: clamp(30px, 6vw, 44px); font-weight: 700; }
+.arithmetic-line { display: block; width: 100%; max-width: 440px; height: auto; margin: 0 auto; }
+.jump-axis, .jump-tick { stroke: var(--ink); stroke-width: 2; }
+.jump-arc { fill: none; stroke: var(--accent); stroke-width: 3; }
+.jump-arrow { fill: var(--accent); }
+.jump-label { fill: var(--ink); font: 700 22px 'Andika', sans-serif; }
+.jump-amount { fill: var(--accent); font: 700 20px 'Andika', sans-serif; }
+.arithmetic-explanation, .spelling-feedback, .reading-explanation, .measure-explanation { margin: 14px 0 0; padding: 14px 16px; border-left: 4px solid var(--accent); border-radius: 10px; background: #f0edfc; font-size: 18px; text-align: left; }
+.arithmetic-explanation h3 { margin: 0 0 8px; font-size: 20px; }
+.arithmetic-steps { margin: 8px 0 0; padding-left: 28px; }
+.arithmetic-steps li { padding: 3px 0; font-weight: 700; }
+.arithmetic-study .study-card, .spelling-study .study-card { margin: 12px 0; }
+.spelling-note { margin: 4px 0 10px; color: var(--muted); font-size: 16px; text-align: center; }
+.spelling-clue { margin: 0; padding: 18px; border: 2px solid var(--line); border-radius: 16px; background: var(--card); font-size: 24px; line-height: 1.5; }
+.spelling-feedback p { margin: 6px 0; }
+.reading-story { width: 100%; max-width: 620px; padding: 16px 20px; border: 2px solid var(--line); border-radius: 16px; background: var(--card); text-align: left; }
+.reading-story h3 { margin: 0 0 12px; font-size: 24px; }
+.reading-story p { margin: 10px 0; line-height: 1.65; }
+.reading-story .reading-evidence { padding: 4px 8px; border-left: 4px solid #b88611; border-radius: 5px; background: #fff1ba; color: var(--ink); }
+.reading-story .reading-explanation { line-height: 1.5; }
+.reading-study-card { margin: 12px 0; }
+.measure-svg { display: block; width: 100%; height: auto; max-width: 390px; margin: 0 auto; }
+.measure-object { padding: 18px; border: 2px solid var(--line); border-radius: 16px; background: var(--card); font-size: 26px; font-weight: 700; text-align: center; }
+.arithmetic-study .study-card, .spelling-study .study-card, .reading-study-card, .measure-study .study-card { align-items: stretch; text-align: left; }

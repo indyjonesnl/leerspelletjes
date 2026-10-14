@@ -24,6 +24,8 @@ export interface Level {
 export interface Choice {
   id: string;
   label: Localized;
+  /** Language of the displayed answer text when it differs from the interface language. */
+  lang?: Lang;
 }
 
 /** What a visual needs to draw itself; `picked` is set once the question is answered. */
@@ -42,6 +44,8 @@ export interface Question {
   prompt: Localized;
   /** Text read aloud instead of the prompt, e.g. "zes keer zeven". */
   speech?: Localized;
+  /** Language of an exercise read aloud, when it differs from the interface language. */
+  speechLang?: Lang;
   visual?: (state: VisualState) => HTMLElement | SVGElement;
   /** Accessible name of the visual: `hidden` before answering, `revealed` after. */
   visualLabel?: { hidden: Localized; revealed: Localized };

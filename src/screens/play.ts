@@ -89,21 +89,23 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
   let finished = false;
   let destroyed = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
-  let speakerShown = ctx.speech.isAvailable(ctx.settings.lang);
+  let speakerShown = ctx.speech.isAvailable(round.current.speechLang ?? ctx.settings.lang);
   let lastLang = ctx.settings.lang;
   /** Whether focus should move to the first choice once the next question is shown (set when a
    *  correct answer is chosen while focus is in the play area; the answered choice is disabled and
    *  removed before the auto-advance timer fires, so real focus can't carry it across the wait). */
   let focusNextQuestion = false;
   const lang = () => ctx.settings.lang;
+  const speechLang = () => round.current.speechLang ?? lang();
 
   function speakQuestion(automatic: boolean): void {
-    if (!ctx.speech.isAvailable(lang())) return;
+    if (!ctx.speech.isAvailable(speechLang())) return;
     if (automatic && (!level.autoSpeak || !ctx.settings.sound)) return;
-    ctx.speech.speak(questionSpeech(round.current, lang(), level.autoSpeak), lang());
+    ctx.speech.speak(questionSpeech(round.current, lang(), level.autoSpeak), speechLang());
   }
 
   function showQuestion(): void {
+    speakerShown = ctx.speech.isAvailable(speechLang());
     render();
     live.textContent = round.current.prompt[lang()];
     speakQuestion(true);
@@ -116,7 +118,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     const result = round.answer(id);
     if (ctx.settings.sound) (result.correct ? playCorrect : playWrong)();
     render();
-    live.textContent = result.correct ? t(lang(), 'correct') : `${t(lang(), 'wrong')} ${answerLabel()}`;
+    live.replaceChildren(...feedbackContent(result.correct));
     if (result.correct && round.current.autoAdvance !== false) {
       focusNextQuestion = wasFocusedInPlay;
       if (wasFocusedInPlay && round.current.answerOn === 'interactive') body.querySelector<HTMLElement>('.feedback')?.focus();
@@ -147,9 +149,11 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     if (round.replaceCurrent()) showQuestion();
   }
 
-  function answerLabel(): string {
+  function feedbackContent(correct: boolean): (string | HTMLElement)[] {
+    if (correct) return [t(lang(), 'correct')];
     const q = round.current;
-    return q.choices.find((c) => c.id === q.answerId)!.label[lang()];
+    const answer = q.choices.find((c) => c.id === q.answerId)!;
+    return [`${t(lang(), 'wrong')} `, el('span', { lang: answer.lang ?? lang() }, answer.label[lang()])];
   }
 
   function render(): void {
@@ -172,7 +176,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
         el('p', { class: 'progress' }, t(L, 'questionProgress', { n: round.index + 1, total: round.length })),
       ),
     );
-    if (ctx.speech.isAvailable(L)) {
+    if (ctx.speech.isAvailable(speechLang())) {
       const speak = el('button', { type: 'button', class: 'icon-button speak', 'aria-label': t(L, 'speak') }, '🔈');
       speak.addEventListener('click', () => speakQuestion(false));
       top.append(speak);
@@ -227,7 +231,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
         const classes = ['choice', isAnswer ? 'correct' : '', isWrongPick ? 'wrong' : ''].filter(Boolean).join(' ');
         const button = el('button', { type: 'button', class: classes, 'data-id': c.id, disabled: result !== null },
           el('span', { class: 'key', 'aria-hidden': 'true' }, String(i + 1)),
-          el('span', { class: 'label' }, c.label[L]),
+          el('span', { class: 'label', lang: c.lang ?? L }, c.label[L]),
         );
         if (isAnswer) button.append(el('span', { class: 'mark', role: 'img', 'aria-label': t(L, 'markRight') }, '✓'));
         if (isWrongPick) button.append(el('span', { class: 'mark', role: 'img', 'aria-label': t(L, 'markWrong') }, '✗'));
@@ -241,7 +245,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
       body.append(el('p', {
         class: 'feedback',
         tabindex: result.correct && q.answerOn === 'interactive' ? '-1' : undefined,
-      }, result.correct ? t(L, 'correct') : `${t(L, 'wrong')} ${answerLabel()}`));
+      }, ...feedbackContent(result.correct)));
       if (!result.correct || q.autoAdvance === false) {
         const next = el('button', { type: 'button', class: 'continue' }, t(L, 'continue'));
         next.addEventListener('click', advance);
@@ -358,7 +362,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
 
   document.addEventListener('keydown', onKey);
   const stopWatchingVoices = ctx.speech.onVoicesChanged(() => {
-    const available = ctx.speech.isAvailable(lang());
+    const available = ctx.speech.isAvailable(speechLang());
     if (available !== speakerShown) {
       speakerShown = available;
       render();
@@ -377,7 +381,7 @@ function roundScreen(ctx: AppContext, game: Game, level: Level, rng: Rng, root: 
     el: root,
     update() {
       ctx.speech.stop();
-      speakerShown = ctx.speech.isAvailable(lang());
+      speakerShown = ctx.speech.isAvailable(speechLang());
       const changedLanguage = lastLang !== lang();
       lastLang = lang();
       if (changedLanguage && game.refreshOnLanguageChange && !finished) {

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Number Jumps">
+ <path d="M7 47h50" stroke="#34333d" stroke-width="3" stroke-linecap="round"/>
+ <path d="M12 44v6m20-6v6m20-6v6" stroke="#34333d" stroke-width="3" stroke-linecap="round"/>
+ <path d="M12 41q10-28 20 0m0 0q10-28 20 0" fill="none" stroke="#6247e8" stroke-width="4" stroke-linecap="round"/>
+ <path d="m27 35 5 7 3-8m12 1 5 7 3-8" fill="none" stroke="#6247e8" stroke-width="3" stroke-linejoin="round"/>
+ <circle cx="12" cy="47" r="4" fill="#fff" stroke="#34333d" stroke-width="2"/>
+ <circle cx="52" cy="47" r="4" fill="#ffb84d" stroke="#34333d" stroke-width="2"/>
+ <path d="M27 11h10m-5-5v10" stroke="#34333d" stroke-width="3" stroke-linecap="round"/>
+</svg>

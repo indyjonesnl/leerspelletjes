@@ -151,6 +151,31 @@ describe('playScreen', () => {
     expect(document.querySelectorAll('.choice')).toHaveLength(3);
   });
 
+  it('uses the exercise language for voice availability and explicit read-aloud', () => {
+    const { ctx, speech } = makeCtx({ lang: 'en' });
+    speech.isAvailable.mockImplementation((language?: string) => language === 'nl');
+    const base = makeGame();
+    const game: Game = {
+      ...base,
+      makeQuestion: (...args) => {
+        const question = base.makeQuestion(...args);
+        return { ...question, speechLang: 'nl', speech: { nl: 'Kies het woord plank.', en: 'Kies het woord plank.' },
+          choices: question.choices.map((choice) => ({ ...choice, lang: 'nl' as const, label: { nl: choice.label.nl, en: choice.label.nl } })) };
+      },
+    };
+    start(ctx, game);
+    expect(speech.speak).not.toHaveBeenCalled();
+    const speaker = document.querySelector<HTMLButtonElement>('.speak');
+    expect(speaker).not.toBeNull();
+    speaker!.click();
+    expect(speech.speak).toHaveBeenCalledWith('Kies het woord plank.', 'nl');
+    expect(speaker!.getAttribute('aria-label')).toBe('Read aloud');
+    expect(document.querySelector('.choice .label')!.getAttribute('lang')).toBe('nl');
+    choice('b').click();
+    expect(document.querySelector('.feedback span[lang="nl"]')?.textContent).toBe('Aap');
+    expect(document.querySelector('[aria-live] span[lang="nl"]')?.textContent).toBe('Aap');
+  });
+
   it('auto-advances 1 s after a correct answer', () => {
     start(makeCtx().ctx);
     choice('a').click();

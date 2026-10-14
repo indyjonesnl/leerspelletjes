@@ -15,5 +15,9 @@ import { animalsGame } from './animals';
 import { solarGame } from './solar';
 import { bodyGame } from './body';
 import { calendarGame } from './calendar';
+import { arithmeticGame } from './arithmetic';
+import { spellingGame } from './spelling';
+import { readingGame } from './reading';
+import { measureGame } from './measure';
 
-export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame, solarGame, bodyGame, calendarGame];
+export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame, solarGame, bodyGame, calendarGame, arithmeticGame, spellingGame, readingGame, measureGame];

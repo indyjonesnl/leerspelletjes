@@ -3,7 +3,7 @@ import { GAMES } from './registry';
 
 describe('study screens', () => {
   it('exist for geography, traffic signs, and science', () => {
-    expect(GAMES.filter((g) => g.study).map((g) => g.id)).toEqual(['flags', 'map', 'capitals', 'nederland', 'traffic', 'solar', 'body', 'calendar']);
+    expect(GAMES.filter((g) => g.study).map((g) => g.id)).toEqual(['flags', 'map', 'capitals', 'nederland', 'traffic', 'solar', 'body', 'calendar', 'arithmetic', 'spelling', 'reading', 'measure']);
     expect(GAMES.filter((g) => !g.study).map((g) => g.id)).toEqual(['clock', 'tables', 'money', 'words', 'patterns', 'initials', 'fractions', 'animals']);
   });
 
