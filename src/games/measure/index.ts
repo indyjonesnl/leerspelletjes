@@ -74,11 +74,11 @@ function scale(weight: number, lang: Lang): SVGSVGElement {
     return [180 + Math.cos(angle) * radius, 184 - Math.sin(angle) * radius];
   };
   for (let n = 0; n <= 12; n++) {
-    const [x1, y1] = point(n, 120), [x2, y2] = point(n, 132), [x, y] = point(n, 151);
+    const [x1, y1] = point(n, 108), [x2, y2] = point(n, 120), [x, y] = point(n, 130);
     svg.append(svgNode('line', { x1, y1, x2, y2, stroke: '#26334b', 'stroke-width': 2 }));
-    svg.append(svgNode('text', { x, y: y + 6, class: 'measure-scale-mark', 'text-anchor': 'middle', 'font-size': 18, fill: '#26334b' }, String(n)));
+    svg.append(svgNode('text', { x, y, class: 'measure-scale-mark', 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': 18, fill: '#26334b' }, String(n)));
   }
-  const [x, y] = point(weight, 118);
+  const [x, y] = point(weight, 106);
   svg.append(svgNode('line', { x1: 180, y1: 184, x2: x, y2: y, stroke: '#b94024', 'stroke-width': 5, 'stroke-linecap': 'round' }));
   svg.append(svgNode('circle', { cx: 180, cy: 184, r: 7, fill: '#26334b' }));
   svg.append(svgNode('text', { x: 180, y: 215, 'text-anchor': 'middle', 'font-size': 20, fill: '#26334b' }, 'kg'));
