@@ -84,7 +84,11 @@ test('traffic has readable Dutch-sign study cards at every level', async ({ page
   for (const level of ['common', 'cycling', 'situations']) {
     await page.goto(`./#/traffic/${level}/learn`);
     expect(await page.locator('.study-card').count()).toBeGreaterThanOrEqual(10);
-    await expect(page.locator('.study-card svg.traffic-sign').first()).toBeVisible();
+    const signs = page.locator('.study-card img.traffic-sign');
+    await expect(signs.first()).toBeVisible();
+    await expect.poll(() => signs.evaluateAll(images => images.every(image =>
+      (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0,
+    ))).toBe(true);
     expect((await page.locator('.study-card').first().boundingBox())!.width).toBeGreaterThanOrEqual(230);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }

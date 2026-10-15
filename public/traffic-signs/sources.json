@@ -1,0 +1,164 @@
+[
+  {
+    "code": "B1",
+    "file": "B1.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/B1.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/B1.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "f673f47e77d1c9beab0ef98828f9cdb3f2fc31cc8757d3e87763c7939a8030bf"
+  },
+  {
+    "code": "B6",
+    "file": "B6.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/B6.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/B6.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "2a7043fae4e12470d80d93c09d1f9f099e54c00746b3aeb8fa4efea4b92feb19"
+  },
+  {
+    "code": "B7",
+    "file": "B7.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/B7.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/B7.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "aee2b1a1cc538d272d1c7afad79b5b37b5314efba48cc6d516ce47d641556e50"
+  },
+  {
+    "code": "C14",
+    "file": "C14.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/C14.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/C14.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "771715db7fe6b9c9f5a7a2056763302d8893b0aeff28483326b04783007fb05b"
+  },
+  {
+    "code": "C16",
+    "file": "C16.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/C16.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/C16.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "791ed24cc4acb7a6d916d22aaca633225e298f230253fdc82c752a83074b27fb"
+  },
+  {
+    "code": "C2",
+    "file": "C2.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/C2.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/C2.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "b9b5fd22b61c54baa88dc094508c0be89bc9fa4c7549ccc826dc244fe86b6242"
+  },
+  {
+    "code": "D2",
+    "file": "D2.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/D2.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/D2.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "a565c3015cb96627dc89303a123c29c3debd57f0d4be8a257f3c49d5c4ad9762"
+  },
+  {
+    "code": "D4",
+    "file": "D4.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/D4.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/D4.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "17b9bf90eee737ba0c13c4b285ada05e0c7a0a9618948ae30318bdbc28475590"
+  },
+  {
+    "code": "D5",
+    "file": "D5.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/D5.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/D5.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "50f44ddbf937c72dc7b0821d435b34490361631ef22251d76873c494169cf591"
+  },
+  {
+    "code": "G11",
+    "file": "G11.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/G11.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/G11.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "62623f73f8ab1c39f321b4b2670fb0630748b44b3369029efcad1541ff35d08d"
+  },
+  {
+    "code": "G13",
+    "file": "G13.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/G13.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/G13.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "78e51777da21119a04e177efe3330ffc416d2851db74319b549f022427cad605"
+  },
+  {
+    "code": "G7",
+    "file": "G7.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/G7.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/G7.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "59bc6fb9d899c0ee2676d44e751e5a72660231fae6fda69341702845b5f3b9e6"
+  },
+  {
+    "code": "J16",
+    "file": "J16.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J16.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J16.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "1fbd825688959dc44df55d7e67886fdacc46fc4b299d6c7e6d1317652104cc61"
+  },
+  {
+    "code": "J21",
+    "file": "J21.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J21.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J21.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "55484ddce9743a724fc2d34dc80ad9bc4c1603f1d8e4f09193447ae486d94446"
+  },
+  {
+    "code": "J22",
+    "file": "J22.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J22.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J22.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "c59f7e4bd9ec07130c9ac4f8452023080a226d3c2c7dc8e1b8d283392b4fa620"
+  },
+  {
+    "code": "J24",
+    "file": "J24.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J24.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J24.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "84f1fd0ebb47e2cb18c9dd931dda75505d6faa8ae6f45185515479f4bda53954"
+  },
+  {
+    "code": "J37",
+    "file": "J37.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J37.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/J37.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "5fd853d884ecfb15c471f7243dcea220fb86f48e42cc6204a7ef1923274345ef"
+  },
+  {
+    "code": "L2",
+    "file": "L2.svg",
+    "source": "https://github.com/ndwnu/qgis-verkeersborden-style/blob/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/L2.svg",
+    "download": "https://raw.githubusercontent.com/ndwnu/qgis-verkeersborden-style/24d3c1aa0e3dc14ff50cb58916efd82db4cbbd31/svg_verkeersborden/L2.svg",
+    "publisher": "Nationaal Dataportaal Wegverkeer (NDW)",
+    "license": "MIT",
+    "sha256": "db9a6fc444b745163520939d97eb362982c1622698e70223878b7a47a260e482"
+  }
+]

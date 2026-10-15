@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { GAMES } from '../registry';
 import { createRng } from '../../core/rng';
 import { Round } from '../../core/round';
+import { TRAFFIC_SIGNS } from './data';
+import { trafficSign } from './Sign';
 
 function game() {
   const g = GAMES.find((g) => g.id === 'traffic');
@@ -10,6 +12,15 @@ function game() {
 }
 
 describe('Dutch traffic signs', () => {
+  it('serves a local SVG image for every RVV code', () => {
+    for (const sign of TRAFFIC_SIGNS) {
+      const image = trafficSign(sign.code);
+      expect(image.tagName).toBe('IMG');
+      expect(image.getAttribute('src')).toBe(`traffic-signs/${sign.code}.svg`);
+      expect(image.getAttribute('alt')).toBe('');
+      expect(image.getAttribute('data-sign-code')).toBe(sign.code);
+    }
+  });
   it('has ten different signs per level and four distinct bilingual answers', () => {
     const g = game();
     for (const level of g.levels) {
@@ -98,7 +109,7 @@ describe('Dutch traffic signs', () => {
         const cards = root.querySelectorAll('.study-card');
         expect(cards.length).toBeGreaterThanOrEqual(10);
         for (const card of cards) {
-          expect(card.querySelector('svg.traffic-sign')).not.toBeNull();
+          expect(card.querySelector('img.traffic-sign')).not.toBeNull();
           expect(card.querySelector('.study-name')!.textContent).toBeTruthy();
           expect(card.querySelector('.traffic-action')!.textContent).toBeTruthy();
         }

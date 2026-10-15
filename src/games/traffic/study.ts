@@ -10,10 +10,10 @@ export function trafficStudy(level: Level, { lang, speak }: StudyContext): HTMLE
     el('h2', {}, level.label[lang]),
     el('p', { class: 'subtitle' }, lang === 'nl' ? 'Nederlandse verkeersborden voor onderweg.' : 'Dutch road signs for walking and cycling.'),
     el('ul', { class: 'study-grid traffic-study-grid' }, ...pool.map((sign) => {
-      const svg = trafficSign(sign.code);
-      svg.setAttribute('aria-hidden', 'true');
+      const image = trafficSign(sign.code);
+      image.setAttribute('aria-hidden', 'true');
       const card = el('li', { class: 'study-card' },
-        el('span', { class: 'study-frame' }, svg),
+        el('span', { class: 'study-frame' }, image),
         el('strong', { class: 'study-name' }, sign.name[lang]),
         el('p', { class: 'traffic-action' }, sign.action[lang]),
       );
