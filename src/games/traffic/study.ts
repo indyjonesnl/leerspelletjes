@@ -3,8 +3,10 @@ import { el } from '../../core/ui';
 import { t } from '../../core/i18n';
 import { TRAFFIC_POOLS } from './levels';
 import { trafficSign } from './Sign';
+import { placesStudy } from './places';
 
 export function trafficStudy(level: Level, { lang, speak }: StudyContext): HTMLElement {
+  if (level.id === 'places') return placesStudy({ lang, speak });
   const pool = TRAFFIC_POOLS[level.id as keyof typeof TRAFFIC_POOLS];
   return el('section', { class: 'study traffic-study' },
     el('h2', {}, level.label[lang]),

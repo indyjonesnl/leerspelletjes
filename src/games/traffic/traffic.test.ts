@@ -23,7 +23,7 @@ describe('Dutch traffic signs', () => {
   });
   it('has ten different signs per level and four distinct bilingual answers', () => {
     const g = game();
-    for (const level of g.levels) {
+    for (const level of g.levels.filter(level => level.id !== 'places')) {
       for (let seed = 0; seed < 5; seed++) {
         const round = new Round(g, level, createRng(seed));
         const signs = new Set<string>();
@@ -103,7 +103,7 @@ describe('Dutch traffic signs', () => {
   it('offers readable study cards for every sign in each level', () => {
     const g = game();
     expect(g.study).toBeDefined();
-    for (const level of g.levels) {
+    for (const level of g.levels.filter(level => level.id !== 'places')) {
       for (const lang of ['nl', 'en'] as const) {
         const root = g.study!(level, { lang });
         const cards = root.querySelectorAll('.study-card');

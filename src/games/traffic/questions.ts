@@ -2,6 +2,7 @@ import type { Level, Question, Rng } from '../../core/types';
 import { pickFresh } from '../../core/pick';
 import { TRAFFIC_POOLS } from './levels';
 import { trafficSign } from './Sign';
+import { makePlaceQuestion } from './places';
 
 // Some other signs' instructions are true but incomplete for the pictured sign.
 // For example STOP also requires giving way, so B6 must not be a wrong answer for B7.
@@ -11,6 +12,7 @@ const PARTIAL_ACTIONS: Record<string, string[]> = {
 };
 
 export function makeTrafficQuestion(level: Level, rng: Rng, previous: readonly Question[]): Question {
+  if (level.id === 'places') return makePlaceQuestion(rng, previous);
   const pool = TRAFFIC_POOLS[level.id as keyof typeof TRAFFIC_POOLS];
   const sign = pickFresh(pool, previous, (s) => s.code, rng);
   const action = level.id === 'situations';

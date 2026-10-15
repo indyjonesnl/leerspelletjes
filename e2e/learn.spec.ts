@@ -24,7 +24,7 @@ async function expectCardInView(page: Page) {
 }
 
 test('only the games with study screens offer "Leer eerst"', async ({ page }) => {
-  for (const [game, levels] of [['flags', 6], ['capitals', 6], ['map', 9], ['nederland', 4], ['traffic', 3], ['solar', 3], ['body', 3]] as const) {
+  for (const [game, levels] of [['flags', 6], ['capitals', 6], ['map', 9], ['nederland', 4], ['traffic', 4], ['solar', 3], ['body', 3]] as const) {
     await page.goto(`./#/${game}`);
     await expect(page.locator('a.learn-link')).toHaveCount(levels);
   }

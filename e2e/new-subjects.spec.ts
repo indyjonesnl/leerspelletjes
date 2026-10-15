@@ -57,7 +57,7 @@ for (const [game, level] of [['fractions', 'shapes'], ['traffic', 'common'], ['a
 test('every new level keeps its question and choices when switching language', async ({ page }) => {
   const games = {
     fractions: ['shapes', 'equivalent', 'decimals', 'percentages'],
-    traffic: ['common', 'cycling', 'situations'],
+    traffic: ['common', 'cycling', 'situations', 'places'],
     animals: ['pictures', 'silhouettes', 'clues'],
   };
   for (const [game, levels] of Object.entries(games)) {
@@ -80,7 +80,7 @@ test('every new level keeps its question and choices when switching language', a
 
 test('traffic has readable Dutch-sign study cards at every level', async ({ page }, testInfo) => {
   await page.goto('./#/traffic');
-  await expect(page.locator('.learn-link')).toHaveCount(3);
+  await expect(page.locator('.learn-link')).toHaveCount(4);
   for (const level of ['common', 'cycling', 'situations']) {
     await page.goto(`./#/traffic/${level}/learn`);
     expect(await page.locator('.study-card').count()).toBeGreaterThanOrEqual(10);

@@ -17,3 +17,11 @@ The 18 SVGs in `public/traffic-signs/` are downloaded, unmodified RVV sign illus
 The files are served from this site's `traffic-signs/` directory in both questions and study cards; playing never contacts NDW, GitHub, or Wikimedia. They remain separate SVG images so their original proportions, artwork, and lettering are preserved.
 
 The game uses signs without supplementary exception plates. Actions distinguish B6 (give way) from B7 (always stop and give way), G11 (mandatory cycle path) from G13 (optional cycle path), and J22 (warning of a crossing ahead) from L2 (pedestrian crossing). Contextual questions specify walking or cycling.
+
+## Photographs: Herken de verkeersplek
+
+Six existing photographs from Wikimedia Commons are served locally from `public/traffic-places/`. They show Dutch haaientanden (Delft and Utrecht), roundabouts (Petten and Maastricht), and zebra crossings (an overhead view and Groesbeek). The images use CC0, CC BY 4.0, CC BY-SA 3.0, or CC BY-SA 4.0 as specified individually in `public/traffic-places/sources.json`. That file retains original file titles, source and download URLs, authors, license links, rendition information, and SHA-256 checksums. Only Wikimedia's existing image renditions are used; no crops, overlays, or generated artwork are added.
+
+Photographer/source and license links are visible beneath every photo in both questions and lessons. Share-alike images retain their original licenses. `src/games/traffic/photo-credits.ts` supplies these visible credits.
+
+The level practises identifying features and their basic meaning, without asking who has priority in the pictured scene. In particular, the Utrecht photo includes traffic lights: its second question concerns the shape of the road markings. The haaientanden meaning question uses the Delft image. Roundabout lessons tell children to look at the signs and road markings, rather than treating every roundabout as having the same priority arrangements. Teaching references: [VVN: priority](https://examen.vvn.nl/verkeerskennis/voorrang) and [VVN: roundabouts](https://vvn.nl/blijf-veilig-onderweg/auto/verkeersregels/richting-aangeven-rotondes).
