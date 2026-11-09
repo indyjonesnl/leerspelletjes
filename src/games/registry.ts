@@ -4,6 +4,7 @@ import { tablesGame } from './tables';
 import { flagsGame } from './flags';
 import { mapGame } from './map';
 import { capitalsGame } from './capitals';
+import { languagesGame } from './languages';
 import { nederlandGame } from './nederland';
 import { moneyGame } from './money';
 import { wordsGame } from './words';
@@ -20,4 +21,4 @@ import { spellingGame } from './spelling';
 import { readingGame } from './reading';
 import { measureGame } from './measure';
 
-export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame, solarGame, bodyGame, calendarGame, arithmeticGame, spellingGame, readingGame, measureGame];
+export const GAMES: readonly Game[] = [clockGame, tablesGame, flagsGame, mapGame, capitalsGame, languagesGame, nederlandGame, moneyGame, wordsGame, patternsGame, initialsGame, fractionsGame, trafficGame, animalsGame, solarGame, bodyGame, calendarGame, arithmeticGame, spellingGame, readingGame, measureGame];

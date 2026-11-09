@@ -65,6 +65,7 @@ button { font: inherit; color: inherit; }
 .tile-flags { background: var(--flags); }
 .tile-map { background: var(--map); }
 .tile-capitals { background: var(--capitals); }
+.tile-languages { background: #f4a6a0; }
 .tile-nederland { background: var(--nederland); }
 .tile-money { background: var(--money); }
 .tile-words { background: var(--words); }
