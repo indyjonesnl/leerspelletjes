@@ -268,18 +268,18 @@ button { font: inherit; color: inherit; }
 .choice.wrong { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); animation: shake 0.4s; }
 .language-question { display: flex; flex-direction: column; align-items: center; gap: 16px; }
 .language-board { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
-.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-.chip {
+.language-board .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.language-board .chip {
   min-height: 56px; min-width: 56px; padding: 8px 20px; border: 3px solid var(--line); border-radius: 999px;
   background: var(--card); color: var(--ink); font: inherit; font-size: 22px; font-weight: 700; cursor: pointer;
 }
-.chip[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: #fff; }
-.chip .mark { margin-left: 8px; }
-.chip:disabled { cursor: default; }
-.chip:disabled:not(.correct):not(.missed):not(.wrong) { opacity: 0.55; }
-.chip.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
-.chip.missed { border-color: var(--correct); border-style: dashed; background: var(--card); color: var(--correct); }
-.chip.wrong { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
+.language-board .chip[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.language-board .chip .mark { margin-left: 8px; }
+.language-board .chip:disabled { cursor: default; }
+.language-board .chip:disabled:not(.correct):not(.missed):not(.wrong) { opacity: 0.55; }
+.language-board .chip.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+.language-board .chip.missed { border-color: var(--correct); border-style: dashed; background: var(--card); color: var(--correct); }
+.language-board .chip.wrong { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
 .check {
   min-height: var(--tap); min-width: 160px; padding: 8px 28px; border: 3px solid var(--accent); border-radius: var(--radius);
   background: var(--accent); color: #fff; font: inherit; font-size: 24px; font-weight: 700; cursor: pointer;

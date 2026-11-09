@@ -14,7 +14,7 @@ async function askedCode(page: Page): Promise<string> {
   return country.code;
 }
 
-const chip = (page: Page, name: string) => page.locator('button.chip', { hasText: new RegExp(`^${name}$`) });
+const chip = (page: Page, name: string) => page.getByRole('button', { name, exact: true });
 
 test('plays a full round of well-known countries', async ({ page }) => {
   await page.goto('./');
@@ -56,4 +56,20 @@ test('the study screen shows a card per country with its languages', async ({ pa
   const texts = await cards.allInnerTexts();
   const nl = LANGUAGES[SPOKEN.NL.main[0]].nl;
   expect(texts.some((t) => t.includes('Nederland') && t.includes(nl))).toBe(true);
+});
+
+test('answered chips: ticked-right and ticked-wrong show the correct and wrong colours, not the pressed colour', async ({ page }) => {
+  await page.goto('./#/languages/1');
+  const code = await askedCode(page);
+  const main = SPOKEN[code].main;
+  const chips = await page.locator('button.chip').allInnerTexts();
+  const extraName = chips.find((n) => !main.some((id) => LANGUAGES[id].nl === n))!;
+  await chip(page, LANGUAGES[main[0]].nl).click();
+  await chip(page, extraName).click();
+  await page.locator('button.check').click();
+  const bg = (loc: ReturnType<Page['locator']>) => loc.first().evaluate((e) => getComputedStyle(e).backgroundColor);
+  const correct = await bg(page.locator('button.chip.correct'));
+  const wrong = await bg(page.locator('button.chip.wrong'));
+  expect(correct).toBe('rgb(227, 246, 234)');
+  expect(wrong).toBe('rgb(251, 232, 227)');
 });

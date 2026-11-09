@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi } from 'vitest';
 import { createRng } from '../../core/rng';
 import type { Question, VisualState } from '../../core/types';
@@ -69,6 +70,22 @@ describe('languageBoard', () => {
     const opts = { chips: ['nl', 'fr', 'de'], answer: ['nl', 'fr'], selected: new Set(['nl', 'fr']) };
     const root = languageBoard(opts, { lang: 'nl', picked: { id: 'fr+nl', answerId: 'fr+nl' } });
     expect(root.querySelector('.language-detail')).toBeNull();
+  });
+});
+
+describe('chip styling scope', () => {
+  it('puts the chips inside the .language-board root so its CSS cannot leak into the map study chips', () => {
+    const root = languageBoard({ chips: ['nl', 'fr'], answer: ['nl'], selected: new Set() }, open);
+    expect(root.classList.contains('language-board')).toBe(true);
+    expect(root.querySelectorAll('.language-board > .chips > .chip')).toHaveLength(2);
+  });
+
+  it('scopes every language chip rule in styles.css; only the two map study rules stay global', () => {
+    const css = readFileSync('src/styles.css', 'utf8');
+    const unscoped = css.split('\n').filter((l) => /^\.chips?\b/.test(l));
+    expect(unscoped.filter((l) => !l.includes('study-flag'))).toHaveLength(3);
+    expect(css).toMatch(/\.language-board \.chip\.wrong/);
+    expect(css).toMatch(/\.language-board \.chip\.correct/);
   });
 });
 
