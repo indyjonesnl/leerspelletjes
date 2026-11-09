@@ -7,7 +7,7 @@ import type { Localized } from '../../../core/types';
  */
 export const LANGUAGES: Readonly<Record<string, Localized>> = {
   aa: { nl: 'Afar', en: 'Afar' },
-  acf: { nl: 'Antilliaans Creools', en: 'Antillean Creole' },
+  acf: { nl: 'Kwéyòl (Frans Creools)', en: 'Kwéyòl (French Creole)' },
   af: { nl: 'Afrikaans', en: 'Afrikaans' },
   ajg: { nl: 'Aja', en: 'Aja' },
   ak: { nl: 'Akan', en: 'Akan' },

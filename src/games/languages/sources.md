@@ -33,7 +33,7 @@ Note on the catalog test: the "no unused language" test accepts a code used in `
 
 - Figures are from memory of censuses/Ethnologue/Wikipedia; not re-verified online. Treat any single percentage as approximate.
 - Catalog granularity: Persian `fa` also covers Dari (AF); Arabic is one language (Darija, Gulf, Egyptian etc. folded in); `ber` is the Berber/Amazigh group (Kabyle, Tashelhit, Tarifit, Tamazight); `zh` covers Mandarin and Cantonese; Hindi (`hi`) and Urdu (`ur`) separate; `ff` is Fula/Pulaar/Fulfulde.
-- English-based Caribbean creoles are folded into `en`, except Jamaican Patois (`jam`), which sits beside `en`. French-based creoles get their own entry when they clear 5% (Haitian `ht`, Seychellois `crs`, Mauritian `mfe`); Antillean Creole (`acf`) in DM/LC is kept as `minor`.
+- English-based Caribbean creoles are folded into `en`, except Jamaican Patois (`jam`), which sits beside `en`. French-based creoles get their own entry when they clear 5% (Haitian `ht`, Seychellois `crs`, Mauritian `mfe`); Kwéyòl (`acf`) is `main` in DM/LC, where it is a majority home language.
 - Very fragmented countries (BJ, CM, ET, ML, NE, KE, UG, TZ, TG, TL, NP, PH, PG, SB, VU, CD, CF, CG) show the largest national or regional languages only. Several languages at 5-7% were deliberately left out of the catalog to keep chips teachable (named in the tables below). This is a known departure from a strict 5% rule.
 - Gulf states (AE, BH, KW, OM, QA, SA): `main` is Arabic only; the large expatriate languages (Hindi, Urdu, Bengali, English) are `minor`. Strictly, expatriate home languages exceed 5% in several of these (Hindi/Urdu/Malayalam in AE, QA, KW), but they are not the languages a child would be asked about for these countries; `minor` keeps them out of answers and distractors.
 - Official-only or lingua franca second languages (English in India, French in most of Africa, Portuguese in TL, Russian in the Caucasus and Central Asia) are `minor` or absent.
@@ -82,17 +82,17 @@ the country's `minor`, which keeps them out of both the answer and the distracto
 | GM | mnk, ff, wo, dyo, snk main | Jola ~10%, Soninke ~9% |
 | NE | ha, dje, tmh, ff main; kr minor | Kanuri ~4.7% |
 | NG | ha, yo, ig, ff, pcm, en main | Fula ~5-6%; Nigerian Pidgin widely a first language; English kept as an everyday home language of urban speakers |
-| ZW | sn, nd main; en minor | English ~2%; Kalanga ~5% omitted from catalog |
+| ZW | sn, nd main; en minor | English ~2%; Kalanga (`kck`, ~5%) is in the catalog but only `minor` here (also `main` in BW) |
 | LY | ar main; ber minor | Amazigh ~4-5% |
 | MZ | pt, vmw, ts, seh, lon main | Portuguese first language ~17% (2017 census) |
-| KE | sw, ki, luy, luo, kln, kam main | Kikuyu ~17%, Luhya ~14%, Kalenjin ~13%, Luo ~10%, Kamba ~10%; Kisii and Mijikenda ~5-6% omitted |
+| KE | sw, ki, luy, luo, kln, kam, so main | Kikuyu ~17%, Luhya ~14%, Kalenjin ~13%, Luo ~10%, Kamba ~10%, Somali ~5.8% (promoted in the final review); Kisii and Mijikenda ~5-6% omitted |
 | UG | lg, nyn, xog, teo main | Luganda ~17%, Runyankole ~10%, Soga ~8%, Ateso ~7%; Lango (~6%) and Acholi (~5%) omitted |
 | BJ | fon, yo, ajg, bba, ff main | Ottamari ~6% omitted |
 | SD | ar, bej main; en minor | Fur ~3-5% omitted |
 | SL | kri, tem, men main | Limba ~8% and Kono ~5% omitted |
 | TZ | sw, suk main | Swahili home use mixed; Sukuma ~16%; other groups ~4% each |
 | TG | ee, kbp main; fr minor | Mina/Gen and Tem 5-8% omitted |
-| NA | kj, naq, af, hz, kwn main; en minor | English ~3% home language, official only |
+| NA | kj, naq, af, hz, kwn, loz main; en, de minor | English ~3% home language, official only; Lozi ~5% (promoted in the final review) |
 | LR | en, kpe, bsq, grb, dnj main | Grebo ~10% and Dan/Gio ~8% added (review fix) |
 | ML | bm, ff, snk, son, sev, dog main | Senufo ~10% and Dogon ~8% added (review fix) |
 | CG | kg, ln, tek, mdw main; fr minor | Teke ~17% and Mbochi ~12% added (review fix) |
@@ -120,7 +120,7 @@ the country's `minor`, which keeps them out of both the answer and the distracto
 | TH | th main | Isan and Northern/Southern Thai folded into Thai |
 | MM | my, shn, kar main | Shan ~9%, Karen ~7%; Rakhine ~4% omitted |
 | IQ, SY | ar, ku main | Kurdish ~15-20% (IQ), ~9% (SY) |
-| IR | fa, az, ku, glk, mzn, lrc main; ar minor | Gilaki ~5%, Mazandarani ~5%, Luri ~6% added (review fix; Gilaki and Mazandarani borderline) |
+| IR | fa, az, ku, lrc main; ar, glk, mzn, tg, tk minor | Luri ~6% main; Gilaki and Mazandarani (~3-5%) moved to minor in the final review |
 | GW | pov, ff, bjt, mnk, mfv, pbo main; pt minor | Manjak ~8% and Papel ~7% added (review fix) |
 | TL | tet, mgm, mkz main; pt, id minor | Mambai ~12%, Makasae ~10% (review fix); other languages under 5% |
 | NZ | en main; mi minor | Maori spoken by ~4% |
