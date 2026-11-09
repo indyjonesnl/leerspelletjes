@@ -54,7 +54,7 @@ Note on the catalog test: the "no unused language" test accepts a code used in `
 | BZ | en, es main | Spanish ~56%; Kriol folded into en |
 | JM | en, jam main | Patois is the everyday language for most |
 | MX | es main; nah minor | Nahuatl ~1.5% |
-| DM, LC | en main; acf minor | Creole widely spoken but treated as minor (see conventions) |
+| DM, LC | en, acf main | Kwéyòl/Patwa is a majority home language (review fix); English-based creoles elsewhere stay folded into en |
 | HT | ht main; fr minor | French is first language of well under 5% |
 | GY, TT | en main; hi minor | Hindi/Bhojpuri home use below 5% |
 
@@ -81,11 +81,11 @@ Note on the catalog test: the "no unused language" test accepts a code used in `
 | TZ | sw, suk main | Swahili home use mixed; Sukuma ~16%; other groups ~4% each |
 | TG | ee, kbp main; fr minor | Mina/Gen and Tem 5-8% omitted |
 | NA | kj, naq, af, hz, kwn main; en minor | English ~3% home language, official only |
-| LR | en, kpe, bsq main | Liberian English; Grebo ~10% omitted |
-| ML | bm, ff, snk, son main | Senufo ~10% omitted |
-| CG | kg, ln main | Teke ~17% omitted |
+| LR | en, kpe, bsq, grb, dnj main | Grebo ~10% and Dan/Gio ~8% added (review fix) |
+| ML | bm, ff, snk, son, sev, dog main | Senufo ~10% and Dogon ~8% added (review fix) |
+| CG | kg, ln, tek, mdw main; fr minor | Teke ~17% and Mbochi ~12% added (review fix) |
 | CF | sg, gba, bad main | Sango is the everyday language |
-| GH | ak, ee, gaa main; en minor | Dagbani/Mole-Dagbani ~16% omitted |
+| GH | ak, ee, gaa main; en minor | Mole-Dagbani is a group: each individual language (Dagbani ~4%, Frafra, Dagaare, ...) is under 5%, so left out |
 | ST | pt, cri main | Forro ~36% |
 | CV | kea main; pt minor | Portuguese official, Kriolu is the home language |
 
@@ -95,7 +95,7 @@ Note on the catalog test: the "no unused language" test accepts a code used in `
 |---|---|---|
 | IN | hi, bn, mr, te, ta main; gu, ur, kn, ml, pa, en minor | 2011 census mother tongues: Hindi ~44%, Bengali ~8%, Marathi ~7%, Telugu ~6.7%, Tamil ~5.7%; Gujarati 4.6%, Urdu 4.2% just under; English <1% |
 | PK | pa, ps, sd, skr, ur main | Saraiki ~12%, Urdu ~7%; Balochi ~3.5% omitted |
-| NP | ne, mai, bho main | Tharu ~5.8% and Tamang ~5% omitted from catalog (borderline) |
+| NP | ne, mai, bho, thl, taj main | Tharu ~5.8% and Tamang ~5% included so the cut is consistent (review fix) |
 | PH | tl, ceb, ilo, hil main; en minor | Bikol ~6% omitted; Waray ~3.5% |
 | GE | ka, az main; hy, ru minor | 2014 census: Azerbaijani 6.3%, Armenian 4.5% (just under) |
 | UZ | uz main; ru, tg minor | Russian and Tajik home use ~5% (borderline) |
@@ -108,7 +108,9 @@ Note on the catalog test: the "no unused language" test accepts a code used in `
 | TH | th main | Isan and Northern/Southern Thai folded into Thai |
 | MM | my, shn, kar main | Shan ~9%, Karen ~7%; Rakhine ~4% omitted |
 | IQ, SY | ar, ku main | Kurdish ~15-20% (IQ), ~9% (SY) |
-| TL | tet, mgm main; pt, id minor | Mambai ~12%; Makasae ~10% omitted (fragmented) |
+| IR | fa, az, ku, glk, mzn, lrc main; ar minor | Gilaki ~5%, Mazandarani ~5%, Luri ~6% added (review fix; Gilaki and Mazandarani borderline) |
+| GW | pov, ff, bjt, mnk, mfv, pbo main; pt minor | Manjak ~8% and Papel ~7% added (review fix) |
+| TL | tet, mgm, mkz main; pt, id minor | Mambai ~12%, Makasae ~10% (review fix); other languages under 5% |
 | NZ | en main; mi minor | Maori spoken by ~4% |
 | AU | en main; zh, ar minor | Mandarin ~2.7%, Arabic ~1.4% |
 | FJ | fj, hif main | Fijian ~55%, Fiji Hindi ~35% |
