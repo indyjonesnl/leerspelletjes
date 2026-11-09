@@ -61,7 +61,7 @@ export function languageBoard(
         const kind = isRight && isPicked ? 'correct' : isRight ? 'missed' : 'wrong';
         button.classList.add(kind);
         button.append(
-          el('span', { class: 'mark', 'aria-label': kind === 'wrong' ? t.wrong : kind === 'missed' ? t.miss : t.ok }, kind === 'wrong' ? '✗' : '✓'),
+          el('span', { class: 'mark', role: 'img', 'aria-label': kind === 'wrong' ? t.wrong : kind === 'missed' ? t.miss : t.ok }, kind === 'wrong' ? '✗' : '✓'),
         );
       }
     } else {

@@ -64,10 +64,9 @@ export function makeLanguageQuestion(level: Level, rng: Rng, previous: readonly 
       el(
         'div',
         { class: 'language-question' },
-        el('img', { src: flagUrl(answer.code), alt: '', class: 'flag' }),
+        el('img', { src: flagUrl(answer.code), alt: countryName(answer.code)[state.lang], class: 'flag' }),
         languageBoard({ chips, answer: correct, selected }, state),
       ),
-    visualLabel: { hidden: { nl: 'vlag', en: 'flag' }, revealed: countryName(answer.code) },
     answerOn: 'interactive',
     autoAdvance: false,
     choices: [{ id: answerId, label: { nl: names('nl'), en: names('en') } }],

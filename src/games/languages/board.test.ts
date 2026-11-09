@@ -54,9 +54,9 @@ describe('languageBoard', () => {
     expect(chip(en, 'nl').classList.contains('correct')).toBe(true);
     expect(chip(en, 'fr').classList.contains('missed')).toBe(true);
     expect(chip(en, 'de').classList.contains('wrong')).toBe(true);
-    expect(chip(en, 'nl').querySelector('[aria-label]')!.textContent).toBe('✓');
-    expect(chip(en, 'de').querySelector('[aria-label]')!.textContent).toBe('✗');
-    expect(chip(en, 'fr').querySelector('[aria-label]')!.textContent).toBe('✓');
+    expect(chip(en, 'nl').querySelector('[role="img"][aria-label]')!.textContent).toBe('✓');
+    expect(chip(en, 'de').querySelector('[role="img"][aria-label]')!.textContent).toBe('✗');
+    expect(chip(en, 'fr').querySelector('[role="img"][aria-label]')!.textContent).toBe('✓');
   });
 
   it('omits an empty half of the detail', () => {
@@ -81,6 +81,15 @@ describe('language question board', () => {
     const second = q.visual!({ ...open, lang: 'en' });
     expect(chip(second, 'nl').getAttribute('aria-pressed')).toBe('true');
     expect(check(second).disabled).toBe(false);
+  });
+
+  it('has no visualLabel (it would hide the buttons) and a real flag alt in both languages', () => {
+    const q = beQuestion();
+    expect(q.visualLabel).toBeUndefined();
+    for (const lang of ['nl', 'en'] as const) {
+      const alt = q.visual!({ ...open, lang }).querySelector('img')!.getAttribute('alt');
+      expect(alt).toBeTruthy();
+    }
   });
 
   it('enables Check only while something is ticked', () => {
