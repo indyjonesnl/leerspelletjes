@@ -21,8 +21,11 @@ export function languageSetId(codes: readonly string[]): string {
   return [...codes].sort().join('+');
 }
 
-/** The correct languages plus distractors, shuffled. */
-export function chipLanguages(countryCode: string, pool: readonly Country[], rng: Rng): string[] {
+/**
+ * The correct languages plus distractors, shuffled. Distractors are main languages of the other pool countries
+ * (same continent only when `sameContinent`; level 1 draws from the starter countries), falling back to the whole catalog.
+ */
+export function chipLanguages(countryCode: string, pool: readonly Country[], rng: Rng, sameContinent = true): string[] {
   const { main, minor = [] } = SPOKEN[countryCode];
   const excluded = new Set([...main, ...minor]);
   const total = Math.min(MAX_CHIPS, Math.max(MIN_CHIPS, main.length + MIN_DISTRACTORS));
@@ -32,7 +35,7 @@ export function chipLanguages(countryCode: string, pool: readonly Country[], rng
   const used = new Set<string>();
   for (const c of pool) {
     if (c.code === countryCode || !SPOKEN[c.code]) continue;
-    if (self && group(c) !== group(self)) continue;
+    if (sameContinent && self && group(c) !== group(self)) continue;
     for (const l of SPOKEN[c.code].main) if (!excluded.has(l)) used.add(l);
   }
   const picked = rng.shuffle([...used]).slice(0, needed);
@@ -45,10 +48,10 @@ export function chipLanguages(countryCode: string, pool: readonly Country[], rng
 }
 
 export function makeLanguageQuestion(level: Level, rng: Rng, previous: readonly Question[]): Question {
-  const { pool } = FLAG_CONFIG[level.id];
+  const { pool, sameContinent } = FLAG_CONFIG[level.id];
   const answer = pickFresh(pool, previous, (c) => c.code, rng);
   const correct = SPOKEN[answer.code].main;
-  const chips = chipLanguages(answer.code, pool, rng);
+  const chips = chipLanguages(answer.code, pool, rng, sameContinent);
   const answerId = languageSetId(correct);
   const names = (lang: 'nl' | 'en') => correct.map((l) => LANGUAGES[l][lang]).join(', ');
   const country = countryWithArticle(answer.code);

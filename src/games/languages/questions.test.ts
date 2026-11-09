@@ -18,11 +18,11 @@ describe('languageSetId', () => {
 describe('chipLanguages', () => {
   it('has all correct, no minor, >= 3 distractors, 5..12 unique chips', () => {
     for (const level of LANGUAGE_LEVELS) {
-      const pool = FLAG_CONFIG[level.id].pool;
+      const { pool, sameContinent } = FLAG_CONFIG[level.id];
       for (let seed = 0; seed < 30; seed++) {
         for (const c of pool) {
           const { main, minor = [] } = SPOKEN[c.code];
-          const chips = chipLanguages(c.code, pool, createRng(seed));
+          const chips = chipLanguages(c.code, pool, createRng(seed), sameContinent);
           for (const m of main) expect(chips).toContain(m);
           for (const m of minor) expect(chips).not.toContain(m);
           expect(chips.length - main.length).toBeGreaterThanOrEqual(3);
@@ -39,6 +39,22 @@ describe('chipLanguages', () => {
     for (const code of ['IN', 'ZA']) {
       const chips = chipLanguages(code, worldPool, createRng(1));
       expect(chips.length - SPOKEN[code].main.length).toBeGreaterThanOrEqual(3);
+    }
+  });
+});
+
+describe('level 1 distractors', () => {
+  it('are main languages of the starter countries, for all 15 countries x 30 seeds', () => {
+    const { pool, sameContinent } = FLAG_CONFIG['1'];
+    expect(sameContinent).toBe(false);
+    expect(pool).toHaveLength(15);
+    const starterMain = new Set(pool.flatMap((c) => SPOKEN[c.code].main));
+    for (const c of pool) {
+      const { main } = SPOKEN[c.code];
+      for (let seed = 0; seed < 30; seed++) {
+        const chips = chipLanguages(c.code, pool, createRng(seed), sameContinent);
+        for (const l of chips.filter((x) => !main.includes(x))) expect(starterMain.has(l), `${c.code} ${l}`).toBe(true);
+      }
     }
   });
 });
