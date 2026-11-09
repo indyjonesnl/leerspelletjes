@@ -3,7 +3,7 @@
 Free educational games for primary school children (groep 1–8), in Dutch and English.
 No accounts, no cookies, no tracking.
 
-Games: clock reading, times tables, flags, finding countries on the map, capitals, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, Pattern Puzzles, First Letters (Beginletters), Fraction Match, Traffic Signs, Animal Detective, Solar System, Body Explorer, Calendar Quest, Number Jumps (Rekensprongen), Spelling Detective, Reading Detective (Leesdetective), and Measure Master (Meetmeester). Flags, capitals, the map game, the Dutch provinces, Traffic Signs, Solar System, Body Explorer, Calendar Quest, Number Jumps, Spelling Detective, Reading Detective, and Measure Master have a "Leer eerst" study screen for every level.
+Games: clock reading, times tables, flags, finding countries on the map, capitals, languages, the Dutch provinces (map, capitals and flags), Money & Change, Word Builder, Pattern Puzzles, First Letters (Beginletters), Fraction Match, Traffic Signs, Animal Detective, Solar System, Body Explorer, Calendar Quest, Number Jumps (Rekensprongen), Spelling Detective, Reading Detective (Leesdetective), and Measure Master (Meetmeester). Flags, capitals, languages, the map game, the Dutch provinces, Traffic Signs, Solar System, Body Explorer, Calendar Quest, Number Jumps, Spelling Detective, Reading Detective, and Measure Master have a "Leer eerst" study screen for every level.
 
 Money & Change has four levels: counting euro coins, counting euros and cents, adding prices, and calculating change. Calculations use integer cents. Word Builder has three word-length levels with Dutch and English vocabulary, picture clues, and scrambled letters; children choose the correctly spelled word from four options. Its read-aloud clues describe the picture without giving away the spelling. Pattern Puzzles has four levels: repeating shapes, counting sequences, missing numbers, and growing steps. Each new game uses the shared ten-question rounds, answer buttons, keyboard controls, feedback, and score screen.
 
@@ -50,7 +50,7 @@ npm run size       # build and check the 200 KB first-load budget
 
 ## Learn mode
 
-Every level of Flags, Capitals, "Waar ligt het?", Nederland, Traffic Signs, Solar System, Body Explorer, Calendar Quest, Number Jumps, Spelling Detective, Reading Detective, and Measure Master has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (for example clock and times tables) show no link. Nothing about what a child has studied is stored.
+Every level of Flags, Capitals, Languages, "Waar ligt het?", Nederland, Traffic Signs, Solar System, Body Explorer, Calendar Quest, Number Jumps, Spelling Detective, Reading Detective, and Measure Master has a "Leer eerst" link (`#/<game>/<level>/learn`). A game opts in by setting `study(level, { lang, speak })` on its `Game` (see `src/core/types.ts`): it returns the study view for the level, and the shared `learnScreen` adds loading (through the game's `load`), the "Nu oefenen" button and the way back. Games without `study` (for example clock and times tables) show no link. Nothing about what a child has studied is stored.
 
 ## Country data
 
@@ -63,6 +63,12 @@ Every level of Flags, Capitals, "Waar ligt het?", Nederland, Traffic Signs, Sola
 ## Capitals
 
 `src/games/capitals/data/capitals.ts` is written by hand: one capital per country, in Dutch and English, as school atlases give it. Conventions for countries with more than one capital are listed at the top of the file.
+
+## Languages
+
+`src/games/languages/data/` is a hand-written table (one file per region) of the languages spoken in each country. A language counts as "main" (and is the answer) when it is the first or everyday home language of at least about 5% of the population; well-known languages below that cut are listed as `minor` and are never used as answers or distractors. Languages that people only learn as a second language (lingua francas such as English or French in many countries) are not counted. Sources are listed in `src/games/languages/sources.md`.
+
+The figures were compiled from memory and have not been checked against those sources, so some entries may be wrong or out of date. Treat them as unverified until someone has gone through the table.
 
 ## Netherlands map
 
