@@ -28,3 +28,89 @@ Note on the catalog test: the "no unused language" test accepts a code used in `
 | IE | en main; ga minor | Irish is official but used daily by ~2% |
 | CH | de, fr, it main; rm minor | Romansh ~0.5% |
 | BE | nl, fr main; de minor | German ~1% |
+
+## Outside Europe: global conventions
+
+- Figures are from memory of censuses/Ethnologue/Wikipedia; not re-verified online. Treat any single percentage as approximate.
+- Catalog granularity: Persian `fa` also covers Dari (AF); Arabic is one language (Darija, Gulf, Egyptian etc. folded in); `ber` is the Berber/Amazigh group (Kabyle, Tashelhit, Tarifit, Tamazight); `zh` covers Mandarin and Cantonese; Hindi (`hi`) and Urdu (`ur`) separate; `ff` is Fula/Pulaar/Fulfulde.
+- English-based Caribbean creoles are folded into `en`, except Jamaican Patois (`jam`), which sits beside `en`. French-based creoles get their own entry when they clear 5% (Haitian `ht`, Seychellois `crs`, Mauritian `mfe`); Antillean Creole (`acf`) in DM/LC is kept as `minor`.
+- Very fragmented countries (BJ, CM, ET, ML, NE, KE, UG, TZ, TG, TL, NP, PH, PG, SB, VU, CD, CF, CG) show the largest national or regional languages only. Several languages at 5-7% were deliberately left out of the catalog to keep chips teachable (named in the tables below). This is a known departure from a strict 5% rule.
+- Gulf states (AE, BH, KW, OM, QA, SA): `main` is Arabic only; the large expatriate languages (Hindi, Urdu, Bengali, English) are `minor`. Strictly, expatriate home languages exceed 5% in several of these (Hindi/Urdu/Malayalam in AE, QA, KW), but they are not the languages a child would be asked about for these countries; `minor` keeps them out of answers and distractors.
+- Official-only or lingua franca second languages (English in India, French in most of Africa, Portuguese in TL, Russian in the Caucasus and Central Asia) are `minor` or absent.
+
+## Americas, borderline (within +-2% of the cut)
+
+| Country | Decision | Reason |
+|---|---|---|
+| BO | es, qu, ay main; gn minor | Quechua ~20%, Aymara ~15% mother tongue; Guarani ~1% |
+| EC | es main; qu minor | Kichwa/Quechua ~3-4% |
+| GT | es, quc, kek, cak main; mam minor | 2018 census: K'iche' ~9%, Q'eqchi' ~8%, Kaqchikel ~6%, Mam ~5% (borderline, left minor) |
+| PE | es, qu main; ay minor | Quechua ~13% (2017 census); Aymara ~1.5% |
+| PY | es, gn main | Guarani is the home language of a majority |
+| CA | en, fr main; zh minor | Chinese languages at home ~3.5-4%, just under |
+| US | en, es main; zh minor | Spanish ~13%; Chinese ~1% |
+| BS | en main; ht minor | Haitian Creole ~4% |
+| SR | nl, srn, hns, jv main | Sranan widely used at home; Sarnami ~18%, Javanese ~15% |
+| BZ | en, es main | Spanish ~56%; Kriol folded into en |
+| JM | en, jam main | Patois is the everyday language for most |
+| MX | es main; nah minor | Nahuatl ~1.5% |
+| DM, LC | en main; acf minor | Creole widely spoken but treated as minor (see conventions) |
+| HT | ht main; fr minor | French is first language of well under 5% |
+| GY, TT | en main; hi minor | Hindi/Bhojpuri home use below 5% |
+
+## Africa, borderline (within +-2% of the cut)
+
+| Country | Decision | Reason |
+|---|---|---|
+| ZA | zu, xh, af, en, nso, tn, st main; ts, ss, ve minor | 2011 census: Tsonga ~4.5%, Swati ~2.5%, Venda ~2.4% |
+| AO | pt, umb, kg, kmb, cjk main | 2014 census: Chokwe ~6.5%, Kikongo/Kimbundu ~8% each |
+| SC | crs, en main; fr minor | English ~5% as home language (2010 census), French ~1% |
+| MU | mfe, bho main; fr minor | Bhojpuri ~5.3% (2011), French ~3.5% |
+| SN | wo, ff, srr, mnk main; dyo minor | Jola ~4.5%, Mandinka ~5% (borderline) |
+| GM | mnk, ff, wo, dyo, snk main | Jola ~10%, Soninke ~9% |
+| NE | ha, dje, tmh, ff main; kr minor | Kanuri ~4.7% |
+| NG | ha, yo, ig, ff, pcm, en main | Fula ~5-6%; Nigerian Pidgin widely a first language; English kept as an everyday home language of urban speakers |
+| ZW | sn, nd main; en minor | English ~2%; Kalanga ~5% omitted from catalog |
+| LY | ar main; ber minor | Amazigh ~4-5% |
+| MZ | pt, vmw, ts, seh, lon main | Portuguese first language ~17% (2017 census) |
+| KE | sw, ki, luy, luo, kln, kam main | Kikuyu ~17%, Luhya ~14%, Kalenjin ~13%, Luo ~10%, Kamba ~10%; Kisii and Mijikenda ~5-6% omitted |
+| UG | lg, nyn, xog, teo main | Luganda ~17%, Runyankole ~10%, Soga ~8%, Ateso ~7%; Lango (~6%) and Acholi (~5%) omitted |
+| BJ | fon, yo, ajg, bba, ff main | Ottamari ~6% omitted |
+| SD | ar, bej main; en minor | Fur ~3-5% omitted |
+| SL | kri, tem, men main | Limba ~8% and Kono ~5% omitted |
+| TZ | sw, suk main | Swahili home use mixed; Sukuma ~16%; other groups ~4% each |
+| TG | ee, kbp main; fr minor | Mina/Gen and Tem 5-8% omitted |
+| NA | kj, naq, af, hz, kwn main; en minor | English ~3% home language, official only |
+| LR | en, kpe, bsq main | Liberian English; Grebo ~10% omitted |
+| ML | bm, ff, snk, son main | Senufo ~10% omitted |
+| CG | kg, ln main | Teke ~17% omitted |
+| CF | sg, gba, bad main | Sango is the everyday language |
+| GH | ak, ee, gaa main; en minor | Dagbani/Mole-Dagbani ~16% omitted |
+| ST | pt, cri main | Forro ~36% |
+| CV | kea main; pt minor | Portuguese official, Kriolu is the home language |
+
+## Asia and Oceania, borderline (within +-2% of the cut)
+
+| Country | Decision | Reason |
+|---|---|---|
+| IN | hi, bn, mr, te, ta main; gu, ur, kn, ml, pa, en minor | 2011 census mother tongues: Hindi ~44%, Bengali ~8%, Marathi ~7%, Telugu ~6.7%, Tamil ~5.7%; Gujarati 4.6%, Urdu 4.2% just under; English <1% |
+| PK | pa, ps, sd, skr, ur main | Saraiki ~12%, Urdu ~7%; Balochi ~3.5% omitted |
+| NP | ne, mai, bho main | Tharu ~5.8% and Tamang ~5% omitted from catalog (borderline) |
+| PH | tl, ceb, ilo, hil main; en minor | Bikol ~6% omitted; Waray ~3.5% |
+| GE | ka, az main; hy, ru minor | 2014 census: Azerbaijani 6.3%, Armenian 4.5% (just under) |
+| UZ | uz main; ru, tg minor | Russian and Tajik home use ~5% (borderline) |
+| TM | tk, uz main; ru minor | Uzbek ~5%, Russian ~4% |
+| KZ | kk, ru main; uz minor | Russian is the home language of ~20%+ |
+| SG | en, zh, ms main; ta minor | 2020 census: English ~48%, Mandarin+dialects ~38%, Malay ~9%, Tamil ~2.5% |
+| MY | ms, zh, ta main | Tamil ~6% |
+| BN | ms, zh main | Chinese ~10% |
+| LK | si, ta main | Tamil ~18% |
+| TH | th main | Isan and Northern/Southern Thai folded into Thai |
+| MM | my, shn, kar main | Shan ~9%, Karen ~7%; Rakhine ~4% omitted |
+| IQ, SY | ar, ku main | Kurdish ~15-20% (IQ), ~9% (SY) |
+| TL | tet, mgm main; pt, id minor | Mambai ~12%; Makasae ~10% omitted (fragmented) |
+| NZ | en main; mi minor | Maori spoken by ~4% |
+| AU | en main; zh, ar minor | Mandarin ~2.7%, Arabic ~1.4% |
+| FJ | fj, hif main | Fijian ~55%, Fiji Hindi ~35% |
+| PG, SB, VU | tpi, pis, bi main | Pidgin/creole lingua francas in daily use; hundreds of local languages, none above ~5% |
+| FM | chk, pon, kos, yap main | Chuukese ~48%, Pohnpeian ~24%, Kosraean ~6%, Yapese ~5.5% |
