@@ -65,6 +65,16 @@ describe('LANGUAGES', () => {
   });
 });
 
+describe('unfair distractors', () => {
+  it.each([
+    ['NL', 'tr'], ['DE', 'tr'], ['KE', 'so'], ['IN', 'bho'], ['TH', 'lo'], ['QA', 'ne'],
+    ['AF', 'tg'], ['CH', 'en'], ['AT', 'hr'], ['SI', 'hr'], ['BE', 'de'],
+  ])('%s never gets %s as a wrong chip (it is main or minor there)', (country, lang) => {
+    const { main, minor = [] } = SPOKEN[country];
+    expect([...main, ...minor]).toContain(lang);
+  });
+});
+
 describe('spot checks', () => {
   it('follows the agreed conventions', () => {
     expect([...EUROPE.BE.main].sort()).toEqual(['fr', 'nl']);

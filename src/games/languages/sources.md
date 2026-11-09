@@ -38,6 +38,18 @@ Note on the catalog test: the "no unused language" test accepts a code used in `
 - Gulf states (AE, BH, KW, OM, QA, SA): `main` is Arabic only; the large expatriate languages (Hindi, Urdu, Bengali, English) are `minor`. Strictly, expatriate home languages exceed 5% in several of these (Hindi/Urdu/Malayalam in AE, QA, KW), but they are not the languages a child would be asked about for these countries; `minor` keeps them out of answers and distractors.
 - Official-only or lingua franca second languages (English in India, French in most of Africa, Portuguese in TL, Russian in the Caucasus and Central Asia) are `minor` or absent.
 
+## Final review: unfair distractors and promotions
+
+A language below the 5% cut that a child could reasonably know (or the same language under another name, or one
+highly visible in the Netherlands) must not show up as a wrong chip ("Dit hoort er niet bij"). Such languages were added to
+the country's `minor`, which keeps them out of both the answer and the distractors.
+
+- Added to `minor` (all present in the catalog): NL tr; DE tr ru pl; AT tr hr sr bs; CH en pt sq; IE pl; GR sq; SE fi; SI hr sr bs; RS hu bs; HR sr; CZ sk uk; PL uk; MD uk; LU it en; MC en; CI sev mos bm; BF bm; ML dyu mnk tmh; GN kpe; CM fan; ER aa bej; ZW kck ny toi ts; UG luo; ZM tum; CF sba; LR mnk; MZ ny sn; IN bho mai; TH lo km my; AF tg tk; IR tg tk; TJ fa; IQ tr az; ID ms; MY id jv; NZ zh sm; MM zh; UZ kk; NP ur hi; AM ku; VN km hmn zh; BZ kek; CA es.
+- Gulf states (AE, BH, KW, OM, QA, SA): additionally ne tl ta pa ps fa si id as `minor` (SA also hi), so no expatriate language shows up as a wrong chip.
+- Promoted to `main` (clear 5%): KE so (Somali ~5.8%, 2019 census), NA loz (Lozi/Silozi ~5%+ home language in Zambezi region), IS pl (Polish ~5-6% of residents, largest immigrant language), PW tl (Filipino ~15% of residents).
+- IR glk and mzn moved from `main` to `minor` (Gilaki and Mazandarani are borderline at ~3-5%; no footnote languages).
+- LT pl stays `minor`: Polish home use (~5%) is not clearly above Russian by the same home-language metric, and Polish is ethnicity-based above that; left as is.
+
 ## Americas, borderline (within +-2% of the cut)
 
 | Country | Decision | Reason |
